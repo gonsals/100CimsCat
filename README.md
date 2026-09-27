@@ -1,31 +1,29 @@
 # 100CimsCat
 
-Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC i guardar una fotografia per cim.
+Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, amb una foto privada per cim i progrés sincronitzat al teu compte.
 
-## Estat d'aquesta primera versió
+## Funcions
 
-- Catàleg FEEC local amb 522 cims i la distinció de 100 cims essencials.
-- Cerca per nom o comarca, filtres de pendents/fets/essencials i ordenació per altitud.
-- Seguiment de cims assolits i fotos personals desades al navegador amb IndexedDB.
-- La foto és opcional i es conserva també si després es desmarca l'ascensió.
+- Catàleg FEEC de 522 cims, incloent-hi els 150 essencials; el repte es completa amb 100 essencials.
+- Cerca per nom o comarca, filtres de cims pendents/fets/essencials i ordenació per altitud.
+- Inici de sessió amb enllaç màgic de correu i seguiment personal sincronitzat amb Supabase.
+- Fotos privades a Supabase Storage, amb accés restringit al seu propietari.
+- Abans de pujar-la, cada foto es redimensiona fins a 1.800 px, es converteix a WebP (o JPEG si el navegador no pot) i s'ajusta la qualitat per mirar de quedar per sota d'1,5 MB. Es treuen les metadades originals i el bucket rebutja fitxers de més de 6 MB.
 
-Les dades del catàleg es van obtenir del fitxer de dades de [mcmontseny/backend-100-cims-feec](https://github.com/mcmontseny/backend-100-cims-feec), derivat del catàleg oficial de la [FEEC](https://www.feec.cat/activitats/100-cims/). Es conserva l'atribució de la font i l'enllaç a la FEEC.
+## Configuració local
 
-## Executar
-
-Obre aquesta carpeta amb qualsevol servidor estàtic local. Per exemple, des de l'arrel del projecte:
+Requereix Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase.
 
 ```sh
-npx serve .
+npm install
+npm run dev
 ```
 
-La pàgina utilitza `fetch()` per llegir el catàleg i, per tant, no funciona si s'obre directament com a fitxer `file://`.
+Obre `http://localhost:3000`. La migració `supabase/migrations/20260927200000_catalog_and_private_ascent_tracking.sql` crea el catàleg, les taules de seguiment, les polítiques RLS i el bucket privat de fotos. El projecte Supabase ja té la migració aplicada.
 
-## Emmagatzematge
+Per fer servir l'enllaç màgic en un domini publicat, afegeix `https://el-teu-domini/auth/callback` als URL de redirecció permesos a Supabase Auth.
 
-La versió inicial guarda l'estat i les imatges localment al navegador. No hi ha encara comptes ni sincronització entre dispositius. El catàleg és independent de les dades de progrés personals.
+## Catàleg
 
-## Origen de les dades
-
-La FEEC indica que el catàleg actual està format per 522 cims, dels quals cadascú en pot triar 100 per completar el repte. El fitxer `data/summits.json` és una còpia normalitzada del catàleg de 522 registres. Consulta la FEEC per verificar possibles actualitzacions futures.
+Les dades normalitzades del catàleg s'inclouen a `data/summits.json` i també es carreguen a `public.summits`. La font és [mcmontseny/backend-100-cims-feec](https://github.com/mcmontseny/backend-100-cims-feec), derivada del catàleg oficial de la [FEEC](https://www.feec.cat/activitats/100-cims/). La [normativa FEEC](https://www.feec.cat/activitats/100-cims/normativa-i-funcionament/) defineix el repte dels 100 cims essencials.
 
