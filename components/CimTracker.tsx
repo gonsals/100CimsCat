@@ -46,6 +46,7 @@ const translations: Record<Language, Record<string, string>> = {
     'Fet per recordar els camins, no només els cims.': 'Hecho para recordar los caminos, no solo las cimas.',
     'Filtrar cims': 'Filtrar cimas', 'Encara no has registrat cap ascensió. Tot comença amb el primer pas.': 'Aún no has registrado ninguna ascensión. Todo empieza con el primer paso.',
     'cim': 'cima', 'cims': 'cimas', 'd’essencials.': 'esenciales.',
+    'Continua amb Google': 'Continuar con Google', 'o bé': 'o también', 'No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.': 'No se ha podido iniciar sesión con Google. Comprueba que el proveedor esté activado en Supabase y vuelve a intentarlo.',
   },
   en: {
     'El meu repte': 'My challenge', 'Catàleg FEEC ↗': 'FEEC catalogue ↗', 'Inicia sessió': 'Sign in',
@@ -65,6 +66,7 @@ const translations: Record<Language, Record<string, string>> = {
     'Fet per recordar els camins, no només els cims.': 'Made to remember the trails, not just the summits.',
     'Filtrar cims': 'Filter summits', 'Encara no has registrat cap ascensió. Tot comença amb el primer pas.': 'You have not recorded an ascent yet. Every journey starts with the first step.',
     'cim': 'summit', 'cims': 'summits', 'd’essencials.': 'essential.',
+    'Continua amb Google': 'Continue with Google', 'o bé': 'or', 'No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.': 'Could not start Google sign-in. Check that the provider is enabled in Supabase and try again.',
   },
 }
 
@@ -136,6 +138,8 @@ export default function CimTracker() {
   const [authOpen, setAuthOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [sendingLink, setSendingLink] = useState(false)
+  const [signingInWithGoogle, setSigningInWithGoogle] = useState(false)
+  const [googleError, setGoogleError] = useState('')
   const [notice, setNotice] = useState('')
   const [busyId, setBusyId] = useState<string | null>(null)
   const [busyLabel, setBusyLabel] = useState('Desant…')
@@ -251,6 +255,24 @@ export default function CimTracker() {
     setSendingLink(false)
     setNotice(error ? 'No s’ha pogut enviar l’enllaç. Revisa el correu i torna-ho a provar.' : 'T’hem enviat un enllaç d’accés al correu. Obre’l per continuar.')
     if (!error) setAuthOpen(false)
+  }
+
+  async function signInWithGoogle() {
+    if (!supabase) {
+      setNotice('Falta configurar Supabase. Revisa les variables del fitxer .env.local.')
+      return
+    }
+    setSigningInWithGoogle(true)
+    setGoogleError('')
+    setNotice('')
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    })
+    if (error) {
+      setGoogleError(t('No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.'))
+      setSigningInWithGoogle(false)
+    }
   }
 
   async function toggleDone(summit: Summit) {
@@ -385,7 +407,7 @@ export default function CimTracker() {
       {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
       <footer>{t('Fet per recordar els camins, no només els cims.')} <span>100CIMS · 2026</span></footer>
 
-      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label="Tancar">×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} /><button className="mark-button" disabled={sendingLink}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
+      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label="Tancar">×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><button type="button" className="google-signin" onClick={() => void signInWithGoogle()} disabled={signingInWithGoogle}>{signingInWithGoogle ? '…' : <><span className="google-mark" aria-hidden="true">G</span>{t('Continua amb Google')}</>}</button>{googleError && <p className="google-error" role="alert">{googleError}</p>}<div className="auth-divider"><span>{t('o bé')}</span></div><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} /><button className="mark-button" disabled={sendingLink}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
     </main>
   )
 }
