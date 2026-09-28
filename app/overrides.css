@@ -67,6 +67,13 @@ button:focus-visible,a:focus-visible,select:focus-visible,.photo-button:focus-wi
 .settings-heading button{width:32px;height:32px;border:0;border-radius:4px;background:transparent;color:var(--muted);font-size:22px;cursor:pointer}
 .settings-panel>label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;color:var(--muted);font-size:12px}
 .settings-panel select{max-width:150px;height:38px;padding:0 9px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:inherit;font:500 12px 'DM Sans',sans-serif}
+.google-signin{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:44px;padding:8px 12px;border:1px solid #dfe3db;border-radius:4px;background:#fff;color:#35443a;font:600 12px 'DM Sans',sans-serif;cursor:pointer}
+.google-signin:hover{background:#f6f7f3;border-color:#bdc9bc}
+.google-signin:disabled{opacity:.6;cursor:wait}
+.google-mark{font:700 16px Arial,sans-serif;color:#4285f4}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:15px 0;color:#929b93;font-size:10px}
+.auth-divider:before,.auth-divider:after{content:'';height:1px;flex:1;background:#e5e8e1}
+.google-error{margin:9px 0 0!important;padding:9px 11px;border-radius:4px;background:#fff1ed;color:#a33f2e!important;font-size:11px!important;line-height:1.5}
 html[data-theme="dark"]{color-scheme:dark;--green:#a4c4a0;--muted:#a5b1a8;--line:#34433a;--paper:#202a24;color:#e1e8e0;background:#151c18}
 html[data-theme="dark"] body{background:#151c18;color:#e1e8e0}
 html[data-theme="dark"] .brand,html[data-theme="dark"] .topbar nav a.active,html[data-theme="dark"] .hero h1,html[data-theme="dark"] .progress-heading h2,html[data-theme="dark"] .section-heading h2,html[data-theme="dark"] .card h3{color:#e1e8e0}
@@ -88,5 +95,9 @@ html[data-theme="dark"] .auth-modal>p:not(.eyebrow),html[data-theme="dark"] .aut
 html[data-theme="dark"] .auth-modal form input{background:#151c18;color:#e1e8e0;border-color:#405247}
 html[data-theme="dark"] .search input{color:#e1e8e0}
 html[data-theme="dark"] .settings-heading button{color:#bbc7bc}
+html[data-theme="dark"] .google-signin{background:#202a24;color:#e1e8e0;border-color:#405247}
+html[data-theme="dark"] .google-signin:hover{background:#29372e}
+html[data-theme="dark"] .auth-divider:before,html[data-theme="dark"] .auth-divider:after{background:#34433a}
+html[data-theme="dark"] .google-error{background:#472d29;color:#ffb9a8!important}
 @media(max-width:560px){.settings-panel{position:fixed;top:68px;right:16px}}
 
