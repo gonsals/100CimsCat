@@ -6,6 +6,11 @@ import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
 
+function getAuthCallbackUrl() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || window.location.origin
+  return `${siteUrl}/auth/callback`
+}
+
 type Summit = {
   id: string
   name: string
@@ -250,7 +255,7 @@ export default function CimTracker() {
     setNotice('')
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { emailRedirectTo: getAuthCallbackUrl() },
     })
     setSendingLink(false)
     setNotice(error ? 'No s’ha pogut enviar l’enllaç. Revisa el correu i torna-ho a provar.' : 'T’hem enviat un enllaç d’accés al correu. Obre’l per continuar.')
@@ -267,7 +272,7 @@ export default function CimTracker() {
     setNotice('')
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: getAuthCallbackUrl() },
     })
     if (error) {
       setGoogleError(t('No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.'))

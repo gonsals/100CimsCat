@@ -12,7 +12,7 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 
 ## Configuració local
 
-Requereix Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase.
+Requereix Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase. Defineix `NEXT_PUBLIC_SITE_URL` amb l'adreça que obres al navegador, normalment `http://localhost:3000`, perquè els retorns d'autenticació no depenguin de l'adreça d'escolta `0.0.0.0`.
 
 ```sh
 npm install
