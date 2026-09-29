@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
@@ -52,6 +52,8 @@ const translations: Record<Language, Record<string, string>> = {
     'Filtrar cims': 'Filtrar cimas', 'Encara no has registrat cap ascensió. Tot comença amb el primer pas.': 'Aún no has registrado ninguna ascensión. Todo empieza con el primer paso.',
     'cim': 'cima', 'cims': 'cimas', 'd’essencials.': 'esenciales.',
     'Continua amb Google': 'Continuar con Google', 'o bé': 'o también', 'No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.': 'No se ha podido iniciar sesión con Google. Comprueba que el proveedor esté activado en Supabase y vuelve a intentarlo.',
+    'El teu compte': 'Tu cuenta', 'Tancar sessió': 'Cerrar sesión', 'Tancant sessió…': 'Cerrando sesión…', 'No s’ha pogut tancar la sessió. Torna-ho a provar.': 'No se ha podido cerrar la sesión. Inténtalo de nuevo.',
+    'Foto de referència': 'Foto de referencia', 'Tancar': 'Cerrar',
   },
   en: {
     'El meu repte': 'My challenge', 'Catàleg FEEC ↗': 'FEEC catalogue ↗', 'Inicia sessió': 'Sign in',
@@ -72,6 +74,8 @@ const translations: Record<Language, Record<string, string>> = {
     'Filtrar cims': 'Filter summits', 'Encara no has registrat cap ascensió. Tot comença amb el primer pas.': 'You have not recorded an ascent yet. Every journey starts with the first step.',
     'cim': 'summit', 'cims': 'summits', 'd’essencials.': 'essential.',
     'Continua amb Google': 'Continue with Google', 'o bé': 'or', 'No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.': 'Could not start Google sign-in. Check that the provider is enabled in Supabase and try again.',
+    'El teu compte': 'Your account', 'Tancar sessió': 'Sign out', 'Tancant sessió…': 'Signing out…', 'No s’ha pogut tancar la sessió. Torna-ho a provar.': 'Could not sign out. Please try again.',
+    'Foto de referència': 'Reference photo', 'Tancar': 'Close',
   },
 }
 
@@ -79,6 +83,7 @@ const target = 100
 const imageLimit = 6 * 1024 * 1024
 const rawImageLimit = 24 * 1024 * 1024
 const preferredImageSize = 1.5 * 1024 * 1024
+const summitPlaceholder = 'https://images.unsplash.com/photo-1755794522527-a1129df652c9?auto=format&fit=crop&w=1280&q=80'
 
 async function encodeCanvas(canvas: HTMLCanvasElement, type: string, quality: number) {
   return new Promise<Blob>((resolve, reject) => {
@@ -152,6 +157,9 @@ export default function CimTracker() {
   const [theme, setTheme] = useState<Theme>('light')
   const [preferencesReady, setPreferencesReady] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
+  const headerActionsRef = useRef<HTMLDivElement>(null)
   const t = (value: string) => translations[language][value] ?? value
 
   useEffect(() => {
@@ -169,6 +177,31 @@ export default function CimTracker() {
     localStorage.setItem('100cimscat-theme', theme)
     localStorage.setItem('100cimscat-language', language)
   }, [theme, language, preferencesReady])
+
+  useEffect(() => {
+    if (!settingsOpen && !profileOpen) return
+
+    function closeOnOutside(event: PointerEvent) {
+      if (!headerActionsRef.current?.contains(event.target as Node)) {
+        setSettingsOpen(false)
+        setProfileOpen(false)
+      }
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setSettingsOpen(false)
+        setProfileOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', closeOnOutside)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutside)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [settingsOpen, profileOpen])
 
   useEffect(() => {
     let active = true
@@ -360,8 +393,11 @@ export default function CimTracker() {
 
   async function signOut() {
     if (!supabase) return
-    await supabase.auth.signOut()
-    setNotice('Has tancat la sessió.')
+    setSigningOut(true)
+    const { error } = await supabase.auth.signOut()
+    setSigningOut(false)
+    setProfileOpen(false)
+    setNotice(error ? t('No s’ha pogut tancar la sessió. Torna-ho a provar.') : 'Has tancat la sessió.')
   }
 
   return (
@@ -369,10 +405,27 @@ export default function CimTracker() {
       <header className="topbar">
         <a className="brand" href="#inici" aria-label="100 Cims, inici"><span className="brand-mark">▲</span><span>100<span className="brand-light">CIMS</span></span></a>
         <nav><a className="active" href="#cims">{t('El meu repte')}</a><a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">{t('Catàleg FEEC ↗')}</a></nav>
-        <div className="header-actions"><button className="settings-trigger" aria-label={t('Configuració')} aria-expanded={settingsOpen} onClick={() => setSettingsOpen(open => !open)}>⚙</button>{user ? <button className="profile profile-button" onClick={signOut} title={`Tancar la sessió de ${user.email ?? ''}`}>{user.email?.[0]?.toLocaleUpperCase() ?? 'G'}</button> : <button className="signin-link" onClick={() => setAuthOpen(true)}>{t('Inicia sessió')}</button>}</div>
+        <div className="header-actions" ref={headerActionsRef}>
+          <button className="settings-trigger" type="button" aria-label={t('Configuració')} aria-expanded={settingsOpen} aria-controls="settings-panel" onClick={() => { setSettingsOpen(open => !open); setProfileOpen(false) }}><span aria-hidden="true">⚙</span></button>
+          {user ? <div className="profile-menu-wrap">
+            <button className="profile-trigger" type="button" aria-label={`${t('El teu compte')}: ${user.email ?? ''}`} aria-haspopup="dialog" aria-expanded={profileOpen} aria-controls="account-menu" onClick={() => { setProfileOpen(open => !open); setSettingsOpen(false) }}>
+              <span className="profile-avatar" aria-hidden="true">{user.email?.[0]?.toLocaleUpperCase() ?? 'G'}</span>
+              <span className="profile-email">{user.email}</span>
+              <span className="profile-chevron" aria-hidden="true" />
+            </button>
+            {profileOpen && <section className="account-menu" id="account-menu" role="dialog" aria-label={t('El teu compte')}>
+              <div className="account-menu-user" role="presentation"><span className="profile-avatar" aria-hidden="true">{user.email?.[0]?.toLocaleUpperCase() ?? 'G'}</span><span><strong>{t('El teu compte')}</strong><small>{user.email}</small></span></div>
+              <div className="account-menu-divider" />
+              <button className="signout-button" type="button" onClick={() => void signOut()} disabled={signingOut}><span className="signout-icon" aria-hidden="true">↪</span>{signingOut ? t('Tancant sessió…') : t('Tancar sessió')}</button>
+            </section>}
+          </div> : <button className="signin-link" onClick={() => setAuthOpen(true)}>{t('Inicia sessió')}</button>}
+          {settingsOpen && <section className="settings-panel" id="settings-panel" role="dialog" aria-label={t('Configuració')}>
+            <div className="settings-heading"><div><span className="menu-eyebrow">100CIMS</span><strong>{t('Configuració')}</strong></div><button type="button" onClick={() => setSettingsOpen(false)} aria-label={t('Tancar')}>×</button></div>
+            <label><span>{t('Tema')}</span><span className="select-wrap"><select value={theme} onChange={event => setTheme(event.target.value as Theme)}><option value="light">☀ {t('Clar')}</option><option value="dark">☾ {t('Fosc')}</option></select></span></label>
+            <label><span>{t('Idioma')}</span><span className="select-wrap"><select value={language} onChange={event => setLanguage(event.target.value as Language)}><option value="ca">Català</option><option value="es">Español</option><option value="en">English</option></select></span></label>
+          </section>}
+        </div>
       </header>
-
-      {settingsOpen && <section className="settings-panel" aria-label={t('Configuració')}><div className="settings-heading"><strong>{t('Configuració')}</strong><button onClick={() => setSettingsOpen(false)} aria-label="×">×</button></div><label>{t('Tema')}<select value={theme} onChange={event => setTheme(event.target.value as Theme)}><option value="light">☀ {t('Clar')}</option><option value="dark">☾ {t('Fosc')}</option></select></label><label>{t('Idioma')}<select value={language} onChange={event => setLanguage(event.target.value as Language)}><option value="ca">Català</option><option value="es">Español</option><option value="en">English</option></select></label></section>}
 
       <section className="hero" id="inici">
         <div className="hero-copy"><p className="eyebrow">{t('EL TEU QUADERN DE MUNTANYA')}</p><h1>{t('Cada cim, una')}<br /><em>{t('història.')}</em></h1><p className="intro">{t('Guarda els teus records i descobreix fins on t’ha portat el camí.')}</p></div>
@@ -393,12 +446,15 @@ export default function CimTracker() {
         <div className="toolbar"><label className="search"><span>⌕</span><input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder={t('Cerca un cim o una comarca...')} aria-label={t('Cerca per cim o comarca')} /></label><div className="filters" role="group" aria-label={t('Filtrar cims')}>
           {([['all', 'Tots'], ['pending', 'Pendents'], ['done', 'Fets'], ['essential', '✦ Essencials']] as const).map(([value, label]) => <button key={value} className={`filter ${filter === value ? 'active' : ''} ${value === 'essential' ? 'essential-filter' : ''}`} onClick={() => setFilter(value)}>{t(label)}{value === 'all' && <span>{summits.length}</span>}</button>)}
         </div></div>
-        <div className="sort-row"><span>{ready ? `${visible.length} ${visible.length === 1 ? (language === 'es' ? 'montaña' : language === 'en' ? 'summit' : 'muntanya') : (language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes')} ${language === 'es' ? 'en el catálogo' : language === 'en' ? 'in catalogue' : 'al catàleg'}` : (language === 'es' ? 'Cargando catálogo…' : language === 'en' ? 'Loading catalogue…' : 'Carregant el catàleg…')}</span><label>{t('Ordena per')} <select value={sortBy} onChange={event => setSortBy(event.target.value as 'name' | 'height')}><option value="name">{t('Nom A–Z')}</option><option value="height">{t('Altitud')}</option></select></label></div>
+        <div className="sort-row"><span>{ready ? `${visible.length} ${visible.length === 1 ? (language === 'es' ? 'montaña' : language === 'en' ? 'summit' : 'muntanya') : (language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes')} ${language === 'es' ? 'en el catálogo' : language === 'en' ? 'in catalogue' : 'al catàleg'}` : (language === 'es' ? 'Cargando catálogo…' : language === 'en' ? 'Loading catalogue…' : 'Carregant el catàleg…')}</span><label>{t('Ordena per')} <span className="select-wrap sort-select"><select value={sortBy} onChange={event => setSortBy(event.target.value as 'name' | 'height')}><option value="name">{t('Nom A–Z')}</option><option value="height">{t('Altitud')}</option></select></span></label></div>
         <div className="grid" aria-live="polite">{visible.map(summit => {
           const ascent = ascents.get(summit.id)
           const busy = busyId === summit.id
           return <article className="card" key={summit.id}>
-            <div className="thumb">{ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`Foto de ${summit.name}`} fill sizes="(max-width: 560px) 76px, 95px" /> : <span className="mountain-icon" aria-hidden="true">⌃</span>}</div>
+            <div className={`thumb ${ascent?.photoUrl ? 'has-summit-photo' : 'has-placeholder'}`}>
+              <Image src={ascent?.photoUrl ?? summitPlaceholder} alt={ascent?.photoUrl ? `Foto de ${summit.name}` : ''} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" />
+              {!ascent?.photoUrl && <span className="thumb-badge">{t('Foto de referència')}</span>}
+            </div>
             <div className="card-body">
               <div className="card-meta">{summit.essential && <span className="essential-tag">{language === 'es' ? '✦ Esencial' : language === 'en' ? '✦ Essential' : '✦ Essencial'}</span>}{ascent && <span className="done-tag">✓ {t('Fets')}</span>}</div>
               <h3 title={summit.name}>{summit.name}</h3><div className="card-detail">{summit.height.toLocaleString('ca-ES')} m · {summit.region.replace(/\s*,\s*/g, ' · ')}</div>
@@ -406,7 +462,7 @@ export default function CimTracker() {
             </div>
           </article>
         })}{ready && visible.length === 0 && <div className="empty">No hem trobat cap cim amb aquests filtres.</div>}</div>
-        <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'}</p>
+        <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Foto de referencia:' : language === 'en' ? 'Reference photo:' : 'Foto de referència:'} <a href="https://unsplash.com/photos/rugged-mountain-range-under-a-clear-blue-sky-iv_CwLkMC6g" target="_blank" rel="noreferrer">Carles Rabada / Unsplash ↗</a></p>
       </section>
 
       {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
@@ -416,4 +472,3 @@ export default function CimTracker() {
     </main>
   )
 }
-
