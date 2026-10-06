@@ -12,7 +12,7 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 
 ## Configuració local
 
-Requereix Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase. Defineix `NEXT_PUBLIC_SITE_URL` amb l'adreça que obres al navegador, normalment `http://localhost:3000`, perquè els retorns d'autenticació no depenguin de l'adreça d'escolta `0.0.0.0`.
+Requereix Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase. Els retorns d'autenticació es construeixen amb l'origen del navegador on s'ha iniciat la sessió, tant en local com a Vercel.
 
 ```sh
 npm install
@@ -21,9 +21,10 @@ npm run dev
 
 Obre `http://localhost:3000`. La migració `supabase/migrations/20260927200000_catalog_and_private_ascent_tracking.sql` crea el catàleg, les taules de seguiment, les polítiques RLS i el bucket privat de fotos. El projecte Supabase ja té la migració aplicada.
 
-Per fer servir l'enllaç màgic en un domini publicat, afegeix `https://el-teu-domini/auth/callback` als URL de redirecció permesos a Supabase Auth.
+Per fer servir l'enllaç màgic o Google en un domini publicat, afegeix `https://el-teu-domini/auth/callback` als URL de redirecció permesos a Supabase Auth i configura l'URL del lloc amb el domini de producció.
 
 ## Catàleg
 
 Les dades normalitzades del catàleg s'inclouen a `data/summits.json` i també es carreguen a `public.summits`. La font és [mcmontseny/backend-100-cims-feec](https://github.com/mcmontseny/backend-100-cims-feec), derivada del catàleg oficial de la [FEEC](https://www.feec.cat/activitats/100-cims/). La [normativa FEEC](https://www.feec.cat/activitats/100-cims/normativa-i-funcionament/) defineix el repte dels 100 cims essencials.
+
 
