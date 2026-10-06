@@ -101,7 +101,8 @@ button:focus-visible,a:focus-visible,select:focus-visible,.photo-button:focus-wi
 .filter.active{background:var(--paper);box-shadow:0 1px 4px #20332b12;color:#34553c}
 .essential-filter.active{background:#f5f0e2;color:#816a31}
 .thumb-badge{position:absolute;z-index:3;left:10px;bottom:10px;padding:5px 8px;border:1px solid #ffffff55;border-radius:999px;background:#18251dcc;color:#fff;font:600 9px/1 'DM Sans',sans-serif;letter-spacing:.15px;backdrop-filter:blur(8px)}
-.thumb.has-placeholder img{filter:saturate(.78) brightness(.9)}
+.mountain-placeholder{position:absolute;inset:0;width:100%;height:100%;display:block;transition:transform .7s cubic-bezier(.2,.7,.25,1)}
+.card:hover .mountain-placeholder{transform:scale(1.035)}
 .thumb.has-summit-photo img{filter:saturate(.92)}
 .card .thumb:after{background:linear-gradient(0deg,#14251c88,transparent 62%)}
 html[data-theme="dark"] .profile-trigger,html[data-theme="dark"] .settings-panel,html[data-theme="dark"] .account-menu,html[data-theme="dark"] .select-wrap select{background:var(--paper);color:#e1e8e0;border-color:var(--line)}

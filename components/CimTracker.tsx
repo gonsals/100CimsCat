@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
+import MountainPlaceholder from '@/components/MountainPlaceholder'
 
 function getAuthCallbackUrl() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || window.location.origin
@@ -53,7 +54,7 @@ const translations: Record<Language, Record<string, string>> = {
     'cim': 'cima', 'cims': 'cimas', 'd’essencials.': 'esenciales.',
     'Continua amb Google': 'Continuar con Google', 'o bé': 'o también', 'No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.': 'No se ha podido iniciar sesión con Google. Comprueba que el proveedor esté activado en Supabase y vuelve a intentarlo.',
     'El teu compte': 'Tu cuenta', 'Tancar sessió': 'Cerrar sesión', 'Tancant sessió…': 'Cerrando sesión…', 'No s’ha pogut tancar la sessió. Torna-ho a provar.': 'No se ha podido cerrar la sesión. Inténtalo de nuevo.',
-    'Foto de referència': 'Foto de referencia', 'Tancar': 'Cerrar',
+    'Il·lustració de referència': 'Ilustración de referencia', 'Tancar': 'Cerrar',
   },
   en: {
     'El meu repte': 'My challenge', 'Catàleg FEEC ↗': 'FEEC catalogue ↗', 'Inicia sessió': 'Sign in',
@@ -75,7 +76,7 @@ const translations: Record<Language, Record<string, string>> = {
     'cim': 'summit', 'cims': 'summits', 'd’essencials.': 'essential.',
     'Continua amb Google': 'Continue with Google', 'o bé': 'or', 'No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.': 'Could not start Google sign-in. Check that the provider is enabled in Supabase and try again.',
     'El teu compte': 'Your account', 'Tancar sessió': 'Sign out', 'Tancant sessió…': 'Signing out…', 'No s’ha pogut tancar la sessió. Torna-ho a provar.': 'Could not sign out. Please try again.',
-    'Foto de referència': 'Reference photo', 'Tancar': 'Close',
+    'Il·lustració de referència': 'Reference illustration', 'Tancar': 'Close',
   },
 }
 
@@ -83,8 +84,6 @@ const target = 100
 const imageLimit = 6 * 1024 * 1024
 const rawImageLimit = 24 * 1024 * 1024
 const preferredImageSize = 1.5 * 1024 * 1024
-const summitPlaceholder = 'https://images.unsplash.com/photo-1755794522527-a1129df652c9?auto=format&fit=crop&w=1280&q=80'
-
 async function encodeCanvas(canvas: HTMLCanvasElement, type: string, quality: number) {
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('No s’ha pogut processar la imatge.')), type, quality)
@@ -452,8 +451,8 @@ export default function CimTracker() {
           const busy = busyId === summit.id
           return <article className="card" key={summit.id}>
             <div className={`thumb ${ascent?.photoUrl ? 'has-summit-photo' : 'has-placeholder'}`}>
-              <Image src={ascent?.photoUrl ?? summitPlaceholder} alt={ascent?.photoUrl ? `Foto de ${summit.name}` : ''} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" />
-              {!ascent?.photoUrl && <span className="thumb-badge">{t('Foto de referència')}</span>}
+              {ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`Foto de ${summit.name}`} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" /> : <MountainPlaceholder seed={summit.id} />}
+              {!ascent?.photoUrl && <span className="thumb-badge">{t('Il·lustració de referència')}</span>}
             </div>
             <div className="card-body">
               <div className="card-meta">{summit.essential && <span className="essential-tag">{language === 'es' ? '✦ Esencial' : language === 'en' ? '✦ Essential' : '✦ Essencial'}</span>}{ascent && <span className="done-tag">✓ {t('Fets')}</span>}</div>
@@ -462,7 +461,7 @@ export default function CimTracker() {
             </div>
           </article>
         })}{ready && visible.length === 0 && <div className="empty">No hem trobat cap cim amb aquests filtres.</div>}</div>
-        <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Foto de referencia:' : language === 'en' ? 'Reference photo:' : 'Foto de referència:'} <a href="https://unsplash.com/photos/rugged-mountain-range-under-a-clear-blue-sky-iv_CwLkMC6g" target="_blank" rel="noreferrer">Carles Rabada / Unsplash ↗</a></p>
+        <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Ilustración de referencia: ilustración original de 100CimsCat.' : language === 'en' ? 'Reference illustration: original artwork by 100CimsCat.' : 'Il·lustració de referència: il·lustració pròpia de 100CimsCat.'}</p>
       </section>
 
       {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
