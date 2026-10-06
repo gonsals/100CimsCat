@@ -450,7 +450,7 @@ export default function CimTracker() {
           const busy = busyId === summit.id
           return <article className="card" key={summit.id}>
             <div className={`thumb ${ascent?.photoUrl ? 'has-summit-photo' : 'has-placeholder'}`}>
-              {ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`Foto de ${summit.name}`} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" /> : <MountainPlaceholder seed={summit.id} />}
+              {ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`Foto de ${summit.name}`} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" /> : <MountainPlaceholder name={summit.name} height={summit.height} region={summit.region} />}
               {!ascent?.photoUrl && <span className="thumb-badge">{t('Il·lustració de referència')}</span>}
             </div>
             <div className="card-body">
