@@ -8,18 +8,21 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 - Cerca per nom o comarca, filtres de cims pendents/fets/essencials i ordenació per altitud.
 - Inici de sessió amb enllaç màgic de correu i seguiment personal sincronitzat amb Supabase.
 - Fotos privades a Supabase Storage, amb accés restringit al seu propietari.
-- Abans de pujar-la, cada foto es redimensiona fins a 1.800 px, es converteix a WebP (o JPEG si el navegador no pot) i s'ajusta la qualitat per mirar de quedar per sota d'1,5 MB. Es treuen les metadades originals i el bucket rebutja fitxers de més de 6 MB.
+- Cada foto es redimensiona fins a 1.440 px, es converteix a WebP (o JPEG si cal) i es comprimeix per sota de 512 KB. Es treuen les metadades originals; el límit també s'aplica al bucket. Quota per compte: 280 MB, amb un màxim global de 900 MB per no superar la quota gratuïta.
+- La fitxa de cada cim enllaça amb informació de la FEEC, obre una cerca a OpenStreetMap i cerca fotos de Wikimedia Commons amb autoria, llicència i font visibles. Cal confirmar que el mapa i les imatges corresponen exactament a la cima.
+- Pots compartir una targeta gràfica del progrés creada al navegador. Les fotos i dades personals no es publiquen.
+- Des de Configuració pots esborrar el compte, les ascensions i les fotos privades.
 
 ## Configuració local
 
-Requereix Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase. Els retorns d'autenticació es construeixen amb l'origen del navegador on s'ha iniciat la sessió, tant en local com a Vercel.
+Requereix Bun i Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase. Per activar l'esborrat del compte, configura `SUPABASE_SERVICE_ROLE_KEY` només com a variable de servidor local/Vercel; no la pugis al repo. Els retorns d'autenticació es construeixen amb l'origen del navegador.
 
 ```sh
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
-Obre `http://localhost:3000`. La migració `supabase/migrations/20260927200000_catalog_and_private_ascent_tracking.sql` crea el catàleg, les taules de seguiment, les polítiques RLS i el bucket privat de fotos. El projecte Supabase ja té la migració aplicada.
+Obre `http://localhost:3000`. Les migracions de `supabase/migrations/` creen el catàleg, el seguiment, les polítiques RLS i el bucket privat. Aplica també la migració de quota gratuïta de fotos abans de desplegar aquesta versió.
 
 Per fer servir l'enllaç màgic o Google en un domini publicat, afegeix `https://el-teu-domini/auth/callback` als URL de redirecció permesos a Supabase Auth i configura l'URL del lloc amb el domini de producció.
 
