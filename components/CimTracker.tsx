@@ -1,12 +1,18 @@
 'use client'
 
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
 import MountainPlaceholder from '@/components/MountainPlaceholder'
 import SummitDetailsModal from '@/components/SummitDetailsModal'
+
+const SummitMap = dynamic(() => import('@/components/SummitMap'), {
+  ssr: false,
+  loading: () => <div className="summit-map-loading" aria-hidden="true" />,
+})
 
 function getAuthCallbackUrl() {
   return `${window.location.origin}/auth/callback`
@@ -156,6 +162,7 @@ export default function CimTracker() {
   const [preferencesReady, setPreferencesReady] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedSummit, setSelectedSummit] = useState<Summit | null>(null)
+  const [catalogView, setCatalogView] = useState<'list' | 'map'>('list')
   const [storageBytes, setStorageBytes] = useState<number | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
@@ -499,12 +506,15 @@ export default function CimTracker() {
       </section>
 
       <section className="catalog" id="cims">
-        <div className="section-heading"><div><p className="eyebrow">{t('EL TEU CATÀLEG')}</p><h2>{t('Tria el pròxim cim')}</h2></div><span className="catalog-count"><b>{visible.length}</b> {language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes'}</span></div>
+        <div className="section-heading"><div><p className="eyebrow">{t('EL TEU CATÀLEG')}</p><h2>{t('Tria el pròxim cim')}</h2></div><div className="catalog-heading-actions"><span className="catalog-count"><b>{visible.length}</b> {language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes'}</span><div className="catalog-view-toggle" role="group" aria-label={language === 'es' ? 'Vista del catálogo' : language === 'en' ? 'Catalogue view' : 'Vista del catàleg'}><button type="button" className={catalogView === 'list' ? 'active' : ''} aria-pressed={catalogView === 'list'} onClick={() => setCatalogView('list')}><span aria-hidden="true">▦</span>{language === 'es' ? 'Lista' : language === 'en' ? 'List' : 'Llista'}</button><button type="button" className={catalogView === 'map' ? 'active' : ''} aria-pressed={catalogView === 'map'} onClick={() => setCatalogView('map')}><span aria-hidden="true">⌖</span>{language === 'es' ? 'Mapa' : language === 'en' ? 'Map' : 'Mapa'}</button></div></div></div>
         <div className="toolbar"><label className="search"><span>⌕</span><input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder={t('Cerca un cim o una comarca...')} aria-label={t('Cerca per cim o comarca')} /></label><div className="filters" role="group" aria-label={t('Filtrar cims')}>
           {([['all', 'Tots'], ['pending', 'Pendents'], ['done', 'Fets'], ['essential', '✦ Essencials']] as const).map(([value, label]) => <button key={value} className={`filter ${filter === value ? 'active' : ''} ${value === 'essential' ? 'essential-filter' : ''}`} onClick={() => setFilter(value)}>{t(label)}{value === 'all' && <span>{summits.length}</span>}</button>)}
         </div></div>
         <div className="sort-row"><span>{ready ? `${visible.length} ${visible.length === 1 ? (language === 'es' ? 'montaña' : language === 'en' ? 'summit' : 'muntanya') : (language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes')} ${language === 'es' ? 'en el catálogo' : language === 'en' ? 'in catalogue' : 'al catàleg'}` : (language === 'es' ? 'Cargando catálogo…' : language === 'en' ? 'Loading catalogue…' : 'Carregant el catàleg…')}</span><label>{t('Ordena per')} <span className="select-wrap sort-select"><select value={sortBy} onChange={event => setSortBy(event.target.value as 'name' | 'height')}><option value="name">{t('Nom A–Z')}</option><option value="height">{t('Altitud')}</option></select></span></label></div>
-        <div className="grid" aria-live="polite">{visible.map(summit => {
+        {catalogView === 'map' ? <SummitMap summits={visible} ascents={ascents} language={language} onSelectSummit={id => {
+          const summit = summits.find(item => item.id === id)
+          if (summit) setSelectedSummit(summit)
+        }} /> : <div className="grid" aria-live="polite">{visible.map(summit => {
           const ascent = ascents.get(summit.id)
           const busy = busyId === summit.id
           return <article className="card" key={summit.id}>
@@ -519,7 +529,7 @@ export default function CimTracker() {
               <button className="summit-explore" type="button" onClick={()=>setSelectedSummit(summit)}>{language==='es'?'Explorar cima ↗':language==='en'?'Explore summit ↗':'Explorar cim ↗'}</button>
             </div>
           </article>
-        })}{ready && visible.length === 0 && <div className="empty">No hem trobat cap cim amb aquests filtres.</div>}</div>
+        })}{ready && visible.length === 0 && <div className="empty">No hem trobat cap cim amb aquests filtres.</div>}</div>}
         <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Ilustración de referencia: ilustración original de 100CimsCat.' : language === 'en' ? 'Reference illustration: original artwork by 100CimsCat.' : 'Il·lustració de referència: il·lustració pròpia de 100CimsCat.'}</p>
       </section>
 

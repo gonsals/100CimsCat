@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import 'leaflet/dist/leaflet.css'
 import './globals.css'
 import './overrides.css'
+import './summit-map.css'
 
 const preferenceBootstrap = `try {
   const root = document.documentElement;

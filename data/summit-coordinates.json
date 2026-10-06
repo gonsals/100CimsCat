@@ -1,0 +1,2090 @@
+{
+  "alt-de-juclar": {
+    "lat": 42.611667,
+    "lng": 1.709722
+  },
+  "alt-de-la-capa": {
+    "lat": 42.563056,
+    "lng": 1.454167
+  },
+  "alt-del-griu": {
+    "lat": 42.525556,
+    "lng": 1.651111
+  },
+  "balandrau": {
+    "lat": 42.37,
+    "lng": 2.219444
+  },
+  "bassegoda": {
+    "lat": 42.312778,
+    "lng": 2.630833
+  },
+  "bastiments": {
+    "lat": 42.426111,
+    "lng": 2.232778
+  },
+  "bellmunt": {
+    "lat": 42.101667,
+    "lng": 2.293889
+  },
+  "besiberri-nord": {
+    "lat": 42.605278,
+    "lng": 0.826389
+  },
+  "besiberri-del-sud": {
+    "lat": 42.593889,
+    "lng": 0.826111
+  },
+  "bony-de-la-pica-o-pica-dos": {
+    "lat": 42.504722,
+    "lng": 1.460278
+  },
+  "cabrera": {
+    "lat": 42.076111,
+    "lng": 2.407222
+  },
+  "cambra-dase": {
+    "lat": 42.450833,
+    "lng": 2.131389
+  },
+  "campirme": {
+    "lat": 42.659444,
+    "lng": 1.193611
+  },
+  "canigo": {
+    "lat": 42.518889,
+    "lng": 2.456667
+  },
+  "cap-de-boumort": {
+    "lat": 42.235,
+    "lng": 1.134722
+  },
+  "cap-de-broate": {
+    "lat": 42.6925,
+    "lng": 1.364444
+  },
+  "cap-de-carreu": {
+    "lat": 42.193611,
+    "lng": 1.123611
+  },
+  "cap-de-gelada": {
+    "lat": 42.521667,
+    "lng": 0.765278
+  },
+  "cap-de-la-boixassa": {
+    "lat": 42.288611,
+    "lng": 1.798611
+  },
+  "cap-de-la-gallina-pelada": {
+    "lat": 42.189444,
+    "lng": 1.738056
+  },
+  "cap-de-pla-redon": {
+    "lat": 42.275556,
+    "lng": 1.266944
+  },
+  "cap-del-verd": {
+    "lat": 42.200833,
+    "lng": 1.613611
+  },
+  "carlit": {
+    "lat": 42.570833,
+    "lng": 1.931389
+  },
+  "caro": {
+    "lat": 40.803056,
+    "lng": 0.343056
+  },
+  "casamanya-nord": {
+    "lat": 42.587222,
+    "lng": 1.570278
+  },
+  "castell-de-besora": {
+    "lat": 42.123889,
+    "lng": 2.251111
+  },
+  "castell-de-bocs": {
+    "lat": 41.6425,
+    "lng": 1.941944
+  },
+  "castell-de-boixadors": {
+    "lat": 41.770556,
+    "lng": 1.574722
+  },
+  "castell-de-burriac": {
+    "lat": 41.5375,
+    "lng": 2.387222
+  },
+  "castell-de-llivia": {
+    "lat": 42.467778,
+    "lng": 1.985833
+  },
+  "castell-de-lluca": {
+    "lat": 42.054444,
+    "lng": 2.040278
+  },
+  "castell-de-milany": {
+    "lat": 42.165556,
+    "lng": 2.289722
+  },
+  "castell-de-montgri": {
+    "lat": 42.052222,
+    "lng": 3.131667
+  },
+  "castell-de-sant-miquel": {
+    "lat": 42.006944,
+    "lng": 2.862222
+  },
+  "castell-saverdera": {
+    "lat": 42.32,
+    "lng": 3.167778
+  },
+  "castellsapera": {
+    "lat": 41.644444,
+    "lng": 1.970833
+  },
+  "catinell": {
+    "lat": 40.758611,
+    "lng": 0.289722
+  },
+  "cavall-bernat-de-llaberia": {
+    "lat": 41.084167,
+    "lng": 0.875278
+  },
+  "clapi-vell": {
+    "lat": 41.388056,
+    "lng": 1.5425
+  },
+  "codol-del-castellar": {
+    "lat": 41.740833,
+    "lng": 2.059444
+  },
+  "cogullo-destela": {
+    "lat": 42.121667,
+    "lng": 1.787222
+  },
+  "cogullo-de-cal-torre": {
+    "lat": 41.6875,
+    "lng": 1.686389
+  },
+  "cogullo-de-turp": {
+    "lat": 42.151111,
+    "lng": 1.347222
+  },
+  "coll-de-pins": {
+    "lat": 40.9875,
+    "lng": 0.593611
+  },
+  "collbaix": {
+    "lat": 41.740833,
+    "lng": 1.780833
+  },
+  "comabona": {
+    "lat": 42.283611,
+    "lng": 1.727222
+  },
+  "comanegra": {
+    "lat": 42.333333,
+    "lng": 2.527778
+  },
+  "comapedrosa": {
+    "lat": 42.591944,
+    "lng": 1.443611
+  },
+  "costa-pubilla-o-pla-de-pujalts": {
+    "lat": 42.285833,
+    "lng": 2.080556
+  },
+  "costabona": {
+    "lat": 42.416944,
+    "lng": 2.343889
+  },
+  "creu-de-gurb": {
+    "lat": 41.952222,
+    "lng": 2.210556
+  },
+  "xaquera-o-creu-de-santos": {
+    "lat": 40.940556,
+    "lng": 0.586111
+  },
+  "el-bres": {
+    "lat": 41.153889,
+    "lng": 0.9775
+  },
+  "el-cadinell": {
+    "lat": 42.264444,
+    "lng": 1.597778
+  },
+  "puig-castellar-serra-dancosa": {
+    "lat": 41.448333,
+    "lng": 1.516389
+  },
+  "el-castellot": {
+    "lat": 41.3375,
+    "lng": 1.578611
+  },
+  "el-codo": {
+    "lat": 42.301389,
+    "lng": 0.914722
+  },
+  "el-cogul": {
+    "lat": 42.11,
+    "lng": 1.639444
+  },
+  "el-cogullo": {
+    "lat": 41.998056,
+    "lng": 1.039167
+  },
+  "el-cogullo-de-cabra": {
+    "lat": 41.429167,
+    "lng": 1.305833
+  },
+  "el-coscollet": {
+    "lat": 42.114167,
+    "lng": 1.2675
+  },
+  "el-far": {
+    "lat": 42.020833,
+    "lng": 2.536667
+  },
+  "el-garrofi": {
+    "lat": 41.861389,
+    "lng": 1.938611
+  },
+  "el-mont": {
+    "lat": 42.258889,
+    "lng": 2.706389
+  },
+  "el-montsianell": {
+    "lat": 40.683056,
+    "lng": 0.555556
+  },
+  "el-negrell": {
+    "lat": 40.734167,
+    "lng": 0.227222
+  },
+  "el-punxo": {
+    "lat": 42.530556,
+    "lng": 1.854722
+  },
+  "el-sui": {
+    "lat": 41.749167,
+    "lng": 2.345556
+  },
+  "el-torn": {
+    "lat": 40.965833,
+    "lng": 0.883333
+  },
+  "el-tossal-gros": {
+    "lat": 41.375278,
+    "lng": 1.239444
+  },
+  "els-angels": {
+    "lat": 41.984722,
+    "lng": 2.908611
+  },
+  "els-bessons": {
+    "lat": 41.466667,
+    "lng": 0.847222
+  },
+  "els-munts": {
+    "lat": 42.078611,
+    "lng": 2.153333
+  },
+  "els-quatre-mollons": {
+    "lat": 40.643056,
+    "lng": 0.561944
+  },
+  "els-tossals": {
+    "lat": 42.089167,
+    "lng": 1.7275
+  },
+  "forca-real": {
+    "lat": 42.726944,
+    "lng": 2.700278
+  },
+  "gallinova": {
+    "lat": 42.184722,
+    "lng": 1.078056
+  },
+  "gra-de-fajol": {
+    "lat": 42.415556,
+    "lng": 2.247778
+  },
+  "gran-encantat": {
+    "lat": 42.568333,
+    "lng": 1.014722
+  },
+  "gran-pic-del-pesso": {
+    "lat": 42.509444,
+    "lng": 0.924167
+  },
+  "gran-tuc-de-colomers": {
+    "lat": 42.589444,
+    "lng": 0.937778
+  },
+  "grony-de-miralles": {
+    "lat": 41.516667,
+    "lng": 1.492222
+  },
+  "lalbarda-castellana": {
+    "lat": 41.601111,
+    "lng": 1.813333
+  },
+  "laliga": {
+    "lat": 41.027778,
+    "lng": 0.557778
+  },
+  "largimon": {
+    "lat": 41.830556,
+    "lng": 2.636111
+  },
+  "laut": {
+    "lat": 42.541389,
+    "lng": 0.808889
+  },
+  "lavedoga-dadons": {
+    "lat": 42.314167,
+    "lng": 0.838333
+  },
+  "lenclusa": {
+    "lat": 41.870833,
+    "lng": 2.320833
+  },
+  "lespina": {
+    "lat": 40.879444,
+    "lng": 0.360833
+  },
+  "loratori": {
+    "lat": 42.201389,
+    "lng": 1.218333
+  },
+  "la-carabassa": {
+    "lat": 42.458056,
+    "lng": 1.727222
+  },
+  "la-cogula": {
+    "lat": 40.577222,
+    "lng": 0.4825
+  },
+  "la-cogulla": {
+    "lat": 41.348889,
+    "lng": 1.224722
+  },
+  "la-cogulla-montsant": {
+    "lat": 41.2775,
+    "lng": 0.805556
+  },
+  "la-coscollosa": {
+    "lat": 40.9025,
+    "lng": 0.413611
+  },
+  "la-creueta": {
+    "lat": 42.305556,
+    "lng": 2.002222
+  },
+  "la-faiada": {
+    "lat": 42.375,
+    "lng": 0.775
+  },
+  "la-fita-alta": {
+    "lat": 41.613056,
+    "lng": 0.843056
+  },
+  "la-guardia-serra-de-busa": {
+    "lat": 42.093056,
+    "lng": 1.624167
+  },
+  "la-miranda-de-terranyes": {
+    "lat": 40.835,
+    "lng": 0.280278
+  },
+  "la-mola": {
+    "lat": 41.211667,
+    "lng": 1.417222
+  },
+  "la-mola-de-sant-llorenc-del-munt": {
+    "lat": 41.641111,
+    "lng": 2.017778
+  },
+  "la-moleta": {
+    "lat": 40.899167,
+    "lng": 0.417778
+  },
+  "la-morella": {
+    "lat": 41.296667,
+    "lng": 1.915556
+  },
+  "la-muga": {
+    "lat": 42.474722,
+    "lng": 1.6775
+  },
+  "la-picossa": {
+    "lat": 41.109444,
+    "lng": 0.576389
+  },
+  "la-portella-del-pinell": {
+    "lat": 40.712778,
+    "lng": 0.306389
+  },
+  "la-serra-vingrau": {
+    "lat": 42.865556,
+    "lng": 2.793889
+  },
+  "la-soca": {
+    "lat": 42.46,
+    "lng": 2.537222
+  },
+  "la-tosa": {
+    "lat": 42.320556,
+    "lng": 1.892778
+  },
+  "la-tossa-tivissa": {
+    "lat": 41.028889,
+    "lng": 0.736389
+  },
+  "les-agudes": {
+    "lat": 41.789444,
+    "lng": 2.443889
+  },
+  "les-borregues": {
+    "lat": 42.396389,
+    "lng": 2.247778
+  },
+  "les-carcoles": {
+    "lat": 41.035833,
+    "lng": 0.679444
+  },
+  "les-picardes": {
+    "lat": 42.527222,
+    "lng": 1.052778
+  },
+  "roca-de-la-barca-les-picossies": {
+    "lat": 40.963611,
+    "lng": 0.584444
+  },
+  "les-piques": {
+    "lat": 42.320833,
+    "lng": 1.175833
+  },
+  "les-solius": {
+    "lat": 41.308333,
+    "lng": 1.886667
+  },
+  "lo-blau-roca-grossa-moletans": {
+    "lat": 40.870833,
+    "lng": 0.266111
+  },
+  "lo-caramull": {
+    "lat": 40.987222,
+    "lng": 0.547778
+  },
+  "lo-corrunco": {
+    "lat": 42.462222,
+    "lng": 0.828611
+  },
+  "lo-morral": {
+    "lat": 41.156389,
+    "lng": 0.851111
+  },
+  "lo-peladet": {
+    "lat": 42.026389,
+    "lng": 0.9125
+  },
+  "lo-tesol-teso-de-son": {
+    "lat": 42.608333,
+    "lng": 1.039167
+  },
+  "lo-tormo": {
+    "lat": 41.179167,
+    "lng": 0.643333
+  },
+  "los-picons": {
+    "lat": 41.925833,
+    "lng": 0.641667
+  },
+  "malera": {
+    "lat": 41.93,
+    "lng": 0.720556
+  },
+  "malh-de-bolard": {
+    "lat": 42.804444,
+    "lng": 0.963889
+  },
+  "malh-dera-artiga": {
+    "lat": 42.658611,
+    "lng": 0.695556
+  },
+  "malh-des-pois-la-forcanada": {
+    "lat": 42.643333,
+    "lng": 0.705556
+  },
+  "matagalls": {
+    "lat": 41.808889,
+    "lng": 2.3825
+  },
+  "mauberme": {
+    "lat": 42.793611,
+    "lng": 0.917222
+  },
+  "mirador-del-pla-de-llet": {
+    "lat": 42.404444,
+    "lng": 1.633056
+  },
+  "miranda-de-llaberia": {
+    "lat": 41.0925,
+    "lng": 0.8625
+  },
+  "miranda-de-puigcerver": {
+    "lat": 41.193611,
+    "lng": 0.931667
+  },
+  "miranda-de-santa-magdalena": {
+    "lat": 41.588333,
+    "lng": 1.826389
+  },
+  "miranda-del-princep": {
+    "lat": 41.605,
+    "lng": 1.792778
+  },
+  "miranda-dels-ecos": {
+    "lat": 41.604444,
+    "lng": 1.806111
+  },
+  "mola-castellona": {
+    "lat": 40.799722,
+    "lng": 0.369722
+  },
+  "mola-destat": {
+    "lat": 41.325556,
+    "lng": 1.060556
+  },
+  "mola-dirto": {
+    "lat": 41.041667,
+    "lng": 0.474722
+  },
+  "mola-de-colldejou": {
+    "lat": 41.1075,
+    "lng": 0.873889
+  },
+  "mola-de-genesies": {
+    "lat": 41.016389,
+    "lng": 0.785556
+  },
+  "mola-de-lord": {
+    "lat": 42.116667,
+    "lng": 1.581944
+  },
+  "moleta-de-les-canals": {
+    "lat": 40.909167,
+    "lng": 0.362778
+  },
+  "mollo-puntaire": {
+    "lat": 40.990556,
+    "lng": 0.847778
+  },
+  "mont-roig": {
+    "lat": 42.710833,
+    "lng": 1.176667
+  },
+  "mont-roig-cim-de-les-altures": {
+    "lat": 41.903056,
+    "lng": 0.878611
+  },
+  "montagut-dancosa": {
+    "lat": 41.406944,
+    "lng": 1.422222
+  },
+  "montalt": {
+    "lat": 41.604167,
+    "lng": 2.496389
+  },
+  "montalt-punta-nord": {
+    "lat": 41.068333,
+    "lng": 0.803333
+  },
+  "montanha-duishera": {
+    "lat": 42.765556,
+    "lng": 0.732778
+  },
+  "montardo": {
+    "lat": 42.633333,
+    "lng": 0.875278
+  },
+  "montarenyo-de-boldis": {
+    "lat": 42.638056,
+    "lng": 1.3075
+  },
+  "montaspre": {
+    "lat": 40.875556,
+    "lng": 0.570833
+  },
+  "montau": {
+    "lat": 41.345833,
+    "lng": 1.885
+  },
+  "montbarbat": {
+    "lat": 41.735556,
+    "lng": 2.776667
+  },
+  "montcau": {
+    "lat": 41.675,
+    "lng": 2.004722
+  },
+  "montcaubo-lo-calbo": {
+    "lat": 42.598611,
+    "lng": 1.179444
+  },
+  "montclar": {
+    "lat": 41.788611,
+    "lng": 2.956111
+  },
+  "montcorbison": {
+    "lat": 42.707778,
+    "lng": 0.758611
+  },
+  "monteixo": {
+    "lat": 42.601667,
+    "lng": 1.361667
+  },
+  "montero": {
+    "lat": 41.862778,
+    "lng": 0.853056
+  },
+  "montgros": {
+    "lat": 41.6,
+    "lng": 1.805
+  },
+  "montigalar": {
+    "lat": 41.963056,
+    "lng": 2.924722
+  },
+  "montllobar": {
+    "lat": 42.146667,
+    "lng": 0.797778
+  },
+  "montlude": {
+    "lat": 42.785278,
+    "lng": 0.758611
+  },
+  "montmagastre": {
+    "lat": 41.976667,
+    "lng": 1.128889
+  },
+  "montmajor": {
+    "lat": 42.268889,
+    "lng": 2.483056
+  },
+  "montmalus": {
+    "lat": 42.508889,
+    "lng": 1.686667
+  },
+  "montolier-de-perellos": {
+    "lat": 42.918611,
+    "lng": 2.865278
+  },
+  "montpalau": {
+    "lat": 41.642222,
+    "lng": 2.670278
+  },
+  "montsaliente": {
+    "lat": 42.603056,
+    "lng": 1.008611
+  },
+  "montsent-serrat-de-picancel": {
+    "lat": 42.095833,
+    "lng": 1.908333
+  },
+  "montsent-de-pallars": {
+    "lat": 42.49,
+    "lng": 1.024444
+  },
+  "monturull": {
+    "lat": 42.45,
+    "lng": 1.581111
+  },
+  "morral-del-cabrafeixet": {
+    "lat": 40.898611,
+    "lng": 0.625278
+  },
+  "munt-de-montsonis": {
+    "lat": 41.885833,
+    "lng": 1.014167
+  },
+  "noufonts": {
+    "lat": 42.424722,
+    "lng": 2.167778
+  },
+  "pala-alta": {
+    "lat": 41.896389,
+    "lng": 0.836389
+  },
+  "pala-del-teller": {
+    "lat": 42.316944,
+    "lng": 0.809444
+  },
+  "pedracastell-o-creu-de-canet": {
+    "lat": 41.608889,
+    "lng": 2.573611
+  },
+  "pedro-de-tubau": {
+    "lat": 42.220278,
+    "lng": 2.049444
+  },
+  "pedro-dels-quatre-batlles": {
+    "lat": 42.184722,
+    "lng": 1.520833
+  },
+  "penya-aguda": {
+    "lat": 42.214444,
+    "lng": 1.267222
+  },
+  "penya-del-papiol": {
+    "lat": 41.322778,
+    "lng": 1.743889
+  },
+  "penya-sant-alis": {
+    "lat": 42.039722,
+    "lng": 0.766667
+  },
+  "penyes-altes": {
+    "lat": 42.306389,
+    "lng": 1.8425
+  },
+  "pic-alt-del-cubil": {
+    "lat": 42.527778,
+    "lng": 1.670278
+  },
+  "pic-descobes": {
+    "lat": 42.609167,
+    "lng": 1.735556
+  },
+  "pic-de-baborte": {
+    "lat": 42.6575,
+    "lng": 1.366944
+  },
+  "pic-de-baixollada": {
+    "lat": 42.661111,
+    "lng": 2.002222
+  },
+  "pic-de-cabanyo": {
+    "lat": 42.630833,
+    "lng": 1.468056
+  },
+  "pic-de-canalbona": {
+    "lat": 42.656667,
+    "lng": 1.405833
+  },
+  "pic-de-cataperdis": {
+    "lat": 42.614722,
+    "lng": 1.4775
+  },
+  "pic-de-certascan": {
+    "lat": 42.711944,
+    "lng": 1.277778
+  },
+  "pic-de-clavera": {
+    "lat": 42.787778,
+    "lng": 1.076667
+  },
+  "pic-de-colatx": {
+    "lat": 42.724444,
+    "lng": 1.325278
+  },
+  "pic-de-coma-mitjana": {
+    "lat": 42.441667,
+    "lng": 2.209722
+  },
+  "pic-de-comaloforno": {
+    "lat": 42.591389,
+    "lng": 0.827778
+  },
+  "pic-de-contraix": {
+    "lat": 42.585278,
+    "lng": 0.906944
+  },
+  "pic-de-costa-cabirolera": {
+    "lat": 42.281389,
+    "lng": 1.670556
+  },
+  "pic-de-filia-tossal-de-paiasso": {
+    "lat": 42.473056,
+    "lng": 0.930278
+  },
+  "pic-de-flamisella": {
+    "lat": 42.712778,
+    "lng": 1.261389
+  },
+  "pic-de-font-blanca": {
+    "lat": 42.649722,
+    "lng": 1.534444
+  },
+  "pic-de-font-freda": {
+    "lat": 42.536389,
+    "lng": 1.795
+  },
+  "pic-de-gallinassa": {
+    "lat": 42.501944,
+    "lng": 2.507222
+  },
+  "pic-de-gerri": {
+    "lat": 42.5975,
+    "lng": 1.394167
+  },
+  "pic-de-laguila": {
+    "lat": 41.14,
+    "lng": 0.602222
+  },
+  "pic-de-lespada": {
+    "lat": 42.499167,
+    "lng": 0.971944
+  },
+  "pic-de-lestanyo": {
+    "lat": 42.608611,
+    "lng": 1.5925
+  },
+  "pic-de-linfern": {
+    "lat": 42.423889,
+    "lng": 2.213611
+  },
+  "pic-de-la-coma-de-varilles": {
+    "lat": 42.619167,
+    "lng": 1.664167
+  },
+  "pic-de-la-mainera": {
+    "lat": 42.524444,
+    "lng": 1.027222
+  },
+  "pic-de-la-pala-alta-de-sarrade": {
+    "lat": 42.574722,
+    "lng": 0.890833
+  },
+  "pic-de-la-plana": {
+    "lat": 42.661667,
+    "lng": 1.036667
+  },
+  "pic-de-la-serrera": {
+    "lat": 42.625556,
+    "lng": 1.6025
+  },
+  "pic-de-llena": {
+    "lat": 42.446944,
+    "lng": 0.917778
+  },
+  "pic-de-maniga": {
+    "lat": 42.505833,
+    "lng": 1.328889
+  },
+  "pic-de-mariola": {
+    "lat": 42.72,
+    "lng": 1.216667
+  },
+  "pic-de-mariolo-pic-de-neriolo": {
+    "lat": 42.530833,
+    "lng": 0.9575
+  },
+  "pic-de-medacorba": {
+    "lat": 42.603611,
+    "lng": 1.441944
+  },
+  "pic-de-montalt": {
+    "lat": 42.750278,
+    "lng": 1.132778
+  },
+  "pic-de-moredo": {
+    "lat": 42.718889,
+    "lng": 1.05
+  },
+  "pic-de-peguera": {
+    "lat": 42.540556,
+    "lng": 1.011944
+  },
+  "pic-de-pilas": {
+    "lat": 42.682778,
+    "lng": 1.131389
+  },
+  "pic-de-quenca": {
+    "lat": 42.699722,
+    "lng": 1.054167
+  },
+  "pic-de-raco-gros": {
+    "lat": 42.432222,
+    "lng": 2.187222
+  },
+  "pic-de-saboredo": {
+    "lat": 42.607778,
+    "lng": 0.981111
+  },
+  "pic-de-sallafort": {
+    "lat": 42.473333,
+    "lng": 3.038056
+  },
+  "pic-de-saloria": {
+    "lat": 42.514444,
+    "lng": 1.385
+  },
+  "pic-de-sanfonts": {
+    "lat": 42.5875,
+    "lng": 1.427778
+  },
+  "pic-de-sotllo": {
+    "lat": 42.668611,
+    "lng": 1.3875
+  },
+  "pic-de-subenuix": {
+    "lat": 42.555,
+    "lng": 0.979444
+  },
+  "pic-de-ventolau": {
+    "lat": 42.690556,
+    "lng": 1.190556
+  },
+  "pic-del-pla-de-lestany": {
+    "lat": 42.606667,
+    "lng": 1.464167
+  },
+  "pic-del-portarro": {
+    "lat": 42.583611,
+    "lng": 0.970278
+  },
+  "pic-del-vent": {
+    "lat": 41.655278,
+    "lng": 2.128333
+  },
+  "pic-dels-moros": {
+    "lat": 42.513056,
+    "lng": 1.991111
+  },
+  "pic-dels-pedrons": {
+    "lat": 42.531389,
+    "lng": 1.752222
+  },
+  "pic-dels-pessons-o-gargantillar": {
+    "lat": 42.508056,
+    "lng": 1.664722
+  },
+  "pic-negre-denvalira": {
+    "lat": 42.517222,
+    "lng": 1.721389
+  },
+  "pic-roi": {
+    "lat": 42.565278,
+    "lng": 0.798056
+  },
+  "pic-tort": {
+    "lat": 42.533611,
+    "lng": 0.988889
+  },
+  "pica-destats": {
+    "lat": 42.666944,
+    "lng": 1.397778
+  },
+  "pica-de-cervi": {
+    "lat": 42.453056,
+    "lng": 0.879167
+  },
+  "pica-roja": {
+    "lat": 42.625,
+    "lng": 1.420278
+  },
+  "picorandan": {
+    "lat": 41.287778,
+    "lng": 1.017222
+  },
+  "pics-de-bassiero": {
+    "lat": 42.606667,
+    "lng": 0.995278
+  },
+  "pilar-dalmenara": {
+    "lat": 41.753333,
+    "lng": 1.067222
+  },
+  "pilo-de-bellmaig": {
+    "lat": 42.431944,
+    "lng": 2.650833
+  },
+  "pollego-inferior-pedraforca": {
+    "lat": 42.235556,
+    "lng": 1.706944
+  },
+  "pollego-superior-pedraforca": {
+    "lat": 42.24,
+    "lng": 1.703056
+  },
+  "pui-durdosa": {
+    "lat": 42.471111,
+    "lng": 1.248333
+  },
+  "pui-de-cassibros": {
+    "lat": 42.560833,
+    "lng": 1.264722
+  },
+  "pui-de-la-bonaigua": {
+    "lat": 42.627222,
+    "lng": 1.019444
+  },
+  "pui-de-linya": {
+    "lat": 42.566111,
+    "lng": 1.043333
+  },
+  "pui-de-lleras": {
+    "lat": 42.269167,
+    "lng": 0.852778
+  },
+  "pui-tabaca": {
+    "lat": 42.588611,
+    "lng": 1.223056
+  },
+  "puig-cadiretes": {
+    "lat": 41.757222,
+    "lng": 2.928333
+  },
+  "puig-castellar": {
+    "lat": 41.470278,
+    "lng": 2.206667
+  },
+  "puig-cavaller": {
+    "lat": 41.027778,
+    "lng": 0.4375
+  },
+  "puig-cendros": {
+    "lat": 41.575556,
+    "lng": 1.893056
+  },
+  "puig-clara": {
+    "lat": 42.132778,
+    "lng": 2.738333
+  },
+  "puig-cornador": {
+    "lat": 42.139722,
+    "lng": 2.108333
+  },
+  "puig-cubell": {
+    "lat": 42.137778,
+    "lng": 2.350833
+  },
+  "puig-daguilera": {
+    "lat": 41.604722,
+    "lng": 1.670833
+  },
+  "puig-dagulles": {
+    "lat": 41.408056,
+    "lng": 1.885
+  },
+  "puig-darques": {
+    "lat": 41.888611,
+    "lng": 2.994167
+  },
+  "puig-den-cama": {
+    "lat": 41.220278,
+    "lng": 1.094167
+  },
+  "puig-den-jorda": {
+    "lat": 42.427778,
+    "lng": 3.081944
+  },
+  "puig-desquers": {
+    "lat": 42.392778,
+    "lng": 3.096389
+  },
+  "puig-dolorda": {
+    "lat": 41.412222,
+    "lng": 2.055
+  },
+  "puig-de-bestreca": {
+    "lat": 42.294444,
+    "lng": 2.515556
+  },
+  "puig-de-cervera": {
+    "lat": 42.435278,
+    "lng": 3.170833
+  },
+  "pic-de-coma-dor": {
+    "lat": 42.583611,
+    "lng": 1.873611
+  },
+  "puig-de-dorria": {
+    "lat": 42.361667,
+    "lng": 2.084722
+  },
+  "puig-de-font-viva": {
+    "lat": 42.569167,
+    "lng": 1.879722
+  },
+  "puig-de-gallicant": {
+    "lat": 41.249444,
+    "lng": 0.960833
+  },
+  "puig-de-gallinas": {
+    "lat": 42.477778,
+    "lng": 2.215278
+  },
+  "puig-de-grialo": {
+    "lat": 41.901667,
+    "lng": 1.108889
+  },
+  "puig-de-laliga": {
+    "lat": 41.283889,
+    "lng": 1.6975
+  },
+  "puig-de-laliga-cap-de-creus": {
+    "lat": 42.280556,
+    "lng": 3.205
+  },
+  "puig-de-lestella": {
+    "lat": 42.514722,
+    "lng": 2.553611
+  },
+  "puig-de-la-cabrafiga": {
+    "lat": 41.053333,
+    "lng": 0.895
+  },
+  "puig-de-la-caritat": {
+    "lat": 41.875833,
+    "lng": 2.108889
+  },
+  "puig-de-la-collada-verda": {
+    "lat": 42.454722,
+    "lng": 2.396944
+  },
+  "puig-de-la-cometa": {
+    "lat": 42.617222,
+    "lng": 1.959167
+  },
+  "puig-de-la-cova": {
+    "lat": 41.315,
+    "lng": 1.475
+  },
+  "puig-de-la-creu": {
+    "lat": 41.629167,
+    "lng": 2.101111
+  },
+  "puig-de-la-forca": {
+    "lat": 41.981111,
+    "lng": 2.388889
+  },
+  "puig-de-la-gavarra": {
+    "lat": 42.360833,
+    "lng": 2.696944
+  },
+  "puig-de-la-grava": {
+    "lat": 42.604722,
+    "lng": 1.933611
+  },
+  "puig-de-la-mola": {
+    "lat": 41.319444,
+    "lng": 1.847778
+  },
+  "puig-de-la-pelada": {
+    "lat": 42.621667,
+    "lng": 2.194722
+  },
+  "puig-de-les-agudes": {
+    "lat": 42.363333,
+    "lng": 2.318611
+  },
+  "puig-de-les-aligues": {
+    "lat": 42.108889,
+    "lng": 2.349444
+  },
+  "puig-de-les-bruixes": {
+    "lat": 42.324444,
+    "lng": 2.555556
+  },
+  "puig-de-les-cols": {
+    "lat": 41.780556,
+    "lng": 2.975556
+  },
+  "puig-de-les-morreres": {
+    "lat": 42.150833,
+    "lng": 1.539444
+  },
+  "puig-de-les-tres-esteles": {
+    "lat": 42.508889,
+    "lng": 2.323333
+  },
+  "puig-de-milla": {
+    "lat": 42.001667,
+    "lng": 0.672222
+  },
+  "puig-de-sant-antoni": {
+    "lat": 41.243611,
+    "lng": 1.474444
+  },
+  "puig-de-sant-cristau": {
+    "lat": 42.491944,
+    "lng": 2.890833
+  },
+  "puig-de-sant-miquel": {
+    "lat": 41.637222,
+    "lng": 1.581111
+  },
+  "puig-de-tretzevents": {
+    "lat": 42.492222,
+    "lng": 2.468333
+  },
+  "puig-del-far": {
+    "lat": 41.959722,
+    "lng": 2.376111
+  },
+  "puig-del-pam": {
+    "lat": 42.604722,
+    "lng": 2.031111
+  },
+  "puig-dels-bufadors": {
+    "lat": 42.301111,
+    "lng": 3.248611
+  },
+  "puig-dels-pruners": {
+    "lat": 42.428056,
+    "lng": 2.803056
+  },
+  "puig-estela": {
+    "lat": 42.284167,
+    "lng": 2.253889
+  },
+  "puig-falco": {
+    "lat": 42.375278,
+    "lng": 2.667222
+  },
+  "puig-francas": {
+    "lat": 41.301111,
+    "lng": 1.458889
+  },
+  "puig-gros": {
+    "lat": 41.775,
+    "lng": 2.998056
+  },
+  "puig-madrona": {
+    "lat": 41.451389,
+    "lng": 2.024167
+  },
+  "puig-neulos": {
+    "lat": 42.482222,
+    "lng": 2.947222
+  },
+  "puig-occidental-de-coll-roig": {
+    "lat": 42.549444,
+    "lng": 1.916667
+  },
+  "puig-ou": {
+    "lat": 42.284167,
+    "lng": 2.427778
+  },
+  "puig-pedros-de-lanos": {
+    "lat": 42.588611,
+    "lng": 1.873056
+  },
+  "puig-pelat": {
+    "lat": 41.266389,
+    "lng": 1.054444
+  },
+  "puig-peric": {
+    "lat": 42.613611,
+    "lng": 1.984444
+  },
+  "puig-segalar": {
+    "lat": 42.1125,
+    "lng": 3.05
+  },
+  "puig-sobira": {
+    "lat": 42.134167,
+    "lng": 1.497778
+  },
+  "puig-vicenc": {
+    "lat": 41.367778,
+    "lng": 1.954167
+  },
+  "puig-alter": {
+    "lat": 41.813889,
+    "lng": 1.785556
+  },
+  "puigcabrer": {
+    "lat": 41.315278,
+    "lng": 1.191389
+  },
+  "puigdefrou": {
+    "lat": 41.963611,
+    "lng": 2.5925
+  },
+  "puiggracios": {
+    "lat": 41.702778,
+    "lng": 2.241111
+  },
+  "puigllancada": {
+    "lat": 42.300556,
+    "lng": 1.935556
+  },
+  "puigmal": {
+    "lat": 42.383333,
+    "lng": 2.116667
+  },
+  "puigpedros": {
+    "lat": 42.4875,
+    "lng": 1.761944
+  },
+  "puigsacalm": {
+    "lat": 42.125278,
+    "lng": 2.387778
+  },
+  "puigsallanca": {
+    "lat": 42.115,
+    "lng": 2.581389
+  },
+  "puigsoler": {
+    "lat": 41.667778,
+    "lng": 1.892778
+  },
+  "pujoalbo": {
+    "lat": 42.655278,
+    "lng": 0.840278
+  },
+  "pujol-de-la-mata": {
+    "lat": 41.682222,
+    "lng": 1.984444
+  },
+  "punta-alta": {
+    "lat": 42.585833,
+    "lng": 0.880278
+  },
+  "punta-dharle": {
+    "lat": 42.610278,
+    "lng": 0.8425
+  },
+  "punta-dossos": {
+    "lat": 41.949722,
+    "lng": 0.6325
+  },
+  "punta-de-laigua": {
+    "lat": 40.927778,
+    "lng": 0.368889
+  },
+  "montmeneu": {
+    "lat": 41.388611,
+    "lng": 0.401389
+  },
+  "punta-del-curull": {
+    "lat": 41.355278,
+    "lng": 0.964444
+  },
+  "punta-del-general": {
+    "lat": 41.341389,
+    "lng": 0.878056
+  },
+  "punta-del-pallars": {
+    "lat": 41.0125,
+    "lng": 0.873889
+  },
+  "punta-dels-pins-carrassers": {
+    "lat": 41.305556,
+    "lng": 0.841944
+  },
+  "punta-redona": {
+    "lat": 41.058889,
+    "lng": 0.500833
+  },
+  "punta-senyalada": {
+    "lat": 42.591389,
+    "lng": 0.808611
+  },
+  "quermany-gros": {
+    "lat": 41.960278,
+    "lng": 3.17
+  },
+  "querroig": {
+    "lat": 42.438333,
+    "lng": 3.120833
+  },
+  "roc-beneidor": {
+    "lat": 42.371111,
+    "lng": 1.560556
+  },
+  "roc-de-cogul": {
+    "lat": 42.065278,
+    "lng": 1.265556
+  },
+  "roc-de-galliner": {
+    "lat": 42.198056,
+    "lng": 1.410833
+  },
+  "roc-de-les-monges-serrat-de-la-questio": {
+    "lat": 42.096667,
+    "lng": 1.717222
+  },
+  "roc-de-les-tres-creus": {
+    "lat": 42.091389,
+    "lng": 1.309444
+  },
+  "roc-de-madres": {
+    "lat": 42.651944,
+    "lng": 2.1925
+  },
+  "roc-de-mallorca": {
+    "lat": 42.616111,
+    "lng": 2.705556
+  },
+  "roc-de-sant-aventi": {
+    "lat": 42.307222,
+    "lng": 0.974167
+  },
+  "roc-de-sant-salvador": {
+    "lat": 42.427222,
+    "lng": 2.694444
+  },
+  "roc-del-boc": {
+    "lat": 42.446389,
+    "lng": 2.155278
+  },
+  "roc-del-comptador": {
+    "lat": 42.422778,
+    "lng": 2.727222
+  },
+  "roc-del-migdia-la-valldan": {
+    "lat": 42.104444,
+    "lng": 1.3625
+  },
+  "roc-mele": {
+    "lat": 42.587778,
+    "lng": 1.741944
+  },
+  "roc-roi": {
+    "lat": 42.435278,
+    "lng": 1.338333
+  },
+  "roca-colom": {
+    "lat": 42.425278,
+    "lng": 2.318611
+  },
+  "roca-corbatera": {
+    "lat": 41.288611,
+    "lng": 0.891111
+  },
+  "roca-de-migdia-serra-del-verd": {
+    "lat": 42.208056,
+    "lng": 1.568056
+  },
+  "roca-de-sant-salvador-lelefant": {
+    "lat": 41.595833,
+    "lng": 1.829722
+  },
+  "roca-del-coscollo": {
+    "lat": 42.127778,
+    "lng": 1.354444
+  },
+  "roca-del-joc-roca-de-la-devesa-jussana": {
+    "lat": 42.215278,
+    "lng": 1.963611
+  },
+  "roca-entravessada": {
+    "lat": 42.598333,
+    "lng": 1.442222
+  },
+  "roca-gelera": {
+    "lat": 42.685,
+    "lng": 2.437778
+  },
+  "roca-gran": {
+    "lat": 42.316389,
+    "lng": 1.711667
+  },
+  "roca-lladre": {
+    "lat": 42.136389,
+    "lng": 2.498056
+  },
+  "roca-maura": {
+    "lat": 42.055278,
+    "lng": 3.189722
+  },
+  "roca-roja": {
+    "lat": 42.072222,
+    "lng": 1.100278
+  },
+  "roca-sareny": {
+    "lat": 41.694444,
+    "lng": 2.017778
+  },
+  "rocallarga": {
+    "lat": 42.009722,
+    "lng": 2.445556
+  },
+  "rocalta": {
+    "lat": 42.211667,
+    "lng": 1.044444
+  },
+  "rocamala": {
+    "lat": 40.992778,
+    "lng": 0.397778
+  },
+  "roques-de-benet-el-castell": {
+    "lat": 40.900556,
+    "lng": 0.326667
+  },
+  "roques-del-rei": {
+    "lat": 41.885278,
+    "lng": 2.565833
+  },
+  "salga-aguda": {
+    "lat": 42.119167,
+    "lng": 1.951389
+  },
+  "sant-antoni": {
+    "lat": 42.305,
+    "lng": 2.375833
+  },
+  "sant-benet": {
+    "lat": 41.948611,
+    "lng": 2.513611
+  },
+  "sant-corneli": {
+    "lat": 42.182778,
+    "lng": 1.002778
+  },
+  "sant-grau": {
+    "lat": 41.9925,
+    "lng": 2.715
+  },
+  "sant-honorat": {
+    "lat": 42.083889,
+    "lng": 1.270278
+  },
+  "sant-jeroni": {
+    "lat": 41.605278,
+    "lng": 1.811389
+  },
+  "sant-mamet": {
+    "lat": 41.977778,
+    "lng": 0.941389
+  },
+  "sant-marc-de-broca": {
+    "lat": 42.265,
+    "lng": 1.898611
+  },
+  "sant-marti-de-la-roca": {
+    "lat": 42.624722,
+    "lng": 2.678056
+  },
+  "sant-marti-xic-castell-de-voltrega": {
+    "lat": 42.010278,
+    "lng": 2.206389
+  },
+  "sant-miquel-de-montclar": {
+    "lat": 41.465833,
+    "lng": 1.345556
+  },
+  "sant-miquel-de-solterra": {
+    "lat": 41.923056,
+    "lng": 2.533056
+  },
+  "sant-miquel-del-mont": {
+    "lat": 42.197778,
+    "lng": 2.446667
+  },
+  "sant-patllari": {
+    "lat": 42.111944,
+    "lng": 2.711667
+  },
+  "sant-pere-martir": {
+    "lat": 41.393611,
+    "lng": 2.097778
+  },
+  "sant-quiri": {
+    "lat": 42.305278,
+    "lng": 1.301389
+  },
+  "sant-ramon": {
+    "lat": 41.337778,
+    "lng": 2.011111
+  },
+  "sant-roc": {
+    "lat": 42.0175,
+    "lng": 2.661944
+  },
+  "sant-sadurni-de-gallifa": {
+    "lat": 41.702778,
+    "lng": 2.123056
+  },
+  "sant-salvador": {
+    "lat": 42.061389,
+    "lng": 1.781944
+  },
+  "sant-salvador-de-les-espases": {
+    "lat": 41.579167,
+    "lng": 1.884444
+  },
+  "sant-simplici": {
+    "lat": 41.145,
+    "lng": 1.336944
+  },
+  "santa-anna-dels-quatre-termes": {
+    "lat": 42.565278,
+    "lng": 2.561389
+  },
+  "santa-barbara": {
+    "lat": 40.956944,
+    "lng": 0.338333
+  },
+  "santa-barbara-escornalbou": {
+    "lat": 41.126944,
+    "lng": 0.915
+  },
+  "santa-barbara-vall-fosca": {
+    "lat": 42.380833,
+    "lng": 0.923333
+  },
+  "santa-fe": {
+    "lat": 42.209167,
+    "lng": 1.301111
+  },
+  "santa-magdalena": {
+    "lat": 42.324444,
+    "lng": 2.825833
+  },
+  "santa-magdalena-de-cambrils": {
+    "lat": 42.168889,
+    "lng": 2.340278
+  },
+  "serra-de-pinos": {
+    "lat": 41.833611,
+    "lng": 1.528889
+  },
+  "serrat-alt": {
+    "lat": 42.080278,
+    "lng": 2.259444
+  },
+  "serrat-de-carrasquers": {
+    "lat": 42.1325,
+    "lng": 1.192778
+  },
+  "serrat-de-la-madrona": {
+    "lat": 41.990556,
+    "lng": 1.843333
+  },
+  "serrat-de-migdia-serrat-de-picancel": {
+    "lat": 42.118056,
+    "lng": 1.931667
+  },
+  "serrat-de-sant-isidre": {
+    "lat": 42.090556,
+    "lng": 1.961944
+  },
+  "serrat-voltor": {
+    "lat": 42.188056,
+    "lng": 1.776944
+  },
+  "serret-del-cisa": {
+    "lat": 41.199722,
+    "lng": 1.0175
+  },
+  "sobrepuny": {
+    "lat": 42.167778,
+    "lng": 1.910833
+  },
+  "taga": {
+    "lat": 42.280833,
+    "lng": 2.21
+  },
+  "tagamanent": {
+    "lat": 41.7475,
+    "lng": 2.296111
+  },
+  "talaia-del-montmell": {
+    "lat": 41.335833,
+    "lng": 1.466667
+  },
+  "torre-alta-castell-ferran": {
+    "lat": 41.611111,
+    "lng": 1.763333
+  },
+  "torre-deina": {
+    "lat": 42.434444,
+    "lng": 2.147222
+  },
+  "torre-de-goa": {
+    "lat": 42.522778,
+    "lng": 2.3775
+  },
+  "torre-de-la-macana": {
+    "lat": 42.498056,
+    "lng": 3.026389
+  },
+  "torre-de-les-conclues": {
+    "lat": 42.016111,
+    "lng": 0.658611
+  },
+  "torre-de-madeloc": {
+    "lat": 42.490556,
+    "lng": 3.075
+  },
+  "torre-del-far": {
+    "lat": 42.805278,
+    "lng": 2.761667
+  },
+  "torreneules": {
+    "lat": 42.390833,
+    "lng": 2.196111
+  },
+  "torres-de-cabrenc": {
+    "lat": 42.364444,
+    "lng": 2.542222
+  },
+  "torreta-de-lorri": {
+    "lat": 42.408333,
+    "lng": 1.215278
+  },
+  "torreta-del-cadi": {
+    "lat": 42.286944,
+    "lng": 1.584167
+  },
+  "torreta-del-montsia": {
+    "lat": 40.613611,
+    "lng": 0.530278
+  },
+  "tossa-despinau": {
+    "lat": 42.273333,
+    "lng": 2.692778
+  },
+  "tosa-del-braibal": {
+    "lat": 42.503056,
+    "lng": 1.598611
+  },
+  "tossa-grossa-de-montferri": {
+    "lat": 41.253333,
+    "lng": 1.370556
+  },
+  "tossa-plana-de-lles-pic-de-la-portelleta": {
+    "lat": 42.468333,
+    "lng": 1.656667
+  },
+  "tossal-bovinar": {
+    "lat": 42.462778,
+    "lng": 1.631667
+  },
+  "tossal-dengrillo": {
+    "lat": 40.943056,
+    "lng": 0.370833
+  },
+  "tossal-despigol": {
+    "lat": 41.711389,
+    "lng": 1.09
+  },
+  "tossal-de-bades": {
+    "lat": 42.323611,
+    "lng": 1.625
+  },
+  "tossal-de-balinyo": {
+    "lat": 42.188333,
+    "lng": 1.343611
+  },
+  "tossal-de-codonyac": {
+    "lat": 42.228056,
+    "lng": 0.814167
+  },
+  "tossal-de-laliga-la-geganta-adormida": {
+    "lat": 42.298889,
+    "lng": 1.018889
+  },
+  "tossal-de-lalzina": {
+    "lat": 40.968056,
+    "lng": 0.809444
+  },
+  "tossal-de-la-baltasana": {
+    "lat": 41.326111,
+    "lng": 1.004167
+  },
+  "tossal-de-la-creu": {
+    "lat": 41.846667,
+    "lng": 1.401944
+  },
+  "tossal-de-la-moradilla": {
+    "lat": 41.619444,
+    "lng": 0.709722
+  },
+  "pic-de-perafita": {
+    "lat": 42.459167,
+    "lng": 1.585556
+  },
+  "tossal-de-les-roies-de-cardet": {
+    "lat": 42.518611,
+    "lng": 0.765278
+  },
+  "tossal-de-les-viudes": {
+    "lat": 42.114722,
+    "lng": 1.659167
+  },
+  "tossal-de-lleto": {
+    "lat": 42.311667,
+    "lng": 1.543056
+  },
+  "tossal-de-mirapallars": {
+    "lat": 42.021111,
+    "lng": 0.959167
+  },
+  "tossal-de-montagut": {
+    "lat": 40.941389,
+    "lng": 0.714722
+  },
+  "tossal-de-mormur": {
+    "lat": 41.78,
+    "lng": 0.749722
+  },
+  "tossal-de-sant-jordi": {
+    "lat": 41.899167,
+    "lng": 0.8925
+  },
+  "tossal-de-suro": {
+    "lat": 41.572778,
+    "lng": 1.305
+  },
+  "tossal-del-mas-de-nadal": {
+    "lat": 41.825556,
+    "lng": 1.317222
+  },
+  "tossal-del-puial": {
+    "lat": 42.341667,
+    "lng": 1.133056
+  },
+  "tossal-dels-tres-reis": {
+    "lat": 40.732778,
+    "lng": 0.170278
+  },
+  "tossal-gros-pelat-de-talltendre": {
+    "lat": 42.420278,
+    "lng": 1.734444
+  },
+  "tossal-gros-serra-de-sant-gervas": {
+    "lat": 42.333056,
+    "lng": 0.771111
+  },
+  "tossal-gros-dalmatret": {
+    "lat": 41.333056,
+    "lng": 0.381944
+  },
+  "tossal-gros-de-vallbona": {
+    "lat": 41.468889,
+    "lng": 1.112778
+  },
+  "tossal-llisoi": {
+    "lat": 42.201111,
+    "lng": 1.843611
+  },
+  "tossau-de-mar": {
+    "lat": 42.630278,
+    "lng": 0.828889
+  },
+  "tosseta-de-lesquella-pic-de-calm-colomer": {
+    "lat": 42.4925,
+    "lng": 1.73
+  },
+  "tosseta-rasa": {
+    "lat": 40.845,
+    "lng": 0.3275
+  },
+  "tristaina": {
+    "lat": 42.653333,
+    "lng": 1.493333
+  },
+  "tuc-darres": {
+    "lat": 42.743611,
+    "lng": 0.663333
+  },
+  "tuc-dera-entecada": {
+    "lat": 42.718056,
+    "lng": 0.696944
+  },
+  "tuc-de-baciver": {
+    "lat": 42.7125,
+    "lng": 0.991667
+  },
+  "tuc-de-barlonguera": {
+    "lat": 42.788611,
+    "lng": 1.009722
+  },
+  "tuc-de-crabera": {
+    "lat": 42.825833,
+    "lng": 0.858333
+  },
+  "tuc-de-la-comamarja": {
+    "lat": 42.526389,
+    "lng": 0.878333
+  },
+  "tuc-de-la-cometa": {
+    "lat": 42.423611,
+    "lng": 1.033056
+  },
+  "tuc-de-la-contesa": {
+    "lat": 42.615556,
+    "lng": 0.788611
+  },
+  "tuc-de-la-llanca": {
+    "lat": 42.684167,
+    "lng": 0.990556
+  },
+  "tuc-de-la-tallada": {
+    "lat": 42.616667,
+    "lng": 0.723611
+  },
+  "tuc-de-lluca": {
+    "lat": 42.610278,
+    "lng": 0.901111
+  },
+  "tuc-de-marimanya": {
+    "lat": 42.709167,
+    "lng": 1.012222
+  },
+  "tuc-de-molieres": {
+    "lat": 42.629444,
+    "lng": 0.698611
+  },
+  "tuc-de-parros": {
+    "lat": 42.767778,
+    "lng": 0.933056
+  },
+  "tuc-de-ratera": {
+    "lat": 42.601111,
+    "lng": 0.953611
+  },
+  "tuc-de-ribereta": {
+    "lat": 42.626111,
+    "lng": 0.895278
+  },
+  "tuc-de-salana": {
+    "lat": 42.646944,
+    "lng": 0.908333
+  },
+  "tuc-de-sarrahera": {
+    "lat": 42.644167,
+    "lng": 0.796389
+  },
+  "tuc-de-samont": {
+    "lat": 42.751389,
+    "lng": 0.851944
+  },
+  "tuc-dera-pincela": {
+    "lat": 42.742778,
+    "lng": 0.875556
+  },
+  "tuc-des-armeros": {
+    "lat": 42.781111,
+    "lng": 0.876944
+  },
+  "tuc-des-carants": {
+    "lat": 42.514167,
+    "lng": 0.903333
+  },
+  "tuc-des-monges": {
+    "lat": 42.6225,
+    "lng": 0.866111
+  },
+  "tuc-deth-plan-deth-ome-vacanera": {
+    "lat": 42.846111,
+    "lng": 0.675
+  },
+  "tuc-deth-port-de-vielha": {
+    "lat": 42.641944,
+    "lng": 0.765556
+  },
+  "tuc-dormidor": {
+    "lat": 42.710278,
+    "lng": 2.266111
+  },
+  "tuc-gran-dera-sendrosa": {
+    "lat": 42.623889,
+    "lng": 0.946944
+  },
+  "turo-den-galzeran-o-den-mates": {
+    "lat": 41.504722,
+    "lng": 2.266667
+  },
+  "turo-den-mora-turo-del-carmel": {
+    "lat": 41.418333,
+    "lng": 2.153333
+  },
+  "turo-donofre-arnau": {
+    "lat": 41.554444,
+    "lng": 2.469167
+  },
+  "turo-de-bell-lloc": {
+    "lat": 42.483333,
+    "lng": 1.922222
+  },
+  "turo-de-bellver": {
+    "lat": 41.847222,
+    "lng": 2.171667
+  },
+  "turo-de-can-dolcet": {
+    "lat": 41.555278,
+    "lng": 1.815833
+  },
+  "turo-de-lermita": {
+    "lat": 41.620278,
+    "lng": 1.815
+  },
+  "turo-de-lescletxa": {
+    "lat": 41.628611,
+    "lng": 1.886944
+  },
+  "turo-de-lhome": {
+    "lat": 41.776389,
+    "lng": 2.434722
+  },
+  "turo-de-les-tres-creus": {
+    "lat": 41.65,
+    "lng": 1.969722
+  },
+  "turo-de-la-torre-o-de-castellnou": {
+    "lat": 41.850833,
+    "lng": 1.83
+  },
+  "turo-de-magarola": {
+    "lat": 41.442222,
+    "lng": 2.129722
+  },
+  "turo-de-montcada": {
+    "lat": 41.477222,
+    "lng": 2.176667
+  },
+  "turo-de-montgat": {
+    "lat": 41.465833,
+    "lng": 2.278611
+  },
+  "turo-de-montsoriu": {
+    "lat": 41.782778,
+    "lng": 2.540556
+  },
+  "turo-de-puigmari": {
+    "lat": 41.754444,
+    "lng": 2.730278
+  },
+  "turo-del-mal-pas": {
+    "lat": 41.671389,
+    "lng": 1.954722
+  },
+  "turo-del-pou-den-sala": {
+    "lat": 41.8325,
+    "lng": 2.3475
+  },
+  "turo-del-ros": {
+    "lat": 41.576389,
+    "lng": 1.933889
+  },
+  "turo-del-samont": {
+    "lat": 41.742778,
+    "lng": 2.365556
+  },
+  "turo-del-vent": {
+    "lat": 41.861389,
+    "lng": 2.631111
+  },
+  "turo-punco": {
+    "lat": 42.424444,
+    "lng": 1.601111
+  },
+  "volca-del-croscat": {
+    "lat": 42.153889,
+    "lng": 2.536111
+  },
+  "vulturo": {
+    "lat": 42.285833,
+    "lng": 1.636389
+  }
+}
