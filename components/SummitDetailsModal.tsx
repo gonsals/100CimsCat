@@ -49,8 +49,13 @@ function getCommonsImages(summitName: string) {
       if (!response.ok) throw new Error('Commons is not available')
       const payload = await response.json()
       const pages = Object.values((payload.query?.pages ?? {}) as Record<string, CommonsImage>)
-      const target = normalized(summitName)
-      return pages.filter(page => normalized(page.title.replace(/^File:/i, '')).includes(target))
+      const stopWords = new Set(['d', 'de', 'del', 'la', 'les', 'el', 'els', 'l', 'i', 'o'])
+      const targetWords = normalized(summitName).split(' ').filter(word => word.length > 1 && !stopWords.has(word))
+      const requiredWords = targetWords.length > 1 ? targetWords : normalized(summitName).split(' ').filter(Boolean)
+      return pages.filter(page => {
+        const fileName = normalized(page.title.replace(/^File:/i, ''))
+        return requiredWords.every(word => fileName.includes(word))
+      })
     })
 
   commonsCache.set(cacheKey, request)
@@ -64,6 +69,9 @@ export default function SummitDetailsModal({ summit, language, onClose }: Props)
 
   useEffect(() => {
     let active = true
+    setImages([])
+    setLoadError(false)
+    setLoading(true)
     getCommonsImages(summit.name).then(results => {
       if (active) setImages(results)
     }).catch(() => {
