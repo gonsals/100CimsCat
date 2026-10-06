@@ -8,8 +8,7 @@ import catalogSeed from '@/data/summits.json'
 import MountainPlaceholder from '@/components/MountainPlaceholder'
 
 function getAuthCallbackUrl() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || window.location.origin
-  return `${siteUrl}/auth/callback`
+  return `${window.location.origin}/auth/callback`
 }
 
 type Summit = {
