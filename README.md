@@ -26,5 +26,3 @@ Per fer servir l'enllaç màgic o Google en un domini publicat, afegeix `https:/
 ## Catàleg
 
 Les dades normalitzades del catàleg s'inclouen a `data/summits.json` i també es carreguen a `public.summits`. La font és [mcmontseny/backend-100-cims-feec](https://github.com/mcmontseny/backend-100-cims-feec), derivada del catàleg oficial de la [FEEC](https://www.feec.cat/activitats/100-cims/). La [normativa FEEC](https://www.feec.cat/activitats/100-cims/normativa-i-funcionament/) defineix el repte dels 100 cims essencials.
-
-
