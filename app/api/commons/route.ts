@@ -9,32 +9,33 @@ export async function GET(request: NextRequest) {
   }
 
   const search = name.replace(/["\\]/g, ' ').replace(/\s+/g, ' ')
-  const params = new URLSearchParams({
-    action: 'query',
-    format: 'json',
-    origin: '*',
-    generator: 'search',
-    gsrnamespace: '6',
-    gsrsearch: `intitle:"${search}"`,
-    gsrlimit: '8',
-    prop: 'imageinfo',
-    iiprop: 'url|extmetadata',
-    iiurlwidth: '960',
-  })
-
   try {
-    const response = await fetch(`https://commons.wikimedia.org/w/api.php?${params}`, {
-      headers: {
-        Accept: 'application/json',
-        'Api-User-Agent': '100CimsCat/1.0 (https://100-cims-cat.vercel.app/)',
-      },
-      next: { revalidate },
-    })
-
-    if (!response.ok) throw new Error('Commons request failed')
-
-    const payload = await response.json()
-    return NextResponse.json(payload, {
+    const searches = [`intitle:"${search}"`, search]
+    const results = await Promise.all(searches.map(async query => {
+      const params = new URLSearchParams({
+        action: 'query',
+        format: 'json',
+        origin: '*',
+        generator: 'search',
+        gsrnamespace: '6',
+        gsrsearch: query,
+        gsrlimit: '20',
+        prop: 'imageinfo',
+        iiprop: 'url|extmetadata',
+        iiurlwidth: '960',
+      })
+      const response = await fetch(`https://commons.wikimedia.org/w/api.php?${params}`, {
+        headers: {
+          Accept: 'application/json',
+          'Api-User-Agent': '100CimsCat/1.0 (https://100-cims-cat.vercel.app/)',
+        },
+        next: { revalidate },
+      })
+      if (!response.ok) throw new Error('Commons request failed')
+      return response.json()
+    }))
+    const pages = Object.assign({}, ...results.map(result => result.query?.pages ?? {}))
+    return NextResponse.json({ query: { pages } }, {
       headers: { 'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800' },
     })
   } catch {
