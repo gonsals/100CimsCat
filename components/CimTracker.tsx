@@ -6,6 +6,7 @@ import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
 import MountainPlaceholder from '@/components/MountainPlaceholder'
+import SummitDetailsModal from '@/components/SummitDetailsModal'
 
 function getAuthCallbackUrl() {
   return `${window.location.origin}/auth/callback`
@@ -80,9 +81,9 @@ const translations: Record<Language, Record<string, string>> = {
 }
 
 const target = 100
-const imageLimit = 6 * 1024 * 1024
+const imageLimit = 512 * 1024
 const rawImageLimit = 24 * 1024 * 1024
-const preferredImageSize = 1.5 * 1024 * 1024
+const preferredImageSize = imageLimit
 async function encodeCanvas(canvas: HTMLCanvasElement, type: string, quality: number) {
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('No s’ha pogut processar la imatge.')), type, quality)
@@ -92,7 +93,7 @@ async function encodeCanvas(canvas: HTMLCanvasElement, type: string, quality: nu
 async function optimizePhoto(file: File) {
   const bitmap = await createImageBitmap(file)
   try {
-    const maxDimension = 1800
+    const maxDimension = 1440
     const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height))
     const canvas = document.createElement('canvas')
     canvas.width = Math.max(1, Math.round(bitmap.width * scale))
@@ -103,14 +104,13 @@ async function optimizePhoto(file: File) {
     context.fillRect(0, 0, canvas.width, canvas.height)
     context.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
 
-    let output = await encodeCanvas(canvas, 'image/webp', 0.82)
-    if (output.type !== 'image/webp') output = await encodeCanvas(canvas, 'image/jpeg', 0.82)
-    if (output.size > preferredImageSize) {
-      output = await encodeCanvas(canvas, output.type, 0.72)
+    let output = await encodeCanvas(canvas, 'image/webp', 0.78)
+    if (output.type !== 'image/webp') output = await encodeCanvas(canvas, 'image/jpeg', 0.78)
+    for (const quality of [0.68, 0.58, 0.48]) {
+      if (output.size <= preferredImageSize) break
+      output = await encodeCanvas(canvas, output.type, quality)
     }
-    if (output.size > preferredImageSize) {
-      output = await encodeCanvas(canvas, output.type, 0.62)
-    }
+    if (output.size > preferredImageSize) throw new Error('La imatge no es pot comprimir prou.')
 
     const extension = output.type === 'image/webp' ? 'webp' : 'jpg'
     const baseName = file.name.replace(/\.[^.]+$/, '') || 'foto-cim'
@@ -155,6 +155,12 @@ export default function CimTracker() {
   const [theme, setTheme] = useState<Theme>('light')
   const [preferencesReady, setPreferencesReady] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [selectedSummit, setSelectedSummit] = useState<Summit | null>(null)
+  const [storageBytes, setStorageBytes] = useState<number | null>(null)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteConfirmation, setDeleteConfirmation] = useState('')
+  const [deletingAccount, setDeletingAccount] = useState(false)
+  const [sharing, setSharing] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const headerActionsRef = useRef<HTMLDivElement>(null)
@@ -276,6 +282,55 @@ export default function CimTracker() {
   const essentialTotal = summits.filter(summit => summit.essential).length
   const progress = Math.min(100, Math.round(essentialDone / target * 100))
 
+  useEffect(() => {
+    if (!settingsOpen || !supabase || !user) return
+    let active = true
+    supabase.rpc('get_my_photo_storage_bytes').then(({ data }) => {
+      if (active) setStorageBytes(data == null ? null : Number(data))
+    })
+    return () => { active = false }
+  }, [settingsOpen, supabase, user])
+
+  async function shareProgress() {
+    setSharing(true)
+    try {
+      const canvas = document.createElement('canvas')
+      canvas.width = 1080; canvas.height = 1350
+      const ctx = canvas.getContext('2d')
+      if (!ctx) throw new Error('canvas')
+      ctx.fillStyle = '#f1f0e8'; ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillStyle = '#234334'; ctx.fillRect(0, 0, canvas.width, 20)
+      ctx.fillStyle = '#70816f'; ctx.font = '600 30px sans-serif'; ctx.fillText('100CIMS CAT', 90, 130)
+      ctx.fillStyle = '#263d30'; ctx.font = '700 62px sans-serif'; ctx.fillText(language === 'es' ? 'MI CAMINO' : language === 'en' ? 'MY JOURNEY' : 'EL MEU CAMÍ', 90, 235)
+      ctx.fillStyle = '#49694c'; ctx.font = '600 205px sans-serif'; ctx.fillText(String(essentialDone), 82, 520)
+      ctx.fillStyle = '#718170'; ctx.font = '500 48px sans-serif'; ctx.fillText('/ 100', 400, 510)
+      ctx.fillStyle = '#536452'; ctx.font = '500 34px sans-serif'; ctx.fillText(language === 'es' ? 'cimas esenciales completadas' : language === 'en' ? 'essential summits completed' : 'cims essencials fets', 95, 590)
+      ctx.fillStyle = '#d4dfd0'; ctx.beginPath(); ctx.moveTo(0,1050); ctx.lineTo(360,690); ctx.lineTo(610,940); ctx.lineTo(820,720); ctx.lineTo(1080,1020); ctx.lineTo(1080,1350); ctx.lineTo(0,1350); ctx.fill()
+      ctx.fillStyle = '#a8bea4'; ctx.beginPath(); ctx.moveTo(0,1180); ctx.lineTo(250,930); ctx.lineTo(470,1120); ctx.lineTo(760,860); ctx.lineTo(1080,1170); ctx.lineTo(1080,1350); ctx.lineTo(0,1350); ctx.fill()
+      ctx.fillStyle = '#263d30'; ctx.font = '600 38px sans-serif'; ctx.fillText(`${completed.length} ${language === 'es' ? 'cimas en mi cuaderno' : language === 'en' ? 'summits in my journal' : 'cims al meu quadern'}`,95,1240)
+      ctx.fillStyle = '#718170'; ctx.font = '500 25px sans-serif'; ctx.fillText('100-cims-cat.vercel.app',95,1300)
+      const blob = await new Promise<Blob>((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('png')),'image/png'))
+      const file = new File([blob],'el-meu-progres-100-cims.png',{type:'image/png'})
+      if (navigator.canShare?.({files:[file]})) await navigator.share({files:[file],title:'100 Cims',text:'El meu progrés als 100 Cims'})
+      else { const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download=file.name; link.click(); URL.revokeObjectURL(url) }
+    } catch { setNotice(language==='es'?'No se pudo crear la imagen de progreso.':language==='en'?'Could not create the progress image.':'No s’ha pogut crear la imatge de progrés.') }
+    finally { setSharing(false) }
+  }
+
+  async function deleteAccount() {
+    if (deleteConfirmation !== 'ELIMINAR') return
+    setDeletingAccount(true)
+    try {
+      const response = await fetch('/api/account',{method:'DELETE'})
+      if (!response.ok) throw new Error(response.status===503?'config':'delete')
+      await supabase?.auth.signOut({scope:'local'})
+      setUser(null); setAscents(new Map()); setDeleteOpen(false); setSettingsOpen(false); setProfileOpen(false)
+      setNotice(language==='es'?'Cuenta y fotos eliminadas.':language==='en'?'Account and photos deleted.':'Compte i fotos eliminats.')
+    } catch(error) {
+      setNotice(error instanceof Error && error.message==='config'?'Falta SUPABASE_SERVICE_ROLE_KEY al servidor per activar el borrat de compte.':language==='es'?'No se pudo borrar la cuenta. Inténtalo de nuevo.':language==='en'?'Could not delete the account. Try again.':'No s’ha pogut esborrar el compte. Torna-ho a provar.')
+    } finally { setDeletingAccount(false) }
+  }
+
   async function sendMagicLink(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!supabase) {
@@ -362,7 +417,10 @@ export default function CimTracker() {
     setBusyLabel('Pujant foto…')
     const extension = optimized.type === 'image/webp' ? 'webp' : 'jpg'
     const nextPath = `${user.id}/${summit.id}/${crypto.randomUUID()}.${extension}`
-    const { error: uploadError } = await supabase.storage.from('summit-photos').upload(nextPath, optimized, { contentType: optimized.type, upsert: false })
+    const oldPath = ascents.get(summit.id)?.photo_path ?? null
+    const { data: allowed, error: quotaError } = await supabase.rpc('can_upload_summit_photo', { p_file_size: optimized.size, p_replace_path: oldPath })
+    if (quotaError || allowed !== true) { setNotice(quotaError ? 'Actualitza la migració de Supabase abans de pujar fotos.' : 'Has arribat al límit de 280 MB de fotos del teu compte. Esborra fotos per continuar.'); setBusyId(null); return }
+    const { error: uploadError } = await supabase.storage.from('summit-photos').upload(nextPath, optimized, { contentType: optimized.type, upsert: false, metadata: oldPath ? { replace_path: oldPath } : {} })
     if (uploadError) {
       setNotice('No s’ha pogut pujar la foto. Torna-ho a provar.')
       setBusyId(null)
@@ -376,7 +434,6 @@ export default function CimTracker() {
       return
     }
     const { data: signed } = await supabase.storage.from('summit-photos').createSignedUrl(nextPath, 60 * 60 * 24)
-    const oldPath = ascents.get(summit.id)?.photo_path
     if (oldPath) await supabase.storage.from('summit-photos').remove([oldPath])
     setAscents(previous => new Map(previous).set(summit.id, {
       summit_id: summit.id,
@@ -420,7 +477,7 @@ export default function CimTracker() {
           {settingsOpen && <section className="settings-panel" id="settings-panel" role="dialog" aria-label={t('Configuració')}>
             <div className="settings-heading"><div><span className="menu-eyebrow">100CIMS</span><strong>{t('Configuració')}</strong></div><button type="button" onClick={() => setSettingsOpen(false)} aria-label={t('Tancar')}>×</button></div>
             <label><span>{t('Tema')}</span><span className="select-wrap"><select value={theme} onChange={event => setTheme(event.target.value as Theme)}><option value="light">☀ {t('Clar')}</option><option value="dark">☾ {t('Fosc')}</option></select></span></label>
-            <label><span>{t('Idioma')}</span><span className="select-wrap"><select value={language} onChange={event => setLanguage(event.target.value as Language)}><option value="ca">Català</option><option value="es">Español</option><option value="en">English</option></select></span></label>
+            <label><span>{t('Idioma')}</span><span className="select-wrap"><select value={language} onChange={event => setLanguage(event.target.value as Language)}><option value="ca">Català</option><option value="es">Español</option><option value="en">English</option></select></span></label>\n            {user && <div className="account-storage"><span>{language==='es'?'Fotos privadas usadas':language==='en'?'Private photo storage':'Espai de fotos privat'}</span><strong>{storageBytes==null?'—':`${(storageBytes/1024/1024).toFixed(1)} / 280 MB`}</strong><button className="delete-account-trigger" type="button" onClick={()=>{setDeleteConfirmation('');setDeleteOpen(true)}}>{language==='es'?'Borrar cuenta':language==='en'?'Delete account':'Esborrar compte'}</button></div>}
           </section>}
         </div>
       </header>
@@ -436,7 +493,7 @@ export default function CimTracker() {
         <div className="progress-heading"><div><p className="eyebrow">{t('EL REPTE DELS 100 CIMS')}</p><h2>{t('El teu camí fins als 100')}</h2></div><div className="progress-numbers"><strong>{essentialDone}</strong><span> / 100</span></div></div>
         <div className="progress-track"><div style={{ width: `${progress}%` }} /></div>
         <div className="progress-footer"><span>{completed.length ? (language === 'es' ? `Ya tienes ${completed.length} ${completed.length === 1 ? 'cima' : 'cimas'} en tu cuaderno, ${essentialDone} esenciales.` : language === 'en' ? `${completed.length} ${completed.length === 1 ? 'summit' : 'summits'} in your journal, ${essentialDone} essential.` : `Ja tens ${completed.length} ${completed.length === 1 ? 'cim' : 'cims'} al teu quadern, ${essentialDone} d’essencials.`) : t('Encara no has registrat cap ascensió. Tot comença amb el primer pas.')}</span><span>{progress}%</span></div>
-        <div className="stats"><div><strong>{completed.length}</strong><span>{language === 'es' ? 'cimas hechas' : language === 'en' ? 'summits done' : 'cims fets'}</span></div><div><strong>{essentialDone}<span className="stat-total"> / {essentialTotal}</span></strong><span>{language === 'es' ? 'esenciales hechas' : language === 'en' ? 'essential done' : 'essencials fets'}</span></div><div><strong>{photoCount}</strong><span>{language === 'es' ? 'recuerdos guardados' : language === 'en' ? 'memories saved' : 'records guardats'}</span></div></div>
+        <div className="stats"><div><strong>{completed.length}</strong><span>{language === 'es' ? 'cimas hechas' : language === 'en' ? 'summits done' : 'cims fets'}</span></div><div><strong>{essentialDone}<span className="stat-total"> / {essentialTotal}</span></strong><span>{language === 'es' ? 'esenciales hechas' : language === 'en' ? 'essential done' : 'essencials fets'}</span></div><div><strong>{photoCount}</strong><span>{language === 'es' ? 'recuerdos guardados' : language === 'en' ? 'memories saved' : 'records guardats'}</span></div></div>\n        <div className="share-progress"><div><strong>{language==='es'?'Tu camino también merece compartirse':language==='en'?'Your journey is worth sharing':'El teu camí també es pot compartir'}</strong><span>{language==='es'?'La tarjeta se crea aquí. Tus fotos y datos no se publican.':language==='en'?'The card is created here. Your photos and data stay private.':'La targeta es crea aquí. Les fotos i les dades no es publiquen.'}</span></div><button onClick={()=>void shareProgress()} disabled={sharing}>{sharing?'…':language==='es'?'Compartir progreso':language==='en'?'Share progress':'Compartir progrés'}</button></div>
       </section>
 
       <section className="catalog" id="cims">
@@ -456,17 +513,17 @@ export default function CimTracker() {
             <div className="card-body">
               <div className="card-meta">{summit.essential && <span className="essential-tag">{language === 'es' ? '✦ Esencial' : language === 'en' ? '✦ Essential' : '✦ Essencial'}</span>}{ascent && <span className="done-tag">✓ {t('Fets')}</span>}</div>
               <h3 title={summit.name}>{summit.name}</h3><div className="card-detail">{summit.height.toLocaleString('ca-ES')} m · {summit.region.replace(/\s*,\s*/g, ' · ')}</div>
-              <div className="card-actions"><button className={`mark-button ${ascent ? 'is-done' : ''}`} onClick={() => void toggleDone(summit)} disabled={busy}>{busy ? busyLabel : ascent ? `✓ ${friendlyDate(ascent.completed_at, language)}` : t('+ Marcar fet')}</button><label className={`photo-button ${ascent?.photo_path ? 'has-photo' : ''}`} aria-label={`${t('Pujar una foto de')} ${summit.name}`}>{ascent?.photo_path ? `▣ ${t('Canviar foto')}` : t('＋ Foto')}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={event => { void uploadPhoto(summit, event.target.files?.[0]); event.currentTarget.value = '' }} disabled={busy} /></label></div>
+              <div className="card-actions"><button className={`mark-button ${ascent ? 'is-done' : ''}`} onClick={() => void toggleDone(summit)} disabled={busy}>{busy ? busyLabel : ascent ? `✓ ${friendlyDate(ascent.completed_at, language)}` : t('+ Marcar fet')}</button><label className={`photo-button ${ascent?.photo_path ? 'has-photo' : ''}`} aria-label={`${t('Pujar una foto de')} ${summit.name}`}>{ascent?.photo_path ? `▣ ${t('Canviar foto')}` : t('＋ Foto')}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={event => { void uploadPhoto(summit, event.target.files?.[0]); event.currentTarget.value = '' }} disabled={busy} /></label></div>\n              <button className="summit-explore" type="button" onClick={()=>setSelectedSummit(summit)}>{language==='es'?'Explorar cima ↗':language==='en'?'Explore summit ↗':'Explorar cim ↗'}</button>
             </div>
           </article>
         })}{ready && visible.length === 0 && <div className="empty">No hem trobat cap cim amb aquests filtres.</div>}</div>
         <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Ilustración de referencia: ilustración original de 100CimsCat.' : language === 'en' ? 'Reference illustration: original artwork by 100CimsCat.' : 'Il·lustració de referència: il·lustració pròpia de 100CimsCat.'}</p>
       </section>
 
-      {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
+      {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>\n      {selectedSummit && <SummitDetailsModal summit={selectedSummit} language={language} onClose={()=>setSelectedSummit(null)} />}}
       <footer>{t('Fet per recordar els camins, no només els cims.')} <span>100CIMS · 2026</span></footer>
 
-      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label="Tancar">×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><button type="button" className="google-signin" onClick={() => void signInWithGoogle()} disabled={signingInWithGoogle}>{signingInWithGoogle ? '…' : <><span className="google-mark" aria-hidden="true">G</span>{t('Continua amb Google')}</>}</button>{googleError && <p className="google-error" role="alert">{googleError}</p>}<div className="auth-divider"><span>{t('o bé')}</span></div><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} /><button className="mark-button" disabled={sendingLink}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
+      {deleteOpen && <div className="modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget&&!deletingAccount)setDeleteOpen(false)}}><section className="auth-modal delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-title"><button className="modal-close" disabled={deletingAccount} onClick={()=>setDeleteOpen(false)} aria-label={t('Tancar')}>×</button><p className="eyebrow">100CIMS CAT</p><h2 id="delete-title">{language==='es'?'Borrar cuenta para siempre':language==='en'?'Permanently delete account':'Esborrar el compte definitivament'}</h2><p>{language==='es'?'Se eliminarán tu cuenta, ascensiones y todas tus fotos privadas. Esta acción no se puede deshacer.':language==='en'?'Your account, ascents and all private photos will be deleted. This cannot be undone.':'S’eliminaran el compte, les ascensions i totes les fotos privades. Aquesta acció no es pot desfer.'}</p><label className="confirm-delete-label" htmlFor="delete-confirm">{language==='es'?'Escribe ELIMINAR para confirmar':language==='en'?'Type ELIMINAR to confirm':'Escriu ELIMINAR per confirmar'}</label><input id="delete-confirm" value={deleteConfirmation} onChange={event=>setDeleteConfirmation(event.target.value)} autoComplete="off" /><button className="delete-confirm-button" disabled={deleteConfirmation!=='ELIMINAR'||deletingAccount} onClick={()=>void deleteAccount()}>{deletingAccount?'…':language==='es'?'Borrar cuenta y fotos':language==='en'?'Delete account and photos':'Esborrar compte i fotos'}</button></section></div>}\n      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label="Tancar">×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><button type="button" className="google-signin" onClick={() => void signInWithGoogle()} disabled={signingInWithGoogle}>{signingInWithGoogle ? '…' : <><span className="google-mark" aria-hidden="true">G</span>{t('Continua amb Google')}</>}</button>{googleError && <p className="google-error" role="alert">{googleError}</p>}<div className="auth-divider"><span>{t('o bé')}</span></div><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} /><button className="mark-button" disabled={sendingLink}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
     </main>
   )
 }
