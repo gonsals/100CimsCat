@@ -523,7 +523,7 @@ export default function CimTracker() {
         <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Ilustración de referencia: ilustración original de 100CimsCat.' : language === 'en' ? 'Reference illustration: original artwork by 100CimsCat.' : 'Il·lustració de referència: il·lustració pròpia de 100CimsCat.'}</p>
       </section>
 
-      {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>
+      {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
       {selectedSummit && <SummitDetailsModal summit={selectedSummit} language={language} onClose={()=>setSelectedSummit(null)} />}}
       <footer>{t('Fet per recordar els camins, no només els cims.')} <span>100CIMS · 2026</span></footer>
 
