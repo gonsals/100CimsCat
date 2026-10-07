@@ -2,12 +2,18 @@
 
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
 import MountainPlaceholder from '@/components/MountainPlaceholder'
 import SummitDetailsModal from '@/components/SummitDetailsModal'
+import CatalogFilters from '@/components/CatalogFilters'
+import AscentEditor from '@/components/AscentEditor'
+import Journal from '@/components/Journal'
+import { coordinates, defaultFilters, distanceKm, filterCatalog, friendlyDate, localDate, validAscentDate, type Ascent, type CatalogFilter, type Coordinate, type Language, type SortBy, type Summit } from '@/lib/tracker'
+import { trackerText } from '@/lib/tracker-i18n'
+import { useModalAccessibility } from '@/lib/use-modal-accessibility'
 
 const SummitMap = dynamic(() => import('@/components/SummitMap'), {
   ssr: false,
@@ -18,24 +24,6 @@ function getAuthCallbackUrl() {
   return `${window.location.origin}/auth/callback`
 }
 
-type Summit = {
-  id: string
-  name: string
-  height: number
-  region: string
-  essential: boolean
-  url: string
-}
-
-type Ascent = {
-  summit_id: string
-  completed_at: string
-  photo_path: string | null
-  photoUrl?: string
-}
-
-type Filter = 'all' | 'pending' | 'done' | 'essential'
-type Language = 'ca' | 'es' | 'en'
 type Theme = 'light' | 'dark'
 
 const translations: Record<Language, Record<string, string>> = {
@@ -129,16 +117,6 @@ async function optimizePhoto(file: File) {
   }
 }
 
-function localDate() {
-  const now = new Date()
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-}
-
-function friendlyDate(value: string, language: Language) {
-  const locale = language === 'es' ? 'es-ES' : language === 'en' ? 'en-GB' : 'ca-ES'
-  return new Date(`${value}T12:00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })
-}
-
 export default function CimTracker() {
   const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
   const supabase = useMemo(() => configured ? createClient() : null, [configured])
@@ -147,8 +125,15 @@ export default function CimTracker() {
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null)
   const [ready, setReady] = useState(false)
   const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<Filter>('all')
-  const [sortBy, setSortBy] = useState<'name' | 'height'>('name')
+  const [filters, setFilters] = useState<CatalogFilter>(defaultFilters)
+  const [sortBy, setSortBy] = useState<SortBy>('name')
+  const [favorites, setFavorites] = useState<Set<string>>(new Set())
+  const [origin, setOrigin] = useState<Coordinate | null>(null)
+  const [originLabel, setOriginLabel] = useState('')
+  const [editingSummit, setEditingSummit] = useState<Summit | null>(null)
+  const [journalReady, setJournalReady] = useState(false)
+  const [journalError, setJournalError] = useState(false)
+  const [loadVersion, setLoadVersion] = useState(0)
   const [authOpen, setAuthOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [sendingLink, setSendingLink] = useState(false)
@@ -171,22 +156,28 @@ export default function CimTracker() {
   const [profileOpen, setProfileOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const headerActionsRef = useRef<HTMLDivElement>(null)
-  const t = (value: string) => translations[language][value] ?? value
+  const t = (value: string) => translations[language][value] ?? trackerText(language, value)
+  const closeAccountDialog = useCallback(() => { setAuthOpen(false); setDeleteOpen(false) }, [])
+  useModalAccessibility(authOpen || deleteOpen, !deletingAccount && !sendingLink && !signingInWithGoogle, closeAccountDialog)
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('100cimscat-language')
-    const savedTheme = localStorage.getItem('100cimscat-theme')
-    if (savedLanguage === 'ca' || savedLanguage === 'es' || savedLanguage === 'en') setLanguage(savedLanguage)
-    if (savedTheme === 'light' || savedTheme === 'dark') setTheme(savedTheme)
-    setPreferencesReady(true)
+    try {
+      const savedLanguage = localStorage.getItem('100cimscat-language')
+      const savedTheme = localStorage.getItem('100cimscat-theme')
+      if (savedLanguage === 'ca' || savedLanguage === 'es' || savedLanguage === 'en') setLanguage(savedLanguage)
+      if (savedTheme === 'light' || savedTheme === 'dark') setTheme(savedTheme)
+    } catch { /* Use defaults when browser storage is unavailable. */ }
+    finally { setPreferencesReady(true) }
   }, [])
 
   useEffect(() => {
     if (!preferencesReady) return
     document.documentElement.dataset.theme = theme
     document.documentElement.lang = language
-    localStorage.setItem('100cimscat-theme', theme)
-    localStorage.setItem('100cimscat-language', language)
+    try {
+      localStorage.setItem('100cimscat-theme', theme)
+      localStorage.setItem('100cimscat-language', language)
+    } catch { /* Preferences still work if browser storage is unavailable. */ }
   }, [theme, language, preferencesReady])
 
   useEffect(() => {
@@ -234,7 +225,7 @@ export default function CimTracker() {
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ? { id: session.user.id, email: session.user.email } : null)
-      if (!session) setAscents(new Map())
+      if (!session) { setAscents(new Map()); setFavorites(new Set()); setJournalReady(false); setEditingSummit(null) }
     })
 
     return () => {
@@ -248,40 +239,37 @@ export default function CimTracker() {
     const currentSupabase = supabase
     const currentUser = user
     let active = true
+    setJournalReady(false)
+    setJournalError(false)
+    setAscents(new Map())
+    setFavorites(new Set())
     async function loadAscents() {
-      const { data, error } = await currentSupabase
-        .from('ascent_records')
-        .select('summit_id,completed_at,photo_path')
-        .eq('user_id', currentUser.id)
+      const [{ data, error }, favoriteResult] = await Promise.all([
+        currentSupabase.from('ascent_records').select('summit_id,completed_at,photo_path,notes').eq('user_id', currentUser.id),
+        currentSupabase.from('summit_favorites').select('summit_id').eq('user_id', currentUser.id),
+      ])
       if (!active) return
-      if (error) {
-        setNotice('No hem pogut carregar els teus cims. Torna-ho a provar d’aquí a un moment.')
+      if (error || favoriteResult.error) {
+        setJournalError(true)
         return
       }
+      setFavorites(new Set((favoriteResult.data ?? []).map(row => row.summit_id)))
       const rows = (data ?? []) as Ascent[]
       const paths = rows.flatMap(row => row.photo_path ? [row.photo_path] : [])
       const signed = paths.length
         ? await currentSupabase.storage.from('summit-photos').createSignedUrls(paths, 60 * 60 * 24)
         : { data: [], error: null }
       const urls = new Map((signed.data ?? []).map(item => [item.path, item.signedUrl]))
-      if (active) setAscents(new Map(rows.map(row => [row.summit_id, { ...row, photoUrl: row.photo_path ? urls.get(row.photo_path) ?? undefined : undefined }])))
+      if (active) {
+        setAscents(new Map(rows.map(row => [row.summit_id, { ...row, photoUrl: row.photo_path ? urls.get(row.photo_path) ?? undefined : undefined }])))
+        setJournalReady(true)
+      }
     }
-    void loadAscents()
+    void loadAscents().catch(() => { if (active) setJournalError(true) })
     return () => { active = false }
-  }, [supabase, user])
+  }, [supabase, user?.id, loadVersion])
 
-  const visible = useMemo(() => {
-    const term = search.trim().toLocaleLowerCase('ca')
-    return summits.filter(summit => {
-      const done = ascents.has(summit.id)
-      if (filter === 'pending' && done) return false
-      if (filter === 'done' && !done) return false
-      if (filter === 'essential' && !summit.essential) return false
-      return !term || `${summit.name} ${summit.region}`.toLocaleLowerCase('ca').includes(term)
-    }).sort((a, b) => sortBy === 'height'
-      ? b.height - a.height || a.name.localeCompare(b.name, 'ca')
-      : a.name.localeCompare(b.name, 'ca'))
-  }, [summits, ascents, filter, search, sortBy])
+  const visible = useMemo(() => filterCatalog(summits, ascents, favorites, filters, search, sortBy, origin), [summits, ascents, favorites, filters, search, sortBy, origin])
 
   const completed = [...ascents.values()]
   const essentialDone = completed.filter(ascent => summits.find(summit => summit.id === ascent.summit_id)?.essential).length
@@ -318,7 +306,7 @@ export default function CimTracker() {
       ctx.fillStyle = '#718170'; ctx.font = '500 25px sans-serif'; ctx.fillText('100-cims-cat.vercel.app',95,1300)
       const blob = await new Promise<Blob>((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('png')),'image/png'))
       const file = new File([blob],'el-meu-progres-100-cims.png',{type:'image/png'})
-      if (navigator.canShare?.({files:[file]})) await navigator.share({files:[file],title:'100 Cims',text:'El meu progrés als 100 Cims'})
+      if (navigator.canShare?.({files:[file]})) await navigator.share({files:[file],title:'100 Cims',text:t('El meu progrés als 100 Cims')})
       else { const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download=file.name; link.click(); URL.revokeObjectURL(url) }
     } catch { setNotice(language==='es'?'No se pudo crear la imagen de progreso.':language==='en'?'Could not create the progress image.':'No s’ha pogut crear la imatge de progrés.') }
     finally { setSharing(false) }
@@ -373,30 +361,96 @@ export default function CimTracker() {
     }
   }
 
-  async function toggleDone(summit: Summit) {
-    if (!user || !supabase) { setAuthOpen(true); return }
+  function editAscent(summit: Summit) {
+    if (!user || !supabase) { setSelectedSummit(null); setAuthOpen(true); return }
+    if (!journalReady || busyId) return
+    setSelectedSummit(null)
+    setNotice('')
+    setEditingSummit(summit)
+  }
+
+  async function saveAscent(date: string, notes: string) {
+    if (!user || !supabase || !editingSummit || busyId) return
+    if (!validAscentDate(date) || notes.length > 4000) { setNotice('Tria una data vàlida que no sigui futura.'); return }
+    const summit = editingSummit
     setBusyId(summit.id)
     setBusyLabel('Desant…')
     setNotice('')
+    try {
+      const existing = ascents.has(summit.id)
+      const result = existing
+        ? supabase.from('ascent_records').update({ completed_at: date, notes }).eq('user_id', user.id).eq('summit_id', summit.id)
+        : supabase.from('ascent_records').insert({ user_id: user.id, summit_id: summit.id, completed_at: date, notes })
+      const { data, error } = await result.select('summit_id,completed_at,photo_path,notes').single()
+      if (error) throw error
+      setAscents(previous => new Map(previous).set(summit.id, { ...previous.get(summit.id), ...data }))
+      setEditingSummit(null)
+      setNotice('Ascensió guardada.')
+    } catch { setNotice('No s’ha pogut desar l’ascensió. Torna-ho a provar.') }
+    finally { setBusyId(null) }
+  }
+
+  async function deleteAscent() {
+    if (!user || !supabase || !editingSummit || busyId) return
+    const summit = editingSummit
     const current = ascents.get(summit.id)
-    if (!current) {
-      const { error } = await supabase.from('ascent_records').insert({ user_id: user.id, summit_id: summit.id, completed_at: localDate() })
-      if (error) setNotice('No s’ha pogut desar l’ascensió. Torna-ho a provar.')
-      else setAscents(previous => new Map(previous).set(summit.id, { summit_id: summit.id, completed_at: localDate(), photo_path: null }))
-    } else {
-      const { error } = await supabase.from('ascent_records').delete().eq('user_id', user.id).eq('summit_id', summit.id)
-      if (error) setNotice('No s’ha pogut desmarcar aquest cim. Torna-ho a provar.')
-      else {
-        if (current.photo_path) await supabase.storage.from('summit-photos').remove([current.photo_path])
-        setAscents(previous => { const next = new Map(previous); next.delete(summit.id); return next })
+    if (!current) return
+    setBusyId(summit.id)
+    setNotice('')
+    try {
+      if (current.photo_path) {
+        const { error } = await supabase.storage.from('summit-photos').remove([current.photo_path])
+        if (error) { setNotice('No s’ha pogut eliminar la foto. L’ascensió es conserva; torna-ho a provar.'); return }
+        // Reflect successful photo removal even if deleting the record fails afterwards.
+        setAscents(previous => new Map(previous).set(summit.id, { ...current, photo_path: null, photoUrl: undefined }))
       }
-    }
-    setBusyId(null)
+      const { data, error } = await supabase.from('ascent_records').delete().eq('user_id', user.id).eq('summit_id', summit.id).select('summit_id')
+      if (error || !data?.length) throw error ?? new Error('No ascent deleted')
+      setAscents(previous => { const next = new Map(previous); next.delete(summit.id); return next })
+      setEditingSummit(null)
+      setNotice('Ascensió eliminada.')
+    } catch { setNotice('No s’ha pogut desmarcar aquest cim. Torna-ho a provar.') }
+    finally { setBusyId(null) }
+  }
+
+  async function toggleFavorite(summit: Summit) {
+    if (!user || !supabase) { setSelectedSummit(null); setAuthOpen(true); return }
+    if (!journalReady || busyId) return
+    const remove = favorites.has(summit.id)
+    setBusyId(summit.id)
+    try {
+      const result = remove
+        ? await supabase.from('summit_favorites').delete().eq('user_id', user.id).eq('summit_id', summit.id).select('summit_id')
+        : await supabase.from('summit_favorites').insert({ user_id: user.id, summit_id: summit.id }).select('summit_id')
+      if (result.error || !result.data?.length) throw result.error ?? new Error('No favorite saved')
+      setFavorites(previous => { const next = new Set(previous); if (remove) next.delete(summit.id); else next.add(summit.id); return next })
+    } catch { setNotice('No s’ha pogut desar el preferit. Torna-ho a provar.') }
+    finally { setBusyId(null) }
+  }
+
+  function changeOrigin(point: Coordinate | null, label: string) {
+    setOrigin(point)
+    setOriginLabel(label)
+    setSortBy(point ? 'distance' : 'name')
+  }
+
+  function clearFilters() {
+    setFilters(defaultFilters)
+    setSearch('')
+    setOrigin(null)
+    setOriginLabel('')
+    setSortBy('name')
   }
 
   async function uploadPhoto(summit: Summit, file?: File) {
-    if (!file) return
+    if (!file || busyId) return
     if (!user || !supabase) { setAuthOpen(true); return }
+    if (!journalReady) return
+    if (!ascents.has(summit.id)) {
+      editAscent(summit)
+      setNotice(language === 'es' ? 'Registra la fecha de la ascensión antes de añadir una foto.' : language === 'en' ? 'Record the ascent date before adding a photo.' : 'Registra la data de l’ascensió abans d’afegir una foto.')
+      return
+    }
     if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif'].includes(file.type)) {
       setNotice('Fes servir una imatge JPEG, PNG, WebP o AVIF.')
       return
@@ -408,6 +462,7 @@ export default function CimTracker() {
     setBusyId(summit.id)
     setBusyLabel('Optimitzant…')
     setNotice('')
+    try {
     let optimized: File
     try {
       optimized = await optimizePhoto(file)
@@ -433,8 +488,8 @@ export default function CimTracker() {
       setBusyId(null)
       return
     }
-    const { error: saveError } = await supabase.from('ascent_records').upsert({ user_id: user.id, summit_id: summit.id, completed_at: ascents.get(summit.id)?.completed_at ?? localDate(), photo_path: nextPath }, { onConflict: 'user_id,summit_id' })
-    if (saveError) {
+    const { data: saved, error: saveError } = await supabase.from('ascent_records').update({ photo_path: nextPath }).eq('user_id', user.id).eq('summit_id', summit.id).select('summit_id').single()
+    if (saveError || !saved) {
       await supabase.storage.from('summit-photos').remove([nextPath])
       setNotice('La foto s’ha pujat, però no hem pogut desar el registre. Torna-ho a provar.')
       setBusyId(null)
@@ -443,14 +498,16 @@ export default function CimTracker() {
     const { data: signed } = await supabase.storage.from('summit-photos').createSignedUrl(nextPath, 60 * 60 * 24)
     if (oldPath) await supabase.storage.from('summit-photos').remove([oldPath])
     setAscents(previous => new Map(previous).set(summit.id, {
+      ...previous.get(summit.id),
       summit_id: summit.id,
       completed_at: previous.get(summit.id)?.completed_at ?? localDate(),
       photo_path: nextPath,
       photoUrl: signed?.signedUrl,
     }))
     setBusyId(null)
-    const savedKilobytes = Math.round(optimized.size / 1024)
-    setNotice(`Foto optimitzada (${savedKilobytes} KB) i guardada per a ${summit.name}.`)
+    setNotice('Foto optimitzada i guardada.')
+    } catch { setNotice('No s’ha pogut pujar la foto. Torna-ho a provar.') }
+    finally { setBusyId(null) }
   }
 
   async function signOut() {
@@ -465,7 +522,7 @@ export default function CimTracker() {
   return (
     <main className="shell">
       <header className="topbar">
-        <a className="brand" href="#inici" aria-label="100 Cims, inici"><span className="brand-mark">▲</span><span>100<span className="brand-light">CIMS</span></span></a>
+        <a className="brand" href="#inici" aria-label={t('100 Cims, inici')}><span className="brand-mark">▲</span><span>100<span className="brand-light">CIMS</span></span></a>
         <nav><a className="active" href="#cims">{t('El meu repte')}</a><a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">{t('Catàleg FEEC ↗')}</a></nav>
         <div className="header-actions" ref={headerActionsRef}>
           <button className="settings-trigger" type="button" aria-label={t('Configuració')} aria-expanded={settingsOpen} aria-controls="settings-panel" onClick={() => { setSettingsOpen(open => !open); setProfileOpen(false) }}><span aria-hidden="true">⚙</span></button>
@@ -478,13 +535,13 @@ export default function CimTracker() {
             {profileOpen && <section className="account-menu" id="account-menu" role="dialog" aria-label={t('El teu compte')}>
               <div className="account-menu-user" role="presentation"><span className="profile-avatar" aria-hidden="true">{user.email?.[0]?.toLocaleUpperCase() ?? 'G'}</span><span><strong>{t('El teu compte')}</strong><small>{user.email}</small></span></div>
               <div className="account-menu-divider" />
-              <button className="signout-button" type="button" onClick={() => void signOut()} disabled={signingOut}><span className="signout-icon" aria-hidden="true">↪</span>{signingOut ? t('Tancant sessió…') : t('Tancar sessió')}</button>
+              <button className="signout-button" type="button" onClick={() => void signOut()} disabled={signingOut || Boolean(busyId)}><span className="signout-icon" aria-hidden="true">↪</span>{signingOut ? t('Tancant sessió…') : t('Tancar sessió')}</button>
             </section>}
           </div> : <button className="signin-link" onClick={() => setAuthOpen(true)}>{t('Inicia sessió')}</button>}
           {settingsOpen && <section className="settings-panel" id="settings-panel" role="dialog" aria-label={t('Configuració')}>
             <div className="settings-heading"><div><span className="menu-eyebrow">100CIMS</span><strong>{t('Configuració')}</strong></div><button type="button" onClick={() => setSettingsOpen(false)} aria-label={t('Tancar')}>×</button></div>
-            <label><span>{t('Tema')}</span><span className="select-wrap"><select value={theme} onChange={event => setTheme(event.target.value as Theme)}><option value="light">☀ {t('Clar')}</option><option value="dark">☾ {t('Fosc')}</option></select></span></label>
-            <label><span>{t('Idioma')}</span><span className="select-wrap"><select value={language} onChange={event => setLanguage(event.target.value as Language)}><option value="ca">Català</option><option value="es">Español</option><option value="en">English</option></select></span></label>
+            <label><span>{t('Tema')}</span><span className="select-wrap"><select aria-label={t('Tema')} value={theme} onChange={event => setTheme(event.target.value as Theme)}><option value="light">☀ {t('Clar')}</option><option value="dark">☾ {t('Fosc')}</option></select></span></label>
+            <label><span>{t('Idioma')}</span><span className="select-wrap"><select aria-label={t('Idioma')} value={language} onChange={event => setLanguage(event.target.value as Language)}><option value="ca">Català</option><option value="es">Español</option><option value="en">English</option></select></span></label>
             {user && <div className="account-storage"><span>{language==='es'?'Fotos privadas usadas':language==='en'?'Private photo storage':'Espai de fotos privat'}</span><strong>{storageBytes==null?'—':`${(storageBytes/1024/1024).toFixed(1)} / 280 MB`}</strong><button className="delete-account-trigger" type="button" onClick={()=>{setDeleteConfirmation('');setDeleteOpen(true)}}>{language==='es'?'Borrar cuenta':language==='en'?'Delete account':'Esborrar compte'}</button></div>}
           </section>}
         </div>
@@ -497,7 +554,7 @@ export default function CimTracker() {
 
       {!user && <section className="account-hint"><span className="hint-icon">↗</span><span><strong>{t('El teu progrés t’acompanya.')}</strong> {t('Inicia sessió per desar cims i fotos al teu compte.')}</span><button onClick={() => setAuthOpen(true)}>{t('Accedir amb el correu')}</button></section>}
 
-      <section className="progress-panel" aria-label="Progrés del repte">
+      <section className="progress-panel" aria-label={t('Progrés del repte')}>
         <div className="progress-heading"><div><p className="eyebrow">{t('EL REPTE DELS 100 CIMS')}</p><h2>{t('El teu camí fins als 100')}</h2></div><div className="progress-numbers"><strong>{essentialDone}</strong><span> / 100</span></div></div>
         <div className="progress-track"><div style={{ width: `${progress}%` }} /></div>
         <div className="progress-footer"><span>{completed.length ? (language === 'es' ? `Ya tienes ${completed.length} ${completed.length === 1 ? 'cima' : 'cimas'} en tu cuaderno, ${essentialDone} esenciales.` : language === 'en' ? `${completed.length} ${completed.length === 1 ? 'summit' : 'summits'} in your journal, ${essentialDone} essential.` : `Ja tens ${completed.length} ${completed.length === 1 ? 'cim' : 'cims'} al teu quadern, ${essentialDone} d’essencials.`) : t('Encara no has registrat cap ascensió. Tot comença amb el primer pas.')}</span><span>{progress}%</span></div>
@@ -505,40 +562,43 @@ export default function CimTracker() {
         <div className="share-progress"><div><strong>{language==='es'?'Tu camino también merece compartirse':language==='en'?'Your journey is worth sharing':'El teu camí també es pot compartir'}</strong><span>{language==='es'?'La tarjeta se crea aquí. Tus fotos y datos no se publican.':language==='en'?'The card is created here. Your photos and data stay private.':'La targeta es crea aquí. Les fotos i les dades no es publiquen.'}</span></div><button onClick={()=>void shareProgress()} disabled={sharing}>{sharing?'…':language==='es'?'Compartir progreso':language==='en'?'Share progress':'Compartir progrés'}</button></div>
       </section>
 
+      {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={() => setLoadVersion(previous => previous + 1)}>{t('Tornar-ho a provar')}</button>}</div>}
+      {user && journalReady && <Journal summits={summits} ascents={ascents} favorites={favorites} language={language} t={t} onEdit={editAscent} />}
+
       <section className="catalog" id="cims">
         <div className="section-heading"><div><p className="eyebrow">{t('EL TEU CATÀLEG')}</p><h2>{t('Tria el pròxim cim')}</h2></div><div className="catalog-heading-actions"><span className="catalog-count"><b>{visible.length}</b> {language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes'}</span><div className="catalog-view-toggle" role="group" aria-label={language === 'es' ? 'Vista del catálogo' : language === 'en' ? 'Catalogue view' : 'Vista del catàleg'}><button type="button" className={catalogView === 'list' ? 'active' : ''} aria-pressed={catalogView === 'list'} onClick={() => setCatalogView('list')}><span aria-hidden="true">▦</span>{language === 'es' ? 'Lista' : language === 'en' ? 'List' : 'Llista'}</button><button type="button" className={catalogView === 'map' ? 'active' : ''} aria-pressed={catalogView === 'map'} onClick={() => setCatalogView('map')}><span aria-hidden="true">⌖</span>{language === 'es' ? 'Mapa' : language === 'en' ? 'Map' : 'Mapa'}</button></div></div></div>
-        <div className="toolbar"><label className="search"><span>⌕</span><input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder={t('Cerca un cim o una comarca...')} aria-label={t('Cerca per cim o comarca')} /></label><div className="filters" role="group" aria-label={t('Filtrar cims')}>
-          {([['all', 'Tots'], ['pending', 'Pendents'], ['done', 'Fets'], ['essential', '✦ Essencials']] as const).map(([value, label]) => <button key={value} className={`filter ${filter === value ? 'active' : ''} ${value === 'essential' ? 'essential-filter' : ''}`} onClick={() => setFilter(value)}>{t(label)}{value === 'all' && <span>{summits.length}</span>}</button>)}
-        </div></div>
-        <div className="sort-row"><span>{ready ? `${visible.length} ${visible.length === 1 ? (language === 'es' ? 'montaña' : language === 'en' ? 'summit' : 'muntanya') : (language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes')} ${language === 'es' ? 'en el catálogo' : language === 'en' ? 'in catalogue' : 'al catàleg'}` : (language === 'es' ? 'Cargando catálogo…' : language === 'en' ? 'Loading catalogue…' : 'Carregant el catàleg…')}</span><label>{t('Ordena per')} <span className="select-wrap sort-select"><select value={sortBy} onChange={event => setSortBy(event.target.value as 'name' | 'height')}><option value="name">{t('Nom A–Z')}</option><option value="height">{t('Altitud')}</option></select></span></label></div>
+        <CatalogFilters summits={summits} filters={filters} onChange={setFilters} search={search} onSearch={setSearch} t={t} origin={origin} originLabel={originLabel} onOrigin={changeOrigin} onNotice={setNotice} />
+        <div className="sort-row"><button className="clear-filters" type="button" onClick={clearFilters}>{t('Netejar filtres')}</button><label>{t('Ordena per')} <span className="select-wrap sort-select"><select value={sortBy} onChange={event => setSortBy(event.target.value as SortBy)}><option value="name">{t('Nom A–Z')}</option><option value="height">{t('Altitud: de més a menys')}</option><option value="height-asc">{t('Altitud: de menys a més')}</option><option value="distance" disabled={!origin}>{t('Distància')}</option></select></span></label></div>
         {catalogView === 'map' ? <SummitMap summits={visible} ascents={ascents} language={language} onSelectSummit={id => {
           const summit = summits.find(item => item.id === id)
-          if (summit) setSelectedSummit(summit)
+          if (summit) { setNotice(''); setSelectedSummit(summit) }
         }} /> : <div className="grid" aria-live="polite">{visible.map(summit => {
           const ascent = ascents.get(summit.id)
-          const busy = busyId === summit.id
+          const busy = Boolean(busyId) || Boolean(user && !journalReady)
           return <article className="card" key={summit.id}>
             <div className={`thumb ${ascent?.photoUrl ? 'has-summit-photo' : 'has-placeholder'}`}>
-              {ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`Foto de ${summit.name}`} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" /> : <MountainPlaceholder name={summit.name} height={summit.height} region={summit.region} />}
+              {ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`${t('Foto de')} ${summit.name}`} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" /> : <MountainPlaceholder name={summit.name} height={summit.height} region={summit.region} />}
               {!ascent?.photoUrl && <span className="thumb-badge">{t('Il·lustració de referència')}</span>}
             </div>
             <div className="card-body">
-              <div className="card-meta">{summit.essential && <span className="essential-tag">{language === 'es' ? '✦ Esencial' : language === 'en' ? '✦ Essential' : '✦ Essencial'}</span>}{ascent && <span className="done-tag">✓ {t('Fets')}</span>}</div>
+              <div className="card-meta">{summit.essential && <span className="essential-tag">{language === 'es' ? '✦ Esencial' : language === 'en' ? '✦ Essential' : '✦ Essencial'}</span>}{ascent && <span className="done-tag">✓ {t('Fets')}</span>}<button type="button" className={`favorite-button ${favorites.has(summit.id) ? 'is-favorite' : ''}`} aria-label={`${t(favorites.has(summit.id) ? 'Treure de preferits' : 'Afegir a preferits')}: ${summit.name}`} aria-pressed={favorites.has(summit.id)} disabled={busy} onClick={() => void toggleFavorite(summit)}>{favorites.has(summit.id) ? '★' : '☆'}</button></div>
               <h3 title={summit.name}>{summit.name}</h3><div className="card-detail">{summit.height.toLocaleString('ca-ES')} m · {summit.region.replace(/\s*,\s*/g, ' · ')}</div>
-              <div className="card-actions"><button className={`mark-button ${ascent ? 'is-done' : ''}`} onClick={() => void toggleDone(summit)} disabled={busy}>{busy ? busyLabel : ascent ? `✓ ${friendlyDate(ascent.completed_at, language)}` : t('+ Marcar fet')}</button><label className={`photo-button ${ascent?.photo_path ? 'has-photo' : ''}`} aria-label={`${t('Pujar una foto de')} ${summit.name}`}>{ascent?.photo_path ? `▣ ${t('Canviar foto')}` : t('＋ Foto')}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={event => { void uploadPhoto(summit, event.target.files?.[0]); event.currentTarget.value = '' }} disabled={busy} /></label></div>
-              <button className="summit-explore" type="button" onClick={()=>setSelectedSummit(summit)}>{language==='es'?'Explorar cima ↗':language==='en'?'Explore summit ↗':'Explorar cim ↗'}</button>
+              {origin && <div className="card-distance">⌖ {coordinates[summit.id] ? `${distanceKm(origin, coordinates[summit.id]).toLocaleString(language, { maximumFractionDigits: 1 })} km` : t('Sense coordenades')}</div>}
+              <div className="card-actions"><button className={`mark-button ${ascent ? 'is-done' : ''}`} onClick={() => editAscent(summit)} aria-label={`${t(ascent ? 'Editar ascensió' : 'Registrar ascensió')}: ${summit.name}`} disabled={busy}>{busyId === summit.id ? t(busyLabel) : ascent ? `✓ ${friendlyDate(ascent.completed_at, language)}` : t('+ Marcar fet')}</button>{ascent ? <label className={`photo-button ${ascent.photo_path ? 'has-photo' : ''}`}>{ascent.photo_path ? `▣ ${t('Canviar foto')}` : t('＋ Foto')}<input type="file" aria-label={`${t('Pujar una foto de')} ${summit.name}`} accept="image/jpeg,image/png,image/webp,image/avif" onChange={event => { void uploadPhoto(summit, event.target.files?.[0]); event.currentTarget.value = '' }} disabled={busy} /></label> : <button type="button" className="photo-button" disabled={busy} onClick={() => editAscent(summit)}>{t('＋ Foto')}</button>}</div>
+              <button className="summit-explore" type="button" onClick={()=>{setNotice('');setSelectedSummit(summit)}}>{language==='es'?'Explorar cima ↗':language==='en'?'Explore summit ↗':'Explorar cim ↗'}</button>
             </div>
           </article>
-        })}{ready && visible.length === 0 && <div className="empty">No hem trobat cap cim amb aquests filtres.</div>}</div>}
+        })}{ready && visible.length === 0 && <div className="empty">{t('No hem trobat cap cim amb aquests filtres.')}<button type="button" className="secondary-button" onClick={clearFilters}>{t('Netejar filtres')}</button></div>}</div>}
         <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Ilustración de referencia: ilustración original de 100CimsCat.' : language === 'en' ? 'Reference illustration: original artwork by 100CimsCat.' : 'Il·lustració de referència: il·lustració pròpia de 100CimsCat.'}</p>
       </section>
 
-      {notice && <div className="toast show" role="status">{notice}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
-      {selectedSummit && <SummitDetailsModal summit={selectedSummit} language={language} onClose={()=>setSelectedSummit(null)} />}
+      {notice && <div className="toast show" role="status">{t(notice)}<button onClick={() => setNotice('')} aria-label={t('Tancar avís')}>×</button></div>}
+      {editingSummit && <AscentEditor key={editingSummit.id} summit={editingSummit} ascent={ascents.get(editingSummit.id)} busy={Boolean(busyId)} feedback={notice ? t(notice) : ''} t={t} onClose={() => setEditingSummit(null)} onSave={saveAscent} onDelete={deleteAscent} />}
+      {selectedSummit && <SummitDetailsModal summit={selectedSummit} language={language} favorite={favorites.has(selectedSummit.id)} completedAt={ascents.get(selectedSummit.id)?.completed_at} busy={Boolean(busyId) || Boolean(user && !journalReady)} feedback={notice ? t(notice) : ''} onFavorite={() => void toggleFavorite(selectedSummit)} onEdit={() => editAscent(selectedSummit)} onClose={()=>setSelectedSummit(null)} />}
       <footer>{t('Fet per recordar els camins, no només els cims.')} <span>100CIMS · 2026</span></footer>
 
       {deleteOpen && <div className="modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget&&!deletingAccount)setDeleteOpen(false)}}><section className="auth-modal delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-title"><button className="modal-close" disabled={deletingAccount} onClick={()=>setDeleteOpen(false)} aria-label={t('Tancar')}>×</button><p className="eyebrow">100CIMS CAT</p><h2 id="delete-title">{language==='es'?'Borrar cuenta para siempre':language==='en'?'Permanently delete account':'Esborrar el compte definitivament'}</h2><p>{language==='es'?'Se eliminarán tu cuenta, ascensiones y todas tus fotos privadas. Esta acción no se puede deshacer.':language==='en'?'Your account, ascents and all private photos will be deleted. This cannot be undone.':'S’eliminaran el compte, les ascensions i totes les fotos privades. Aquesta acció no es pot desfer.'}</p><label className="confirm-delete-label" htmlFor="delete-confirm">{language==='es'?'Escribe ELIMINAR para confirmar':language==='en'?'Type ELIMINAR to confirm':'Escriu ELIMINAR per confirmar'}</label><input id="delete-confirm" value={deleteConfirmation} onChange={event=>setDeleteConfirmation(event.target.value)} autoComplete="off" /><button className="delete-confirm-button" disabled={deleteConfirmation!=='ELIMINAR'||deletingAccount} onClick={()=>void deleteAccount()}>{deletingAccount?'…':language==='es'?'Borrar cuenta y fotos':language==='en'?'Delete account and photos':'Esborrar compte i fotos'}</button></section></div>}
-      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label="Tancar">×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><button type="button" className="google-signin" onClick={() => void signInWithGoogle()} disabled={signingInWithGoogle}>{signingInWithGoogle ? '…' : <><span className="google-mark" aria-hidden="true">G</span>{t('Continua amb Google')}</>}</button>{googleError && <p className="google-error" role="alert">{googleError}</p>}<div className="auth-divider"><span>{t('o bé')}</span></div><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} /><button className="mark-button" disabled={sendingLink}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
+      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label={t('Tancar')}>×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><button type="button" className="google-signin" onClick={() => void signInWithGoogle()} disabled={signingInWithGoogle}>{signingInWithGoogle ? '…' : <><span className="google-mark" aria-hidden="true">G</span>{t('Continua amb Google')}</>}</button>{googleError && <p className="google-error" role="alert">{googleError}</p>}<div className="auth-divider"><span>{t('o bé')}</span></div><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} /><button className="mark-button" disabled={sendingLink}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
     </main>
   )
 }

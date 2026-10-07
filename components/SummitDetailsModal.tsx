@@ -1,16 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-
-type Summit = {
-  id: string
-  name: string
-  height: number
-  region: string
-  essential: boolean
-  url: string
-}
+import { useEffect, useRef, useState } from 'react'
+import { friendlyDate, type Summit } from '@/lib/tracker'
+import { trackerText } from '@/lib/tracker-i18n'
 
 type CommonsMetadata = { value?: string }
 type CommonsImage = {
@@ -26,6 +19,12 @@ type Props = {
   summit: Summit
   language: 'ca' | 'es' | 'en'
   onClose: () => void
+  favorite: boolean
+  completedAt?: string
+  busy: boolean
+  onFavorite: () => void
+  onEdit: () => void
+  feedback: string
 }
 
 const commonsCache = new Map<string, Promise<CommonsImage[]>>()
@@ -58,11 +57,14 @@ function getCommonsImages(summitName: string) {
       })
     })
 
+  request.catch(() => { commonsCache.delete(cacheKey) })
   commonsCache.set(cacheKey, request)
   return request
 }
 
-export default function SummitDetailsModal({ summit, language, onClose }: Props) {
+export default function SummitDetailsModal({ summit, language, onClose, favorite, completedAt, busy, onFavorite, onEdit, feedback }: Props) {
+  const dialog = useRef<HTMLDialogElement>(null)
+  const t = (value: string) => trackerText(language, value)
   const [images, setImages] = useState<CommonsImage[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
@@ -83,12 +85,12 @@ export default function SummitDetailsModal({ summit, language, onClose }: Props)
   }, [summit.name])
 
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [onClose])
+    const element = dialog.current
+    element?.showModal()
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { element?.close(); document.body.style.overflow = previous }
+  }, [])
 
   const openMap = new URL('https://www.openstreetmap.org/search')
   openMap.searchParams.set('query', `${summit.name}, ${summit.region}`)
@@ -102,12 +104,14 @@ export default function SummitDetailsModal({ summit, language, onClose }: Props)
       : { details: 'Fitxa de la cima', close: 'Tancar', essential: 'Essencial', map: 'Cercar al mapa', route: 'Fitxa i recorregut FEEC', photos: 'Fotos de referència', loading: 'Cercant imatges amb llicència lliure…', empty: 'No hem trobat cap foto amb el nom exacte del cim.', error: 'No s’han pogut carregar les imatges.', commons: 'Cercar més fotos a Wikimedia Commons', attribution: 'Cada foto manté l’autoria, la llicència i l’enllaç a la font. Comprova que correspon exactament a aquest cim abans de fer-la servir.', location: 'La cerca del mapa fa servir el nom i la comarca; confirma el punt exacte abans de sortir.' }
 
   return (
-    <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) onClose() }}>
-      <section className="summit-modal" role="dialog" aria-modal="true" aria-labelledby="summit-modal-title">
+      <dialog ref={dialog} className="summit-modal" aria-labelledby="summit-modal-title" onCancel={onClose}>
         <button className="modal-close" onClick={onClose} aria-label={labels.close}>×</button>
         <p className="eyebrow">{labels.details}</p>
         <h2 id="summit-modal-title">{summit.name}</h2>
+        {feedback && <p className="form-error" role="status">{feedback}</p>}
         <div className="summit-facts"><strong>{summit.height.toLocaleString(language === 'en' ? 'en-GB' : language === 'es' ? 'es-ES' : 'ca-ES')} m</strong><span>{summit.region.replace(/\s*,\s*/g, ' · ')}</span>{summit.essential && <span className="essential-tag">✦ {labels.essential}</span>}</div>
+
+        <div className="summit-journal-actions"><button className="primary-button" type="button" disabled={busy} onClick={onEdit}>{t(completedAt ? 'Editar ascensió' : 'Registrar ascensió')}{completedAt && ` · ${friendlyDate(completedAt, language)}`}</button><button className="secondary-button" type="button" disabled={busy} aria-pressed={favorite} onClick={onFavorite}>{favorite ? '★' : '☆'} {t(favorite ? 'Treure de preferits' : 'Afegir a preferits')}</button></div>
 
         <div className="summit-detail-links">
           <a href={summit.url} target="_blank" rel="noreferrer">{labels.route} ↗</a>
@@ -133,7 +137,6 @@ export default function SummitDetailsModal({ summit, language, onClose }: Props)
           </article>
         })}</div>}
         <p className="commons-attribution">{labels.attribution}</p>
-      </section>
-    </div>
+      </dialog>
   )
 }

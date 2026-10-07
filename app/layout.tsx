@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css'
 import './globals.css'
 import './overrides.css'
 import './summit-map.css'
+import './tracker.css'
 
 const preferenceBootstrap = `try {
   const root = document.documentElement;
