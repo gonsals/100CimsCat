@@ -1,5 +1,17 @@
 # Validación de funcionalidades y móvil
 
+## Corrección de subida de fotos — 13 de octubre de 2026
+
+La política INSERT rechazaba la comprobación previa de Supabase Storage: en ese momento `metadata.size` todavía no existe, aunque la llamada de cuota desde el navegador permita la foto. Se reprodujo el rechazo usando una copia temporal de `storage.objects` con la política real y el rol `authenticated`.
+
+La migración `20261013191912_fix_photo_upload_permission_probe.sql`, aplicada en Supabase, usa `metadata.size`, después `metadata.contentLength` y finalmente una reserva conservadora de 512 KiB cuando falta el tamaño. Se mantienen el bucket privado, la restricción por propietario y los límites de almacenamiento.
+
+`tests/photo-upload-policy.sql` verifica la política aplicada: cinco casos válidos aceptados y siete inválidos rechazados, incluyendo otra cuenta, otro bucket, archivos vacíos, exceso de tamaño y ausencia de usuario. Las pruebas usan una tabla temporal y terminan con ROLLBACK; no modifican cuentas, ascensiones ni archivos reales. Los cinco tests de `npm test` también pasan. Los asesores de seguridad mantienen los mismos avisos anteriores, sin nuevos hallazgos.
+
+Esta comprobación valida la regla de permisos contra Supabase; no realiza una subida real desde una sesión de usuario.
+
+## Validación anterior
+
 Fecha: 7 de octubre de 2026.
 
 ## Resultado
