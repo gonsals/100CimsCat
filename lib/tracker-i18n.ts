@@ -2,6 +2,13 @@ import type { Language } from './tracker'
 
 // Catalan is the source language, matching the existing catalogue and interface.
 const messages: Record<string, [string, string]> = {
+  'Relleu il·lustrat': ['Relieve ilustrado', 'Illustrated terrain'],
+  'Il·lustracions basades en el relleu real: ICGC i Mapzen.': ['Ilustraciones basadas en el relieve real: ICGC y Mapzen.', 'Illustrations based on real terrain: ICGC and Mapzen.'],
+  'Imatge del cim': ['Imagen de la cima', 'Summit image'],
+  'Il·lustració': ['Ilustración', 'Illustration'], 'Fotografia': ['Fotografía', 'Photo'],
+  'Perfil generat amb elevacions reals.': ['Perfil generado con elevaciones reales.', 'Profile generated from real elevations.'],
+  'Vista des de': ['Vista desde', 'View from'],
+  'Interpretació artística amb escala vertical adaptada.': ['Interpretación artística con escala vertical adaptada.', 'Artistic interpretation with an adjusted vertical scale.'],
   'Idioma': ['Idioma', 'Language'],
   'Foto': ['Foto', 'Photo'],
   'Tancar': ['Cerrar', 'Close'],

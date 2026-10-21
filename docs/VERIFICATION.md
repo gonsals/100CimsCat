@@ -1,5 +1,17 @@
 # Validación de funcionalidades y móvil
 
+## Ilustraciones de terreno real — 21 de octubre de 2026
+
+Se sustituyen los perfiles aleatorios por 522 SVG calculados a partir de las elevaciones alrededor de cada cima. 463 utilizan ICGC MET de 15 m y 111 utilizan Mapzen Terrarium; 52 combinan ambas fuentes en los límites de cobertura. Se conservan la composición por capas y la paleta de la web. Se ajustan las vistas de montañas características, incluidos los dos Pollegons y la enforcadura del Pedraforca. Son interpretaciones estilizadas con escala vertical adaptada; no se afirma que todos los pequeños accidentes sean reconocibles a esta resolución. No se añade nieve ni caminos inventados.
+
+Las tarjetas cargan SVG locales y las fichas públicas y del mapa comparten el selector de ilustración/fotografía. Cada ilustración muestra orientación y atribución; `/fonts#relleu` explica las fuentes, licencia y transformaciones. El generador funciona fuera de la aplicación y conserva procedencia y hashes. El navegador no solicita mosaicos de elevaciones; los SVG con nombre por contenido se cachean un año. El lector sin conexión no incorpora imágenes ni información privada.
+
+Compilación de producción con TypeScript correcta y 540 páginas generadas. Las 13 pruebas unitarias verifican también la decodificación Terrarium, la validación de rejillas ICGC, el relieve de dos cimas, la independencia del nombre y la cobertura, integridad y atribución de los 522 archivos. `scripts/product-check.cjs` completa 66 comprobaciones, incluidas 63 con axe-core 4.14.0 y los flujos privados simulados, sin infracciones detectadas ni errores JavaScript. Comprueba alternar ilustración y fotografía a 320, 390 y 1280 px.
+
+`scripts/mountain-art-check.cjs` verifica siete perfiles, incluido un cerro costero bajo, con capturas y comprobaciones de imágenes decodificadas, orientación, créditos, cabeceras de caché y ausencia de desbordamientos o peticiones a ICGC/Mapzen desde el navegador. Las pruebas del cuaderno pasan en 320, 375, 390, 768 y 1280 px. Se revisan visualmente los perfiles y la ficha del Pedraforca en móvil y escritorio. No se modifican tablas ni datos personales.
+
+La prueba de navegación detectó que el reinicio del scroll de Next.js podía sobrescribir la posición del catálogo mientras se desmontaba la página anterior. Se ignoran los eventos de scroll después del cambio de ruta. `scripts/improvements-check.cjs` confirma volver al bloque ampliado de 96 tarjetas y recuperar la posición, filtros y mapa, además de abrir, recargar y eliminar fichas sin conexión. La prueba espera también las fuentes y la comprobación de visibilidad del enlace antes de medir la posición de salida.
+
 ## Producto y uso diario — 21 de octubre de 2026
 
 Identidad e iconos SVG compartidos, cabecera y pie coherentes, páginas de proyecto, ayuda, fuentes, privacidad y contacto. Se publica el responsable Marc Gonzalez Tarrio y el correo marcgonzaleztarrio@gmail.com, facilitados por el propietario. Se mantienen Fraunces y Hanken Grotesk, servidas desde la propia web.

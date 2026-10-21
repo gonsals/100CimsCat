@@ -1,10 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
-import MountainPlaceholder from '@/components/MountainPlaceholder'
+import SummitReference from '@/components/SummitReference'
 import OfflineButton from '@/components/OfflineButton'
 import { coordinates, localeFor, type Language, type Summit } from '@/lib/tracker'
 import { usePreferences } from '@/lib/use-preferences'
@@ -23,12 +21,10 @@ const copy = {
 
 export default function SummitPageContent({ summit, related }: { summit: Summit; related: Summit[] }) {
   const { language } = usePreferences()
-  const { data, loading, error, retry } = useSummitContext(summit)
-  const [imageFailed, setImageFailed] = useState(false)
-  useEffect(() => { setImageFailed(false) }, [summit.id])
+  const context = useSummitContext(summit)
+  const { data } = context
   const t = copy[language]
   const tx = (value: string) => trackerText(language, value)
-  const photo = !imageFailed ? data?.photo : null
   const point = coordinates[summit.id]
   const mapUrl = point ? `https://www.openstreetmap.org/?mlat=${point.lat}&mlon=${point.lng}#map=14/${point.lat}/${point.lng}` : `https://www.openstreetmap.org/search?query=${encodeURIComponent(`${summit.name}, ${summit.region}`)}`
   const height = summit.height.toLocaleString(localeFor(language))
@@ -36,7 +32,7 @@ export default function SummitPageContent({ summit, related }: { summit: Summit;
   return <div className="shell summit-page"><SkipLink language={language} /><SiteHeader language={language} /><main id="main-content" tabIndex={-1}>
     <nav className="breadcrumbs" aria-label={t.breadcrumbs}><Link href="/">{t.home}</Link><span aria-hidden="true">/</span><span>{summit.name}</span></nav>
     <article>
-      <div className="summit-page-heading"><div><p className="eyebrow">{t.challenge}</p><h1>{summit.name}</h1><p className="summit-page-facts">{height} m · {summit.region}</p>{summit.essential && <span className="essential-tag"><Icon name="star" size={13} />{t.essential}</span>}{data?.description[language] && <p className="summit-description">{data.description[language]} <a href={data.entityUrl} target="_blank" rel="noreferrer">Wikidata<Icon name="arrow" size={13} /></a></p>}</div><figure className="summit-reference"><div className="summit-page-art">{photo ? <Image src={photo.url} alt={summit.name} width={1280} height={853} unoptimized onError={() => setImageFailed(true)} /> : <><MountainPlaceholder name={summit.name} height={summit.height} region={summit.region} /><span>{t.illustration}</span></>}</div><figcaption>{photo ? <><span>{photo.author}</span> · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.license}</a> · <a href={photo.sourceUrl} target="_blank" rel="noreferrer">Wikimedia Commons<Icon name="arrow" size={12} /></a><small>{tx('Imatge vinculada a la cima per nom i coordenades a Wikidata.')}</small></> : loading ? <span role="status">{tx('Comprovant imatges i fonts…')}</span> : (error || imageFailed) ? <span>{tx('La imatge no està disponible ara.')} <button type="button" className="text-button" onClick={() => { setImageFailed(false); retry() }}>{tx('Tornar-ho a provar')}</button></span> : tx('Il·lustració de referència; no representa una fotografia del cim.')}</figcaption></figure></div>
+      <div className="summit-page-heading"><div><p className="eyebrow">{t.challenge}</p><h1>{summit.name}</h1><p className="summit-page-facts">{height} m · {summit.region}</p>{summit.essential && <span className="essential-tag"><Icon name="star" size={13} />{t.essential}</span>}{data?.description[language] && <p className="summit-description">{data.description[language]} <a href={data.entityUrl} target="_blank" rel="noreferrer">Wikidata<Icon name="arrow" size={13} /></a></p>}</div><SummitReference summit={summit} language={language} context={context} /></div>
       <section className="summit-page-section" aria-labelledby="summit-information"><h2 id="summit-information">{t.prepare}</h2><p>{summit.name} · {t.catalogue}</p><dl className="summit-data"><div><dt>{t.altitude}</dt><dd>{height} m</dd></div><div><dt>{t.region}</dt><dd>{summit.region}</dd></div>{point && <div><dt>{t.coordinates}</dt><dd>{point.lat.toFixed(5)}, {point.lng.toFixed(5)}</dd></div>}</dl>{point && <LocationMap point={point} name={summit.name} language={language} />}<div className="summit-page-actions"><a href={summit.url} target="_blank" rel="noreferrer" className="secondary-button">{t.route}<Icon name="arrow" /></a><a href={mapUrl} target="_blank" rel="noreferrer" className="secondary-button">{t.map}<Icon name="arrow" /></a><Link href={`/?cim=${summit.id}&registrar=1#cims`} className="primary-button" prefetch={false}>{tx('Registrar ascensió')}<Icon name="plus" /></Link></div><div className="route-source"><Icon name="info" /><p>{tx('Consulta accessos, variants i recorreguts a la fitxa FEEC. L’altitud del cim no indica la dificultat ni el desnivell de la ruta.')} <a href={summit.url} target="_blank" rel="noreferrer">FEEC<Icon name="arrow" size={14} /></a></p></div><p className="field-hint">{t.note}</p></section>
       <section className="summit-page-section" aria-labelledby="save-summit"><h2 id="save-summit">{t.offline}</h2><p>{t.offlineNote}</p><OfflineButton summit={summit} language={language} /></section>
       {related.length > 0 && <section className="summit-page-section" aria-labelledby="related-summits"><h2 id="related-summits">{t.related}</h2><ul className="related-summits">{related.map(item => <li key={item.id}><Link href={`/cims/${item.id}`} prefetch={false}>{item.name}<span>{item.height.toLocaleString(localeFor(language))} m</span></Link></li>)}</ul></section>}

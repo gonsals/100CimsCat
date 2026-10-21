@@ -1,0 +1,4230 @@
+{
+  "canigo": {
+    "file": "canigo.668e1a98ac74.svg",
+    "bearing": 330,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "les-agudes": {
+    "file": "les-agudes.fe4f4e47b8df.svg",
+    "bearing": 100,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-mola-de-sant-llorenc-del-munt": {
+    "file": "la-mola-de-sant-llorenc-del-munt.28fdfeda4b26.svg",
+    "bearing": 160,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "matagalls": {
+    "file": "matagalls.285524dde750.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montcau": {
+    "file": "montcau.e5b0856716a5.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pollego-inferior-pedraforca": {
+    "file": "pollego-inferior-pedraforca.6c58adfe39e1.svg",
+    "bearing": 100,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pollego-superior-pedraforca": {
+    "file": "pollego-superior-pedraforca.e13b0e219f17.svg",
+    "bearing": 100,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puigmal": {
+    "file": "puigmal.62695ec56e55.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puigsacalm": {
+    "file": "puigsacalm.a5782d441c01.svg",
+    "bearing": 135,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-jeroni": {
+    "file": "sant-jeroni.b6582534198e.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-lhome": {
+    "file": "turo-de-lhome.aad7e4e9b1b9.svg",
+    "bearing": 190,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "alt-de-juclar": {
+    "file": "alt-de-juclar.3540c9efdae2.svg",
+    "bearing": 240,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "alt-de-la-capa": {
+    "file": "alt-de-la-capa.11d1eee3ebd6.svg",
+    "bearing": 150,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "alt-del-griu": {
+    "file": "alt-del-griu.4428c6e66aa3.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "balandrau": {
+    "file": "balandrau.dbe2ba45fa6a.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "bassegoda": {
+    "file": "bassegoda.e4aee1c9087f.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "bastiments": {
+    "file": "bastiments.f6bb59f7da11.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "bellmunt": {
+    "file": "bellmunt.14d83fbfbef4.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "besiberri-del-sud": {
+    "file": "besiberri-del-sud.6294c6155c33.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "besiberri-nord": {
+    "file": "besiberri-nord.fafe753a7d90.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cabrera": {
+    "file": "cabrera.db7b5f363de4.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "bony-de-la-pica-o-pica-dos": {
+    "file": "bony-de-la-pica-o-pica-dos.0dcc34624b72.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "cambra-dase": {
+    "file": "cambra-dase.65a98b3d1e62.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "cap-de-boumort": {
+    "file": "cap-de-boumort.ca91d4ae1551.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "campirme": {
+    "file": "campirme.3fb02f76d41c.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cap-de-carreu": {
+    "file": "cap-de-carreu.d91ffbdce77c.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cap-de-broate": {
+    "file": "cap-de-broate.5c849c70bde6.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "cap-de-la-boixassa": {
+    "file": "cap-de-la-boixassa.54de1f89dade.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cap-de-gelada": {
+    "file": "cap-de-gelada.09ad121711be.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cap-de-la-gallina-pelada": {
+    "file": "cap-de-la-gallina-pelada.8f7f69dc7616.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cap-de-pla-redon": {
+    "file": "cap-de-pla-redon.b4b078aa2eaf.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cap-del-verd": {
+    "file": "cap-del-verd.9e191211b1ca.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "casamanya-nord": {
+    "file": "casamanya-nord.623b8d1523bc.svg",
+    "bearing": 210,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "caro": {
+    "file": "caro.19cfd0f7bb24.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "carlit": {
+    "file": "carlit.9db081d95576.svg",
+    "bearing": 240,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "castell-de-besora": {
+    "file": "castell-de-besora.4e95493ae623.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-boixadors": {
+    "file": "castell-de-boixadors.fd28e83f3833.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-bocs": {
+    "file": "castell-de-bocs.ccd511235e5c.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-burriac": {
+    "file": "castell-de-burriac.09ca78ef20a5.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-llivia": {
+    "file": "castell-de-llivia.a36320920649.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-lluca": {
+    "file": "castell-de-lluca.407e28e1d00a.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-milany": {
+    "file": "castell-de-milany.9e882c977a46.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-montgri": {
+    "file": "castell-de-montgri.6e132ac1c13a.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-de-sant-miquel": {
+    "file": "castell-de-sant-miquel.2ca09fee437b.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castellsapera": {
+    "file": "castellsapera.57ae8014f3ed.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "castell-saverdera": {
+    "file": "castell-saverdera.6ef1761e7fe4.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "catinell": {
+    "file": "catinell.9e81995253fd.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cavall-bernat-de-llaberia": {
+    "file": "cavall-bernat-de-llaberia.de9f64414654.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "clapi-vell": {
+    "file": "clapi-vell.4029b5f199f4.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "codol-del-castellar": {
+    "file": "codol-del-castellar.2ad132c3bde0.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cogullo-destela": {
+    "file": "cogullo-destela.5c2f8a6b8a3e.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cogullo-de-cal-torre": {
+    "file": "cogullo-de-cal-torre.374c2fc77068.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "cogullo-de-turp": {
+    "file": "cogullo-de-turp.da775f56e294.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "coll-de-pins": {
+    "file": "coll-de-pins.db112a211acd.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "collbaix": {
+    "file": "collbaix.8ba7c8baaf36.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "comabona": {
+    "file": "comabona.84ca4ef2db19.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "comapedrosa": {
+    "file": "comapedrosa.9cdbd79575b5.svg",
+    "bearing": 120,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "comanegra": {
+    "file": "comanegra.c7d185915797.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "costa-pubilla-o-pla-de-pujalts": {
+    "file": "costa-pubilla-o-pla-de-pujalts.e7f0329a6b0a.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "costabona": {
+    "file": "costabona.3aa4483e2d73.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "creu-de-gurb": {
+    "file": "creu-de-gurb.c30dbd323a41.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "xaquera-o-creu-de-santos": {
+    "file": "xaquera-o-creu-de-santos.22dc486278a9.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-bres": {
+    "file": "el-bres.6c3e4a0a51a0.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-cadinell": {
+    "file": "el-cadinell.96ed16b8fb66.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-castellar-serra-dancosa": {
+    "file": "puig-castellar-serra-dancosa.39bde6539b16.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-castellot": {
+    "file": "el-castellot.38624b0ca2ca.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-codo": {
+    "file": "el-codo.10466c8c6878.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-cogul": {
+    "file": "el-cogul.6b97ca2cab39.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-cogullo": {
+    "file": "el-cogullo.a949597de807.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-cogullo-de-cabra": {
+    "file": "el-cogullo-de-cabra.5fda8c8e1784.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-far": {
+    "file": "el-far.fdab0bbf2be5.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-coscollet": {
+    "file": "el-coscollet.55f0a0a257bd.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-garrofi": {
+    "file": "el-garrofi.afccac655383.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-mont": {
+    "file": "el-mont.e693f0bdcfad.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-montsianell": {
+    "file": "el-montsianell.cda0811c298f.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-negrell": {
+    "file": "el-negrell.664e5a876aab.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-sui": {
+    "file": "el-sui.dcf3e9fb2f4f.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-punxo": {
+    "file": "el-punxo.97b0e41ac786.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "el-torn": {
+    "file": "el-torn.2a0e3b2a5041.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "el-tossal-gros": {
+    "file": "el-tossal-gros.f9fcba1c2bc6.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "els-angels": {
+    "file": "els-angels.55cb3236defb.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "els-bessons": {
+    "file": "els-bessons.19144bd3c77f.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "els-munts": {
+    "file": "els-munts.bae46b999a8e.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "els-quatre-mollons": {
+    "file": "els-quatre-mollons.5369b1e858e7.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "els-tossals": {
+    "file": "els-tossals.c4ee23d5a0ae.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "forca-real": {
+    "file": "forca-real.fd188778467e.svg",
+    "bearing": 90,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "gallinova": {
+    "file": "gallinova.0a08e45bdf27.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "gra-de-fajol": {
+    "file": "gra-de-fajol.28414aa57a8a.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "gran-encantat": {
+    "file": "gran-encantat.c65494ccd5e4.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "gran-tuc-de-colomers": {
+    "file": "gran-tuc-de-colomers.2dfb82ad2beb.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "gran-pic-del-pesso": {
+    "file": "gran-pic-del-pesso.eb06eb4faa0a.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "grony-de-miralles": {
+    "file": "grony-de-miralles.63900080c6f8.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lalbarda-castellana": {
+    "file": "lalbarda-castellana.28577ecb5d77.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "laliga": {
+    "file": "laliga.9b91e328ad1f.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "largimon": {
+    "file": "largimon.9c047ff64bb8.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "laut": {
+    "file": "laut.5d51c09e4f66.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lavedoga-dadons": {
+    "file": "lavedoga-dadons.7406e874d333.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lenclusa": {
+    "file": "lenclusa.87b40e70caed.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lespina": {
+    "file": "lespina.50131362b9a6.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "loratori": {
+    "file": "loratori.e6d30d86efef.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-cogula": {
+    "file": "la-cogula.ab46be1a5589.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-cogulla": {
+    "file": "la-cogulla.9e7b1b9b2df1.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-carabassa": {
+    "file": "la-carabassa.3733b7437ce1.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-coscollosa": {
+    "file": "la-coscollosa.ded5b2eee0fb.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-cogulla-montsant": {
+    "file": "la-cogulla-montsant.dbf9f8a78347.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-creueta": {
+    "file": "la-creueta.5835b96c0898.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-faiada": {
+    "file": "la-faiada.79807cf0b5d2.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-fita-alta": {
+    "file": "la-fita-alta.81a1d8c176fa.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-guardia-serra-de-busa": {
+    "file": "la-guardia-serra-de-busa.b3fa671b293b.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-miranda-de-terranyes": {
+    "file": "la-miranda-de-terranyes.8259a21da945.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-moleta": {
+    "file": "la-moleta.4d2c5f187ba3.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-mola": {
+    "file": "la-mola.5b11b187fa21.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-morella": {
+    "file": "la-morella.1b78599c5417.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-muga": {
+    "file": "la-muga.8b72c5076b1d.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-picossa": {
+    "file": "la-picossa.f9038c83c63a.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-portella-del-pinell": {
+    "file": "la-portella-del-pinell.d9f1b3fe0671.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-serra-vingrau": {
+    "file": "la-serra-vingrau.24dc9d4cd8ae.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "la-soca": {
+    "file": "la-soca.fafeddc6298e.svg",
+    "bearing": 90,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "la-tosa": {
+    "file": "la-tosa.d84b213529c7.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "la-tossa-tivissa": {
+    "file": "la-tossa-tivissa.39cbb2724f6f.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "les-carcoles": {
+    "file": "les-carcoles.59f2237e2b24.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "les-borregues": {
+    "file": "les-borregues.28258c8a8917.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-de-la-barca-les-picossies": {
+    "file": "roca-de-la-barca-les-picossies.26d8460fc3ef.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "les-picardes": {
+    "file": "les-picardes.9a0134c50024.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "les-solius": {
+    "file": "les-solius.e6d1ee4dd5c7.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "les-piques": {
+    "file": "les-piques.a89869bed93c.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lo-blau-roca-grossa-moletans": {
+    "file": "lo-blau-roca-grossa-moletans.884fc87e97d6.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lo-caramull": {
+    "file": "lo-caramull.bbf0191b31d9.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lo-corrunco": {
+    "file": "lo-corrunco.7a06f8229f39.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lo-morral": {
+    "file": "lo-morral.60cc722a3993.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lo-peladet": {
+    "file": "lo-peladet.01726422b34e.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lo-tesol-teso-de-son": {
+    "file": "lo-tesol-teso-de-son.a14747348dda.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "lo-tormo": {
+    "file": "lo-tormo.a1d02694a677.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "los-picons": {
+    "file": "los-picons.56170d68c636.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "malera": {
+    "file": "malera.d780f1d638e1.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "malh-de-bolard": {
+    "file": "malh-de-bolard.abe7001b32ea.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "malh-des-pois-la-forcanada": {
+    "file": "malh-des-pois-la-forcanada.f7fc655d51f3.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "malh-dera-artiga": {
+    "file": "malh-dera-artiga.7e7621744386.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "miranda-de-llaberia": {
+    "file": "miranda-de-llaberia.509a4cdbb37b.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mauberme": {
+    "file": "mauberme.77d9fd39c2c2.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "mirador-del-pla-de-llet": {
+    "file": "mirador-del-pla-de-llet.f85fdcaf4ffd.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "miranda-de-santa-magdalena": {
+    "file": "miranda-de-santa-magdalena.49dd702dfa43.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "miranda-de-puigcerver": {
+    "file": "miranda-de-puigcerver.908c96d57f2d.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "miranda-del-princep": {
+    "file": "miranda-del-princep.900fa20837e4.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "miranda-dels-ecos": {
+    "file": "miranda-dels-ecos.94eacd4d22bf.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mola-castellona": {
+    "file": "mola-castellona.ea218396a080.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mola-destat": {
+    "file": "mola-destat.9ff5a649b650.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mola-de-colldejou": {
+    "file": "mola-de-colldejou.029747b79e6e.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mola-dirto": {
+    "file": "mola-dirto.eddf299abc78.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mola-de-genesies": {
+    "file": "mola-de-genesies.4c7169ae5fe0.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mola-de-lord": {
+    "file": "mola-de-lord.6d9df8ec1884.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "moleta-de-les-canals": {
+    "file": "moleta-de-les-canals.e03cc265c865.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mollo-puntaire": {
+    "file": "mollo-puntaire.a0378397f6d6.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mont-roig": {
+    "file": "mont-roig.4be166222ec5.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "montagut-dancosa": {
+    "file": "montagut-dancosa.bb5b593e9152.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "mont-roig-cim-de-les-altures": {
+    "file": "mont-roig-cim-de-les-altures.8e4cf3d3aa42.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montalt": {
+    "file": "montalt.a18993061a30.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montalt-punta-nord": {
+    "file": "montalt-punta-nord.ef5e5562ea28.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montardo": {
+    "file": "montardo.e0328c8b659c.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montanha-duishera": {
+    "file": "montanha-duishera.d553c1f0c35e.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montaspre": {
+    "file": "montaspre.6f12be7ac81d.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montarenyo-de-boldis": {
+    "file": "montarenyo-de-boldis.7dfbe6ab2279.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montau": {
+    "file": "montau.6f96d9b462a7.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montbarbat": {
+    "file": "montbarbat.76afecd7bc7d.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montclar": {
+    "file": "montclar.f346e3ce185a.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montcaubo-lo-calbo": {
+    "file": "montcaubo-lo-calbo.9fde82f9e832.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montcorbison": {
+    "file": "montcorbison.83593ac57dc5.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montero": {
+    "file": "montero.1fa008b31ac5.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "monteixo": {
+    "file": "monteixo.c841d8b75e45.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montgros": {
+    "file": "montgros.c66869a6d9d7.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montigalar": {
+    "file": "montigalar.d028e9c22db6.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montllobar": {
+    "file": "montllobar.063175a2dcf6.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montlude": {
+    "file": "montlude.a0fed0bc7f01.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montmagastre": {
+    "file": "montmagastre.7b251e727025.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montmalus": {
+    "file": "montmalus.642f53694265.svg",
+    "bearing": 30,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "montmajor": {
+    "file": "montmajor.fb45161aca9f.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montolier-de-perellos": {
+    "file": "montolier-de-perellos.941be99a7ba0.svg",
+    "bearing": 90,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "montpalau": {
+    "file": "montpalau.dedb649b4447.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montsaliente": {
+    "file": "montsaliente.b1ee12489d6b.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montsent-serrat-de-picancel": {
+    "file": "montsent-serrat-de-picancel.0da9ec9f6852.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montsent-de-pallars": {
+    "file": "montsent-de-pallars.5825865e1af5.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "monturull": {
+    "file": "monturull.d855148cd2fc.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "morral-del-cabrafeixet": {
+    "file": "morral-del-cabrafeixet.3de2947c34b2.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "noufonts": {
+    "file": "noufonts.88a583d3acbb.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "munt-de-montsonis": {
+    "file": "munt-de-montsonis.ce1e2b467f85.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pala-alta": {
+    "file": "pala-alta.50c06a9f0c41.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pala-del-teller": {
+    "file": "pala-del-teller.a030e688027b.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pedracastell-o-creu-de-canet": {
+    "file": "pedracastell-o-creu-de-canet.c91232c7487d.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pedro-de-tubau": {
+    "file": "pedro-de-tubau.cdb95328c0ba.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "penya-aguda": {
+    "file": "penya-aguda.168ccedc4ec9.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "penya-del-papiol": {
+    "file": "penya-del-papiol.e2093c7d9352.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pedro-dels-quatre-batlles": {
+    "file": "pedro-dels-quatre-batlles.dac6ca4c049b.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "penyes-altes": {
+    "file": "penyes-altes.85bf002a1500.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "penya-sant-alis": {
+    "file": "penya-sant-alis.e4e1ed903465.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-alt-del-cubil": {
+    "file": "pic-alt-del-cubil.08101a0a0a8c.svg",
+    "bearing": 30,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-descobes": {
+    "file": "pic-descobes.46871788bda5.svg",
+    "bearing": 150,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-baborte": {
+    "file": "pic-de-baborte.c1ae29c98d24.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-cabanyo": {
+    "file": "pic-de-cabanyo.d0340d1892f8.svg",
+    "bearing": 330,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-baixollada": {
+    "file": "pic-de-baixollada.c8b8bc27ad8d.svg",
+    "bearing": 150,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-canalbona": {
+    "file": "pic-de-canalbona.944d8b774c2e.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-cataperdis": {
+    "file": "pic-de-cataperdis.683f17d7306b.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-certascan": {
+    "file": "pic-de-certascan.ce0d916a77c2.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-colatx": {
+    "file": "pic-de-colatx.c9958d6420f3.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-clavera": {
+    "file": "pic-de-clavera.80a51f191dfa.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "pic-de-comaloforno": {
+    "file": "pic-de-comaloforno.26c0899fe4ff.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-coma-mitjana": {
+    "file": "pic-de-coma-mitjana.15942dbe3abb.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-de-contraix": {
+    "file": "pic-de-contraix.2174ead7a803.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-costa-cabirolera": {
+    "file": "pic-de-costa-cabirolera.97579e46ca99.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-filia-tossal-de-paiasso": {
+    "file": "pic-de-filia-tossal-de-paiasso.e34df0761b76.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-flamisella": {
+    "file": "pic-de-flamisella.d53cb0892808.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-font-blanca": {
+    "file": "pic-de-font-blanca.1832500fc7b5.svg",
+    "bearing": 120,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-font-freda": {
+    "file": "pic-de-font-freda.820c765eb0ee.svg",
+    "bearing": 90,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-de-gallinassa": {
+    "file": "pic-de-gallinassa.46837d1ec206.svg",
+    "bearing": 60,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-de-gerri": {
+    "file": "pic-de-gerri.5d3ab1127585.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-laguila": {
+    "file": "pic-de-laguila.eb342647f019.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-lespada": {
+    "file": "pic-de-lespada.02812706ff60.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-lestanyo": {
+    "file": "pic-de-lestanyo.dee5cb5f493d.svg",
+    "bearing": 330,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-linfern": {
+    "file": "pic-de-linfern.a6908a439362.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-de-la-coma-de-varilles": {
+    "file": "pic-de-la-coma-de-varilles.a56a45fb8483.svg",
+    "bearing": 240,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-la-mainera": {
+    "file": "pic-de-la-mainera.e55281d7e8b6.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-la-pala-alta-de-sarrade": {
+    "file": "pic-de-la-pala-alta-de-sarrade.062ab8bfdeb0.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-la-plana": {
+    "file": "pic-de-la-plana.84fdb8fe0ce0.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-la-serrera": {
+    "file": "pic-de-la-serrera.9f463e05a600.svg",
+    "bearing": 330,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-llena": {
+    "file": "pic-de-llena.a72e4b892194.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-mariola": {
+    "file": "pic-de-mariola.dabd28030920.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-mariolo-pic-de-neriolo": {
+    "file": "pic-de-mariolo-pic-de-neriolo.0b8915f3cb4c.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-maniga": {
+    "file": "pic-de-maniga.49c50ca3e985.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-medacorba": {
+    "file": "pic-de-medacorba.3b87dee223fd.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-montalt": {
+    "file": "pic-de-montalt.4ef37f8ed30d.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-moredo": {
+    "file": "pic-de-moredo.f284b530f7bb.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-peguera": {
+    "file": "pic-de-peguera.a6bc92003dfe.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-pilas": {
+    "file": "pic-de-pilas.86ddeddaf00a.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-quenca": {
+    "file": "pic-de-quenca.0c74b5a759aa.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-raco-gros": {
+    "file": "pic-de-raco-gros.bb80a4f593f8.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-de-saboredo": {
+    "file": "pic-de-saboredo.569ca5f5b2b4.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-sallafort": {
+    "file": "pic-de-sallafort.a3d582096191.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-de-saloria": {
+    "file": "pic-de-saloria.1536d85dad51.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-sanfonts": {
+    "file": "pic-de-sanfonts.28676314a704.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-sotllo": {
+    "file": "pic-de-sotllo.276401cdad09.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-de-subenuix": {
+    "file": "pic-de-subenuix.9237df42a7c8.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-ventolau": {
+    "file": "pic-de-ventolau.775cb1afd633.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-del-pla-de-lestany": {
+    "file": "pic-del-pla-de-lestany.2af892ba0f61.svg",
+    "bearing": 180,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pic-del-portarro": {
+    "file": "pic-del-portarro.0004ea8a34cc.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-del-vent": {
+    "file": "pic-del-vent.c51ba3d10d6a.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-dels-moros": {
+    "file": "pic-dels-moros.e7fc24726ff9.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-dels-pedrons": {
+    "file": "pic-dels-pedrons.e88ab8cb1017.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-dels-pessons-o-gargantillar": {
+    "file": "pic-dels-pessons-o-gargantillar.611417ce7cc4.svg",
+    "bearing": 30,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-negre-denvalira": {
+    "file": "pic-negre-denvalira.444c543115b5.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-roi": {
+    "file": "pic-roi.1462e4bc9cdf.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-tort": {
+    "file": "pic-tort.f31629575aa6.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pica-destats": {
+    "file": "pica-destats.8b93b297229f.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "pica-de-cervi": {
+    "file": "pica-de-cervi.45bc9cf50a52.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pica-roja": {
+    "file": "pica-roja.929287ae08a4.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "picorandan": {
+    "file": "picorandan.ed475339ad6c.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pics-de-bassiero": {
+    "file": "pics-de-bassiero.75c6a30b1bd5.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pilo-de-bellmaig": {
+    "file": "pilo-de-bellmaig.8190812e5be1.svg",
+    "bearing": 0,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pilar-dalmenara": {
+    "file": "pilar-dalmenara.c935c56441c1.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pui-durdosa": {
+    "file": "pui-durdosa.d2c47181649b.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pui-de-la-bonaigua": {
+    "file": "pui-de-la-bonaigua.d249920ce36f.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pui-de-cassibros": {
+    "file": "pui-de-cassibros.6a4740b0f36a.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pui-de-linya": {
+    "file": "pui-de-linya.86b834dea90c.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pui-tabaca": {
+    "file": "pui-tabaca.034adb5c64c9.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pui-de-lleras": {
+    "file": "pui-de-lleras.1ee693c798f4.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-cadiretes": {
+    "file": "puig-cadiretes.0265ddce85bf.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-castellar": {
+    "file": "puig-castellar.5cff1d1426da.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-cavaller": {
+    "file": "puig-cavaller.e2984d0a7b1c.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-cendros": {
+    "file": "puig-cendros.fd4cb49d35fe.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-clara": {
+    "file": "puig-clara.f03f56427074.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-cornador": {
+    "file": "puig-cornador.8b6ba8aee239.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-cubell": {
+    "file": "puig-cubell.20de62216037.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-daguilera": {
+    "file": "puig-daguilera.d15ec420cba9.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-dagulles": {
+    "file": "puig-dagulles.3e87aac8e3ae.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-darques": {
+    "file": "puig-darques.550c6311240b.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-den-cama": {
+    "file": "puig-den-cama.dd33ffd0c70b.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-den-jorda": {
+    "file": "puig-den-jorda.a549a0b99441.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-desquers": {
+    "file": "puig-desquers.9a9da7cafe43.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-dolorda": {
+    "file": "puig-dolorda.b1b8c3c045e6.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-bestreca": {
+    "file": "puig-de-bestreca.615c639dbf6b.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-cervera": {
+    "file": "puig-de-cervera.e1228d0b3e8a.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "pic-de-coma-dor": {
+    "file": "pic-de-coma-dor.29e7842dcc9c.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-de-font-viva": {
+    "file": "puig-de-font-viva.5d1352c0ecef.svg",
+    "bearing": 180,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-de-dorria": {
+    "file": "puig-de-dorria.e07e4fca731b.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-de-gallinas": {
+    "file": "puig-de-gallinas.7e7054fa64de.svg",
+    "bearing": 60,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-de-gallicant": {
+    "file": "puig-de-gallicant.e4535012bf4f.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-grialo": {
+    "file": "puig-de-grialo.fcedb297633c.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-laliga": {
+    "file": "puig-de-laliga.b49e5f40f035.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-laliga-cap-de-creus": {
+    "file": "puig-de-laliga-cap-de-creus.cd89c0073a21.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-lestella": {
+    "file": "puig-de-lestella.9d600ea8d03d.svg",
+    "bearing": 60,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-de-la-cabrafiga": {
+    "file": "puig-de-la-cabrafiga.7f5186050707.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-la-caritat": {
+    "file": "puig-de-la-caritat.3918626f68bb.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-la-collada-verda": {
+    "file": "puig-de-la-collada-verda.f5eb7f504faf.svg",
+    "bearing": 180,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-de-la-cometa": {
+    "file": "puig-de-la-cometa.16bf22d5afc6.svg",
+    "bearing": 30,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-de-la-creu": {
+    "file": "puig-de-la-creu.b16489e733f3.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-la-cova": {
+    "file": "puig-de-la-cova.9bc3b7a92246.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-la-forca": {
+    "file": "puig-de-la-forca.3a4bcc15f0e6.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-la-grava": {
+    "file": "puig-de-la-grava.6a3e13460ed3.svg",
+    "bearing": 0,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-de-la-gavarra": {
+    "file": "puig-de-la-gavarra.80dda1b0fe0c.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-la-mola": {
+    "file": "puig-de-la-mola.ad1a87a276c1.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-la-pelada": {
+    "file": "puig-de-la-pelada.4f9b9a46a02d.svg",
+    "bearing": 180,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-de-les-agudes": {
+    "file": "puig-de-les-agudes.18fc290c2bb3.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-les-aligues": {
+    "file": "puig-de-les-aligues.37be36d86a93.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-les-bruixes": {
+    "file": "puig-de-les-bruixes.d2d9396b4832.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-les-cols": {
+    "file": "puig-de-les-cols.9f5c64029473.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-les-morreres": {
+    "file": "puig-de-les-morreres.7b1577f6ed9d.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-les-tres-esteles": {
+    "file": "puig-de-les-tres-esteles.a2542ee81cd5.svg",
+    "bearing": 0,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-de-milla": {
+    "file": "puig-de-milla.e7dfd4397eec.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-sant-antoni": {
+    "file": "puig-de-sant-antoni.5d13cdcdbd1f.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-de-sant-cristau": {
+    "file": "puig-de-sant-cristau.45edc4e78792.svg",
+    "bearing": 330,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-de-tretzevents": {
+    "file": "puig-de-tretzevents.16087e3fc389.svg",
+    "bearing": 180,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-de-sant-miquel": {
+    "file": "puig-de-sant-miquel.8d54c7e14c86.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-del-far": {
+    "file": "puig-del-far.c6ad7e2135cc.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-del-pam": {
+    "file": "puig-del-pam.d84ffec90632.svg",
+    "bearing": 60,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-dels-bufadors": {
+    "file": "puig-dels-bufadors.07fc8a3a705c.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-dels-pruners": {
+    "file": "puig-dels-pruners.bbe8ea9e4487.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-estela": {
+    "file": "puig-estela.0bc774788de7.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-francas": {
+    "file": "puig-francas.3bde09e92ecc.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-falco": {
+    "file": "puig-falco.836cb7d32d22.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-gros": {
+    "file": "puig-gros.62c6684ba158.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-madrona": {
+    "file": "puig-madrona.28d626fd182b.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-neulos": {
+    "file": "puig-neulos.8fbf0a965a09.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-occidental-de-coll-roig": {
+    "file": "puig-occidental-de-coll-roig.c7f7e327a74f.svg",
+    "bearing": 270,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puig-ou": {
+    "file": "puig-ou.b296482aa8f2.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-pedros-de-lanos": {
+    "file": "puig-pedros-de-lanos.d8d997570765.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-pelat": {
+    "file": "puig-pelat.4c53948a3d02.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-peric": {
+    "file": "puig-peric.663e268ee42a.svg",
+    "bearing": 210,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "puig-segalar": {
+    "file": "puig-segalar.7c9e0c4d60db.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-vicenc": {
+    "file": "puig-vicenc.7895b717ae12.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-sobira": {
+    "file": "puig-sobira.87863c9f8dbe.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puig-alter": {
+    "file": "puig-alter.8dc794f3941b.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puigcabrer": {
+    "file": "puigcabrer.9986c389cb8a.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puigdefrou": {
+    "file": "puigdefrou.f743a1a11a53.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puigllancada": {
+    "file": "puigllancada.ed2c13b84391.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puiggracios": {
+    "file": "puiggracios.b739c6c99004.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puigpedros": {
+    "file": "puigpedros.fe7d229f2108.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "puigsallanca": {
+    "file": "puigsallanca.2640eba7835b.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "puigsoler": {
+    "file": "puigsoler.85e05f476f98.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pujoalbo": {
+    "file": "pujoalbo.dbec6afa7d3c.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pujol-de-la-mata": {
+    "file": "pujol-de-la-mata.74ec795644f0.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-alta": {
+    "file": "punta-alta.73195095f6fb.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-dharle": {
+    "file": "punta-dharle.a111929340af.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-dossos": {
+    "file": "punta-dossos.42be715afd92.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-de-laigua": {
+    "file": "punta-de-laigua.1978218c9c4d.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "montmeneu": {
+    "file": "montmeneu.c5556f454279.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-del-curull": {
+    "file": "punta-del-curull.631d06579c27.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-del-pallars": {
+    "file": "punta-del-pallars.44b054ebed5c.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-del-general": {
+    "file": "punta-del-general.b502160fb5f1.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-dels-pins-carrassers": {
+    "file": "punta-dels-pins-carrassers.f113fc28dcab.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-redona": {
+    "file": "punta-redona.bfc82a24c4a3.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "punta-senyalada": {
+    "file": "punta-senyalada.4f15da19e09a.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "quermany-gros": {
+    "file": "quermany-gros.86be84b467c2.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "querroig": {
+    "file": "querroig.338270ff8cbb.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-beneidor": {
+    "file": "roc-beneidor.1814ec888935.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-de-cogul": {
+    "file": "roc-de-cogul.370ee4cf30be.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-de-galliner": {
+    "file": "roc-de-galliner.ac7f9ec9095a.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-de-les-monges-serrat-de-la-questio": {
+    "file": "roc-de-les-monges-serrat-de-la-questio.92368ac6b1b3.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-de-les-tres-creus": {
+    "file": "roc-de-les-tres-creus.e12003c89d4e.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-de-madres": {
+    "file": "roc-de-madres.2bb688b2b1d1.svg",
+    "bearing": 210,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "roc-de-mallorca": {
+    "file": "roc-de-mallorca.e7f2f64d5602.svg",
+    "bearing": 0,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "roc-de-sant-salvador": {
+    "file": "roc-de-sant-salvador.d124742007be.svg",
+    "bearing": 240,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "roc-de-sant-aventi": {
+    "file": "roc-de-sant-aventi.6dc7793da4cc.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-del-boc": {
+    "file": "roc-del-boc.b4001d19a519.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "roc-del-comptador": {
+    "file": "roc-del-comptador.c028b17a5aba.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "roc-del-migdia-la-valldan": {
+    "file": "roc-del-migdia-la-valldan.b44494997270.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roc-mele": {
+    "file": "roc-mele.a17f4e3ab791.svg",
+    "bearing": 90,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "roc-roi": {
+    "file": "roc-roi.12a2142bd49c.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-colom": {
+    "file": "roca-colom.7bffc2283820.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "roca-corbatera": {
+    "file": "roca-corbatera.f0370939ed68.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-de-migdia-serra-del-verd": {
+    "file": "roca-de-migdia-serra-del-verd.f5921de34f6d.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-de-sant-salvador-lelefant": {
+    "file": "roca-de-sant-salvador-lelefant.2053d320484a.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-del-coscollo": {
+    "file": "roca-del-coscollo.b63c184923c5.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-entravessada": {
+    "file": "roca-entravessada.e0ef9e6e1ff7.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "roca-del-joc-roca-de-la-devesa-jussana": {
+    "file": "roca-del-joc-roca-de-la-devesa-jussana.ffc6acffb87b.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-gelera": {
+    "file": "roca-gelera.0b9ae555c62e.svg",
+    "bearing": 60,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "roca-gran": {
+    "file": "roca-gran.a78facc81680.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-lladre": {
+    "file": "roca-lladre.e18f2ecbfe75.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-maura": {
+    "file": "roca-maura.23230d774e51.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-sareny": {
+    "file": "roca-sareny.eb48367e0759.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roca-roja": {
+    "file": "roca-roja.79a190b54b77.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "rocallarga": {
+    "file": "rocallarga.f37373828807.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "rocalta": {
+    "file": "rocalta.ab9f5d395869.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "rocamala": {
+    "file": "rocamala.8b58557ce215.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roques-de-benet-el-castell": {
+    "file": "roques-de-benet-el-castell.3c3bf7b6e6d8.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "roques-del-rei": {
+    "file": "roques-del-rei.6b77b01fe03b.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "salga-aguda": {
+    "file": "salga-aguda.2cea4303cc56.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-antoni": {
+    "file": "sant-antoni.f987c7d8a046.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-benet": {
+    "file": "sant-benet.03cfc8a898cd.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-corneli": {
+    "file": "sant-corneli.2e8030bbc4c1.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-grau": {
+    "file": "sant-grau.f96abc32a412.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-honorat": {
+    "file": "sant-honorat.9c532f2272e8.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-mamet": {
+    "file": "sant-mamet.165736667ac9.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-marc-de-broca": {
+    "file": "sant-marc-de-broca.4d89e69ed77d.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-marti-de-la-roca": {
+    "file": "sant-marti-de-la-roca.ffad7eef5499.svg",
+    "bearing": 30,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "sant-marti-xic-castell-de-voltrega": {
+    "file": "sant-marti-xic-castell-de-voltrega.1033be75e98d.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-miquel-de-montclar": {
+    "file": "sant-miquel-de-montclar.614562390b6a.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-miquel-de-solterra": {
+    "file": "sant-miquel-de-solterra.66480f75fd40.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-miquel-del-mont": {
+    "file": "sant-miquel-del-mont.8eef63670f08.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-patllari": {
+    "file": "sant-patllari.75f431323476.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-pere-martir": {
+    "file": "sant-pere-martir.893baa90eadc.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-quiri": {
+    "file": "sant-quiri.ecf1b6665ccb.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-ramon": {
+    "file": "sant-ramon.e1aef1878041.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-roc": {
+    "file": "sant-roc.25f2f81ae1fc.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-sadurni-de-gallifa": {
+    "file": "sant-sadurni-de-gallifa.374bc00d1891.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-salvador-de-les-espases": {
+    "file": "sant-salvador-de-les-espases.95aa0e24b967.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-salvador": {
+    "file": "sant-salvador.2276f3dc1241.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sant-simplici": {
+    "file": "sant-simplici.111820ff5e92.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "santa-anna-dels-quatre-termes": {
+    "file": "santa-anna-dels-quatre-termes.d6f01523c430.svg",
+    "bearing": 150,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "santa-barbara-escornalbou": {
+    "file": "santa-barbara-escornalbou.576d3c589957.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "santa-barbara": {
+    "file": "santa-barbara.d2b8d6c5587a.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "santa-barbara-vall-fosca": {
+    "file": "santa-barbara-vall-fosca.0345af046a3c.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "santa-fe": {
+    "file": "santa-fe.f51087e7818b.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "santa-magdalena": {
+    "file": "santa-magdalena.80c330f23707.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "santa-magdalena-de-cambrils": {
+    "file": "santa-magdalena-de-cambrils.721789b506a7.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serrat-alt": {
+    "file": "serrat-alt.66fa298540b4.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serra-de-pinos": {
+    "file": "serra-de-pinos.9496cd84b95f.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serrat-de-carrasquers": {
+    "file": "serrat-de-carrasquers.d0223f3ee047.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serrat-de-la-madrona": {
+    "file": "serrat-de-la-madrona.370d3f1582b3.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serrat-de-migdia-serrat-de-picancel": {
+    "file": "serrat-de-migdia-serrat-de-picancel.6fe3530543fa.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serrat-de-sant-isidre": {
+    "file": "serrat-de-sant-isidre.55998eaf61f6.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serrat-voltor": {
+    "file": "serrat-voltor.36a30ab55c36.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "serret-del-cisa": {
+    "file": "serret-del-cisa.24d007f6b3fe.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "sobrepuny": {
+    "file": "sobrepuny.8caf6cb0d980.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "taga": {
+    "file": "taga.7306e5092179.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "talaia-del-montmell": {
+    "file": "talaia-del-montmell.03790e4f19ac.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tagamanent": {
+    "file": "tagamanent.b85a773fb1b5.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "torre-deina": {
+    "file": "torre-deina.d946c79cc191.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "torre-alta-castell-ferran": {
+    "file": "torre-alta-castell-ferran.1311185eb1e9.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "torre-de-goa": {
+    "file": "torre-de-goa.c90ed8972bae.svg",
+    "bearing": 330,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "torre-de-la-macana": {
+    "file": "torre-de-la-macana.9312bdcc8bdf.svg",
+    "bearing": 0,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "torre-de-les-conclues": {
+    "file": "torre-de-les-conclues.814418f788b7.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.4
+  },
+  "torre-de-madeloc": {
+    "file": "torre-de-madeloc.6e94d2031ca4.svg",
+    "bearing": 60,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "torreneules": {
+    "file": "torreneules.aaf4e060c8db.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "torre-del-far": {
+    "file": "torre-del-far.535c3244cf54.svg",
+    "bearing": 180,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "torres-de-cabrenc": {
+    "file": "torres-de-cabrenc.317f9a538d9c.svg",
+    "bearing": 300,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "torreta-de-lorri": {
+    "file": "torreta-de-lorri.d8f2a3708767.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "torreta-del-cadi": {
+    "file": "torreta-del-cadi.e6b9f8beba04.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "torreta-del-montsia": {
+    "file": "torreta-del-montsia.b536e158b1de.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossa-despinau": {
+    "file": "tossa-despinau.a56b71b8ebfe.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tosa-del-braibal": {
+    "file": "tosa-del-braibal.c6e599f97691.svg",
+    "bearing": 240,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "tossa-grossa-de-montferri": {
+    "file": "tossa-grossa-de-montferri.0598b9088f32.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossa-plana-de-lles-pic-de-la-portelleta": {
+    "file": "tossa-plana-de-lles-pic-de-la-portelleta.600abecd822e.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "tossal-bovinar": {
+    "file": "tossal-bovinar.62d54f1b4d33.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "tossal-dengrillo": {
+    "file": "tossal-dengrillo.d97f638c0eb7.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-despigol": {
+    "file": "tossal-despigol.4269d71df055.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-bades": {
+    "file": "tossal-de-bades.c3df0bd43593.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-balinyo": {
+    "file": "tossal-de-balinyo.2a78f57147fa.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-codonyac": {
+    "file": "tossal-de-codonyac.21d5886b68c0.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-laliga-la-geganta-adormida": {
+    "file": "tossal-de-laliga-la-geganta-adormida.87a81c7427f2.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-lalzina": {
+    "file": "tossal-de-lalzina.056c8423c9bc.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-la-baltasana": {
+    "file": "tossal-de-la-baltasana.a1f71f904326.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-la-creu": {
+    "file": "tossal-de-la-creu.3f88a5666f65.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "pic-de-perafita": {
+    "file": "pic-de-perafita.2763b138e5e9.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "tossal-de-la-moradilla": {
+    "file": "tossal-de-la-moradilla.9b7d1928297c.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-les-roies-de-cardet": {
+    "file": "tossal-de-les-roies-de-cardet.5611de6a6c5e.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-les-viudes": {
+    "file": "tossal-de-les-viudes.aab7378d12a8.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-lleto": {
+    "file": "tossal-de-lleto.495f4f556a59.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-montagut": {
+    "file": "tossal-de-montagut.5e7b961d47f8.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-mirapallars": {
+    "file": "tossal-de-mirapallars.97b6957d6adc.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-mormur": {
+    "file": "tossal-de-mormur.002bcce1b77f.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-sant-jordi": {
+    "file": "tossal-de-sant-jordi.0e13eb56595a.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-de-suro": {
+    "file": "tossal-de-suro.1285cc535672.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-del-mas-de-nadal": {
+    "file": "tossal-del-mas-de-nadal.fd44772cec15.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-del-puial": {
+    "file": "tossal-del-puial.9c0bbe316fbf.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-gros-pelat-de-talltendre": {
+    "file": "tossal-gros-pelat-de-talltendre.41bd8a100a8d.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-dels-tres-reis": {
+    "file": "tossal-dels-tres-reis.ee205a5c73ac.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-gros-serra-de-sant-gervas": {
+    "file": "tossal-gros-serra-de-sant-gervas.1a372cf7c7aa.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-gros-dalmatret": {
+    "file": "tossal-gros-dalmatret.3fb41f225824.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-gros-de-vallbona": {
+    "file": "tossal-gros-de-vallbona.d86153d4a127.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossal-llisoi": {
+    "file": "tossal-llisoi.713c24920c80.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tossau-de-mar": {
+    "file": "tossau-de-mar.5c81fbec66ae.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tosseta-de-lesquella-pic-de-calm-colomer": {
+    "file": "tosseta-de-lesquella-pic-de-calm-colomer.327dc988c875.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "tosseta-rasa": {
+    "file": "tosseta-rasa.c9540d18cf50.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tristaina": {
+    "file": "tristaina.3b2c5b8d79ea.svg",
+    "bearing": 90,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "tuc-dera-entecada": {
+    "file": "tuc-dera-entecada.542be88bdd0a.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-darres": {
+    "file": "tuc-darres.0070720c386a.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "tuc-de-baciver": {
+    "file": "tuc-de-baciver.1147e33ea18e.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-barlonguera": {
+    "file": "tuc-de-barlonguera.202d9e9d3181.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "tuc-de-crabera": {
+    "file": "tuc-de-crabera.1e7a7e0177fb.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "tuc-de-la-comamarja": {
+    "file": "tuc-de-la-comamarja.2ff23e82ed94.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-la-contesa": {
+    "file": "tuc-de-la-contesa.4a36dc3a0409.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-la-cometa": {
+    "file": "tuc-de-la-cometa.00e191d6f814.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-la-llanca": {
+    "file": "tuc-de-la-llanca.e33e57449bc2.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-la-tallada": {
+    "file": "tuc-de-la-tallada.d1963829b53a.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "tuc-de-lluca": {
+    "file": "tuc-de-lluca.3a7af0b5c635.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-marimanya": {
+    "file": "tuc-de-marimanya.b9412b76106e.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-molieres": {
+    "file": "tuc-de-molieres.1adb5bab39f4.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "tuc-de-parros": {
+    "file": "tuc-de-parros.e0f14f41033f.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-ratera": {
+    "file": "tuc-de-ratera.63c3e701a7d4.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-ribereta": {
+    "file": "tuc-de-ribereta.e120d8b3b22d.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-salana": {
+    "file": "tuc-de-salana.b56824e7badc.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-sarrahera": {
+    "file": "tuc-de-sarrahera.548629d74b88.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-de-samont": {
+    "file": "tuc-de-samont.4aac5096edc2.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-dera-pincela": {
+    "file": "tuc-dera-pincela.d491af5020bc.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-des-armeros": {
+    "file": "tuc-des-armeros.c0267b66b34a.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-des-carants": {
+    "file": "tuc-des-carants.4761e7aa9721.svg",
+    "bearing": 270,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-des-monges": {
+    "file": "tuc-des-monges.ccf654ad4870.svg",
+    "bearing": 300,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-deth-port-de-vielha": {
+    "file": "tuc-deth-port-de-vielha.7edbe8d3359e.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-deth-plan-deth-ome-vacanera": {
+    "file": "tuc-deth-plan-deth-ome-vacanera.dbc8d1c02596.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28
+  },
+  "tuc-gran-dera-sendrosa": {
+    "file": "tuc-gran-dera-sendrosa.317de1c5d56f.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "tuc-dormidor": {
+    "file": "tuc-dormidor.cb5be1512911.svg",
+    "bearing": 330,
+    "sources": [
+      "mapzen"
+    ],
+    "resolution": 28.1
+  },
+  "turo-den-galzeran-o-den-mates": {
+    "file": "turo-den-galzeran-o-den-mates.94a63b2f31ec.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-den-mora-turo-del-carmel": {
+    "file": "turo-den-mora-turo-del-carmel.2c5a452be128.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-donofre-arnau": {
+    "file": "turo-donofre-arnau.0d673b2235ad.svg",
+    "bearing": 150,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-bell-lloc": {
+    "file": "turo-de-bell-lloc.c963ad1040da.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.2
+  },
+  "turo-de-can-dolcet": {
+    "file": "turo-de-can-dolcet.acf2caa70823.svg",
+    "bearing": 60,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-bellver": {
+    "file": "turo-de-bellver.34a5f0739a8e.svg",
+    "bearing": 0,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-lermita": {
+    "file": "turo-de-lermita.014794defdde.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-lescletxa": {
+    "file": "turo-de-lescletxa.655eb935cbca.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-les-tres-creus": {
+    "file": "turo-de-les-tres-creus.30c6d84b2154.svg",
+    "bearing": 210,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-la-torre-o-de-castellnou": {
+    "file": "turo-de-la-torre-o-de-castellnou.3da2929a9852.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-magarola": {
+    "file": "turo-de-magarola.5614a6708bd7.svg",
+    "bearing": 240,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-montcada": {
+    "file": "turo-de-montcada.e628e4137968.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-montgat": {
+    "file": "turo-de-montgat.25b3b4776291.svg",
+    "bearing": 120,
+    "sources": [
+      "icgc",
+      "mapzen"
+    ],
+    "resolution": 28.6
+  },
+  "turo-de-montsoriu": {
+    "file": "turo-de-montsoriu.abe62ef50512.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-de-puigmari": {
+    "file": "turo-de-puigmari.d1fa3d760b9e.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-del-mal-pas": {
+    "file": "turo-del-mal-pas.e670ed2c87d9.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-del-pou-den-sala": {
+    "file": "turo-del-pou-den-sala.6f6c63139934.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-del-samont": {
+    "file": "turo-del-samont.001291419162.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-del-ros": {
+    "file": "turo-del-ros.ef476d2485ce.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-del-vent": {
+    "file": "turo-del-vent.df25ca7ad848.svg",
+    "bearing": 30,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "turo-punco": {
+    "file": "turo-punco.a7cb2fa858e0.svg",
+    "bearing": 180,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "vulturo": {
+    "file": "vulturo.8d6c2112930c.svg",
+    "bearing": 330,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  },
+  "volca-del-croscat": {
+    "file": "volca-del-croscat.f0d7a2d01e3c.svg",
+    "bearing": 90,
+    "sources": [
+      "icgc"
+    ],
+    "resolution": 15
+  }
+}

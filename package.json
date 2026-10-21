@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test tests/tracker.test.cjs"
+    "test": "node --test tests/tracker.test.cjs tests/mountain-art.test.cjs",
+    "art:generate": "node scripts/generate-mountain-art.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
@@ -22,7 +23,8 @@
     "@types/node": "22.15.30",
     "@types/react": "19.2.0",
     "@types/react-dom": "19.2.0",
+    "proj4": "2.15.0",
+    "sharp": "0.35.5",
     "typescript": "5.9.3"
   }
 }
-

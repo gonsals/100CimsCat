@@ -1,10 +1,9 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import OfflineButton from '@/components/OfflineButton'
-import MountainPlaceholder from '@/components/MountainPlaceholder'
+import SummitReference from '@/components/SummitReference'
 import Icon from '@/components/Icon'
 import { coordinates, friendlyDate, type Summit } from '@/lib/tracker'
 import { trackerText } from '@/lib/tracker-i18n'
@@ -15,10 +14,8 @@ type Props = { summit: Summit; language: 'ca' | 'es' | 'en'; onClose: () => void
 export default function SummitDetailsModal({ summit, language, onClose, favorite, completedAt, busy, onFavorite, onEdit, feedback }: Props) {
   const dialog = useRef<HTMLDialogElement>(null)
   const t = (value: string) => trackerText(language, value)
-  const { data, loading, error, retry } = useSummitContext(summit)
-  const [imageFailed, setImageFailed] = useState(false)
-  const photo = !imageFailed ? data?.photo : null
-  useEffect(() => { setImageFailed(false) }, [summit.id])
+  const context = useSummitContext(summit)
+  const { data } = context
   useEffect(() => {
     const element = dialog.current
     const previousFocus = document.activeElement as HTMLElement | null
@@ -43,6 +40,6 @@ export default function SummitDetailsModal({ summit, language, onClose, favorite
     <div className="summit-journal-actions"><button className="primary-button" type="button" disabled={busy} onClick={onEdit}><Icon name={completedAt ? 'check' : 'plus'} />{t(completedAt ? 'Editar ascensió' : 'Registrar ascensió')}{completedAt && ` · ${friendlyDate(completedAt, language)}`}</button><button className="secondary-button" type="button" disabled={busy} aria-pressed={favorite} onClick={onFavorite}><Icon name="star" style={favorite ? { fill: 'currentColor' } : undefined} />{t(favorite ? 'Treure de preferits' : 'Afegir a preferits')}</button></div>
     <div className="summit-detail-links"><Link href={`/cims/${summit.id}`} prefetch={false}>{t('Obrir fitxa completa')}<Icon name="next" size={16} /></Link><a href={summit.url} target="_blank" rel="noreferrer">{labels.route}<Icon name="arrow" size={16} /></a><a href={mapUrl} target="_blank" rel="noreferrer">{labels.map}<Icon name="arrow" size={16} /></a></div>
     <p className="summit-map-note">{labels.location}</p><OfflineButton summit={summit} language={language} />
-    <h3 className="modal-photo-heading">{labels.photos}</h3><figure className="summit-reference"><div className="summit-page-art">{photo ? <Image src={photo.url} alt={summit.name} width={1280} height={853} unoptimized onError={() => setImageFailed(true)} /> : <><MountainPlaceholder name={summit.name} height={summit.height} region={summit.region} /><span>{labels.illustration}</span></>}</div><figcaption>{photo ? <>{photo.author} · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.license}</a> · <a href={photo.sourceUrl} target="_blank" rel="noreferrer">Wikimedia Commons<Icon name="arrow" size={12} /></a><small>{t('Imatge vinculada a la cima per nom i coordenades a Wikidata.')}</small></> : loading ? <span role="status">{t('Comprovant imatges i fonts…')}</span> : (error || imageFailed) ? <span>{t('La imatge no està disponible ara.')} <button type="button" className="text-button" onClick={() => { setImageFailed(false); retry() }}>{t('Tornar-ho a provar')}</button></span> : t('Il·lustració de referència; no representa una fotografia del cim.')}</figcaption></figure>
+    <h3 className="modal-photo-heading">{labels.photos}</h3><SummitReference summit={summit} language={language} context={context} />
   </dialog>
 }

@@ -32,6 +32,9 @@ async function main() {
     assert.equal(await page.locator('.card').count(), 96)
     const link = page.locator('.card').nth(70).getByRole('link', { name: 'Explorar cima' })
     await link.scrollIntoViewIfNeeded()
+    await page.evaluate(() => document.fonts.ready)
+    // Let Playwright finish the same visibility/scroll checks as the real click.
+    await link.click({ trial: true })
     await page.waitForTimeout(200)
     const previousScroll = await page.evaluate(() => scrollY)
     const summitPath = await link.getAttribute('href')

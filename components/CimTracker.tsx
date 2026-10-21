@@ -326,8 +326,10 @@ export default function CimTracker() {
 
   useEffect(() => {
     if (!preferencesReady) return
+    const pathname = window.location.pathname
     const persist = () => {
-      if (pendingScroll.current !== null) return
+      // Next can reset scroll before the outgoing catalogue has unmounted.
+      if (pendingScroll.current !== null || window.location.pathname !== pathname) return
       try { sessionStorage.setItem(catalogStateKey, JSON.stringify({ version: 1, ...catalogSnapshot.current, scrollY: window.scrollY })) } catch { /* Browsing works without storage. */ }
     }
     persist()
@@ -662,7 +664,7 @@ export default function CimTracker() {
           const busy = Boolean(busyId) || Boolean(user && !journalReady)
           return <article className="card" key={summit.id}>
             <div className={`thumb ${ascent?.photoUrl ? 'has-summit-photo' : 'has-placeholder'}`}>
-              {ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`${t('Foto de')} ${summit.name}`} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" unoptimized /> : <MountainPlaceholder name={summit.name} height={summit.height} region={summit.region} />}
+              {ascent?.photoUrl ? <Image src={ascent.photoUrl} alt={`${t('Foto de')} ${summit.name}`} fill sizes="(max-width: 560px) 50vw, (max-width: 820px) 50vw, 33vw" unoptimized /> : <MountainPlaceholder summitId={summit.id} />}
               {!ascent?.photoUrl && <span className="thumb-badge">{t('Il·lustració de referència')}</span>}
             </div>
             <div className="card-body">
@@ -675,7 +677,7 @@ export default function CimTracker() {
           </article>
         })}{ready && visible.length === 0 && <div className="empty">{t('No hem trobat cap cim amb aquests filtres.')}<button type="button" className="secondary-button" onClick={clearFilters}>{t('Netejar filtres')}</button></div>}</div>}
         {catalogView === 'list' && visible.length > 0 && <div className="catalog-pagination"><p role="status">{t('Cims mostrats')}: {Math.min(catalogLimit, visible.length)} / {visible.length}</p>{catalogLimit < visible.length && <button className="secondary-button" type="button" onClick={() => setPagination({ key: catalogKey, limit: catalogLimit + 48 })}>{t('Carregar més cims')}</button>}</div>}
-        <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Ilustración de referencia: ilustración original de 100CimsCat.' : language === 'en' ? 'Reference illustration: original artwork by 100CimsCat.' : 'Il·lustració de referència: il·lustració pròpia de 100CimsCat.'}</p>
+        <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · <Link href="/fonts#relleu">{t('Il·lustracions basades en el relleu real: ICGC i Mapzen.')}</Link></p>
       </section>
 
       {notice && !editingSummit && <div className="toast show" role="status">{t(notice)}<button onClick={() => setNotice('')} aria-label={t('Tancar avís')}><Icon name="close" /></button></div>}
