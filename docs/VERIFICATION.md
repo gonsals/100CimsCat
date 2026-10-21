@@ -1,5 +1,13 @@
 # Validación de funcionalidades y móvil
 
+## Portada con rotación de cimas — 21 de octubre de 2026
+
+La portada alterna cada 8 segundos entre Pedraforca, Puigmal, Sant Jeroni, Canigó, Matagalls y Puigsacalm. Las imágenes entrantes se decodifican antes de sustituir la actual y se mezclan durante 900 ms; nombre, altura y comarca corresponden a la imagen mostrada. Incluye controles de anterior, pausa/reanudación y siguiente, con etiquetas en los tres idiomas. En móvil se priorizan nombre y altura para separar el texto de los controles táctiles de 44 px.
+
+La rotación se detiene cuando la portada queda fuera de pantalla, la pestaña está oculta o el ratón está sobre la imagen. La navegación manual y el foco en sus controles detienen el avance. La preferencia de movimiento reducido desactiva el inicio automático y las transiciones; se puede navegar manualmente o iniciar la reproducción expresamente.
+
+Compilación de producción con TypeScript correcta. `scripts/hero-rotation-check.cjs` comprueba avance automático, pausa/reanudación, los seis perfiles y el retorno al inicio, navegación anterior, pausa fuera de pantalla y movimiento reducido a 320, 390 y 1280 px. Sin desbordamientos, superposición de controles ni infracciones en las reglas axe WCAG A/AA ejecutadas. La prueba controla el reloj de los temporizadores y deja avanzar el renderizado para IntersectionObserver. También se ha observado un cambio automático con tiempo real en Chrome. Las pruebas usan únicamente el catálogo público y no modifican cuentas ni cuadernos.
+
 ## Ilustraciones de terreno real — 21 de octubre de 2026
 
 Se sustituyen los perfiles aleatorios por 522 SVG calculados a partir de las elevaciones alrededor de cada cima. 463 utilizan ICGC MET de 15 m y 111 utilizan Mapzen Terrarium; 52 combinan ambas fuentes en los límites de cobertura. Se conservan la composición por capas y la paleta de la web. Se ajustan las vistas de montañas características, incluidos los dos Pollegons y la enforcadura del Pedraforca. Son interpretaciones estilizadas con escala vertical adaptada; no se afirma que todos los pequeños accidentes sean reconocibles a esta resolución. No se añade nieve ni caminos inventados.

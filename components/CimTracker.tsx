@@ -8,6 +8,7 @@ import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
 import MountainPlaceholder from '@/components/MountainPlaceholder'
+import HeroMountains from '@/components/HeroMountains'
 import SummitDetailsModal from '@/components/SummitDetailsModal'
 import CatalogFilters from '@/components/CatalogFilters'
 import AscentEditor from '@/components/AscentEditor'
@@ -636,7 +637,7 @@ export default function CimTracker() {
 
       <section className="hero" id="inici">
         <div className="hero-copy"><p className="eyebrow">{t('EL TEU QUADERN DE MUNTANYA')}</p><h1>{t('Cada cim, una')}<br /><em>{t('història.')}</em></h1><p className="intro">{t('Guarda els teus records i descobreix fins on t’ha portat el camí.')}</p><div className="hero-actions"><a className="primary-button" href="#cims">{t('Explorar els cims')}<Icon name="down" /></a><a className="offline-reader-link" href="/offline.html">{t('Fitxes descarregades')}</a></div></div>
-        <figure className="hero-art"><MountainPlaceholder summitId="pollego-superior-pedraforca" eager /><figcaption className="art-label">PEDRAFORCA<br /><span>2.506 m · Berguedà</span></figcaption></figure>
+        <HeroMountains language={language} />
       </section>
 
       {!user && <section className="account-hint"><Icon name="book" size={23} /><span><strong>{t('El teu progrés t’acompanya.')}</strong> {t('Inicia sessió per desar cims i fotos al teu compte.')}</span><button onClick={() => setAuthOpen(true)}>{t('Accedir amb el correu')}<Icon name="arrow" size={15} /></button></section>}
