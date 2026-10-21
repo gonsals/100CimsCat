@@ -14,6 +14,8 @@ La comprobación de cuotas utiliza una copia temporal de la función desplegada 
 
 Las pruebas del cuaderno usan respuestas simuladas; las pruebas SQL comprueban los permisos reales sin conservar datos de prueba. El modo sin conexión permite consultar fichas públicas, no mapas topográficos ni editar el cuaderno.
 
+Verificación posterior al despliegue en `https://100-cims-cat.vercel.app`: fuentes, bloques de 48/96 tarjetas, fichas y metadatos, restauración de navegación y mapa, sitemap, 404 y lectura de descargas con la red desactivada correctos. Sin errores de JavaScript. La prueba espera a que Next.js termine de actualizar los metadatos al navegar entre páginas.
+
 ## Iconos y metadatos — 20 de octubre de 2026
 
 Añadidos favicon ICO (16, 32 y 48 px), SVG, icono Apple de 180 px y manifest con iconos de 192 y 512 px. La tarjeta Open Graph de 1200 × 630 px también se utiliza en Twitter. La URL canónica y el sitemap usan el dominio de producción ya referenciado en la aplicación. `robots.txt` permite la portada y excluye las rutas de API y autenticación.

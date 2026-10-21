@@ -40,6 +40,7 @@ async function main() {
     assert.equal(raw.status(), 200)
     const html = await raw.text()
     assert.ok(html.includes('<h1>') && html.includes('rel="canonical"') && html.includes(summitPath))
+    await page.waitForFunction(summitPath => document.querySelector('link[rel="canonical"]')?.getAttribute('href') === 'https://100-cims-cat.vercel.app' + summitPath, summitPath)
     assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'), 'https://100-cims-cat.vercel.app' + summitPath)
     await page.goBack()
     await page.waitForFunction(() => document.querySelectorAll('.card').length === 96)
