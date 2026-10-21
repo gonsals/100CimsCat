@@ -15,7 +15,7 @@ type Props = { summit: Summit; language: 'ca' | 'es' | 'en'; onClose: () => void
 export default function SummitDetailsModal({ summit, language, onClose, favorite, completedAt, busy, onFavorite, onEdit, feedback }: Props) {
   const dialog = useRef<HTMLDialogElement>(null)
   const t = (value: string) => trackerText(language, value)
-  const { data, loading, error, retry } = useSummitContext(summit.id)
+  const { data, loading, error, retry } = useSummitContext(summit)
   const [imageFailed, setImageFailed] = useState(false)
   const photo = !imageFailed ? data?.photo : null
   useEffect(() => { setImageFailed(false) }, [summit.id])

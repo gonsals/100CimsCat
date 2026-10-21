@@ -23,7 +23,7 @@ const copy = {
 
 export default function SummitPageContent({ summit, related }: { summit: Summit; related: Summit[] }) {
   const { language } = usePreferences()
-  const { data, loading, error, retry } = useSummitContext(summit.id)
+  const { data, loading, error, retry } = useSummitContext(summit)
   const [imageFailed, setImageFailed] = useState(false)
   useEffect(() => { setImageFailed(false) }, [summit.id])
   const t = copy[language]

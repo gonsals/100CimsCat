@@ -10,6 +10,7 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 - Fotos privades a Supabase Storage, amb accés restringit al seu propietari.
 - Cada foto es redimensiona fins a 1.440 px, es converteix a WebP (o JPEG si cal) i es comprimeix per sota de 512 KB. Es treuen les metadades originals; el límit també s'aplica al bucket. Quota per compte: 280 MB, amb un màxim global de 900 MB per no superar la quota gratuïta.
 - Les fitxes públiques i les del mapa comparteixen fotografies de Wikimedia Commons amb autoria, llicència i font. La identitat es comprova amb nom i coordenades de Wikidata i, quan hi consta, altitud. Si la coincidència és ambigua o la llicència no es pot validar, es conserva la il·lustració. No tots els cims tenen una foto disponible.
+- Si la consulta del servidor no està disponible, el navegador pot recuperar les mateixes dades públiques de Wikidata i Commons mitjançant CORS anònim, sense cookies ni credencials. Les comprovacions d’identitat i llicència són compartides entre les dues vies.
 - Cada fitxa pública incorpora un mapa de situació, coordenades i accés a la font FEEC per consultar recorreguts. L’altitud no es presenta com a dificultat, durada ni desnivell d’una ruta.
 - Pots compartir una targeta gràfica del progrés creada al navegador. Les fotos i dades personals no es publiquen.
 - Des de Configuració pots esborrar el compte, les ascensions i les fotos privades.

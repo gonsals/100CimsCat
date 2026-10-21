@@ -42,7 +42,18 @@ async function fixture(browser, width, signedIn = false) {
   const state = { records: [], visits: [], inserts: 0, uploads: 0, removals: [], signings: 0, failUpload: false, failLink: false, photoMode: 'success' }
   await page.route('https://*.tile.openstreetmap.org/**', route => route.fulfill({ contentType: 'image/png', body: png }))
   await page.route('https://upload.wikimedia.org/**', route => route.fulfill({ contentType: 'image/png', body: png }))
-  await page.route('**/api/summit-context?*', route => state.photoMode === 'error' ? route.fulfill({ status: 502, json: { error: 'Fixture' } }) : route.fulfill({ json: state.photoMode === 'empty' ? { description: {}, photo: null } : { entityUrl: 'https://www.wikidata.org/wiki/Q6650', description: { es: 'montaña de los Pirineos', en: 'mountain in the Pyrenees' }, photo: { url: 'https://upload.wikimedia.org/wikipedia/commons/test.png', sourceUrl: 'https://commons.wikimedia.org/wiki/File:Test.png', author: 'Fixture author', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/' } } }))
+  await page.route('**/api/summit-context?*', route => ['error', 'fallback'].includes(state.photoMode) ? route.fulfill({ status: 502, json: { error: 'Fixture' } }) : route.fulfill({ json: state.photoMode === 'empty' ? { description: {}, photo: null } : { entityUrl: 'https://www.wikidata.org/wiki/Q6650', description: { es: 'montaña de los Pirineos', en: 'mountain in the Pyrenees' }, photo: { url: 'https://upload.wikimedia.org/wikipedia/commons/test.png', sourceUrl: 'https://commons.wikimedia.org/wiki/File:Test.png', author: 'Fixture author', license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/' } } }))
+  await page.route(/https:\/\/(www\.wikidata\.org|commons\.wikimedia\.org)\/w\/api\.php/, route => {
+    assert.equal(route.request().headers().authorization, undefined)
+    assert.equal(route.request().headers().cookie, undefined)
+    if (state.photoMode === 'error') return route.fulfill({ status: 503, json: {}, headers: { 'access-control-allow-origin': '*' } })
+    const url = new URL(route.request().url())
+    const point = require('../data/summit-coordinates.json').canigo
+    const entity = { id: 'Q6650', labels: { ca: { value: 'Canigó' } }, descriptions: { es: { value: 'montaña de los Pirineos' } }, claims: { P625: [{ mainsnak: { datavalue: { value: { latitude: point.lat, longitude: point.lng, globe: 'http://www.wikidata.org/entity/Q2' } } } }], P18: [{ mainsnak: { datavalue: { value: 'Test.png' } } }] } }
+    const info = { thumburl: 'https://upload.wikimedia.org/wikipedia/commons/test.png', descriptionurl: 'https://commons.wikimedia.org/wiki/File:Test.png', mime: 'image/png', extmetadata: { Artist: { value: 'Fixture author' }, LicenseShortName: { value: 'CC BY-SA 4.0' }, LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0/' } } }
+    const json = url.hostname === 'commons.wikimedia.org' ? { query: { pages: { 1: { imageinfo: [info] } } } } : url.searchParams.get('action') === 'wbsearchentities' ? { search: [{ id: 'Q6650' }] } : { entities: { Q6650: entity } }
+    return route.fulfill({ json, headers: { 'access-control-allow-origin': '*' } })
+  })
   await page.route('https://*.supabase.co/**', async route => {
     const request = route.request(), url = new URL(request.url()), method = request.method()
     const json = data => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data), headers: { 'access-control-allow-origin': '*' } })
@@ -130,6 +141,9 @@ async function main() {
       assert.equal(await page.locator('html').getAttribute('lang'), 'en')
       await page.getByLabel('Language', { exact: true }).selectOption('es')
       await page.getByRole('button', { name: 'Activar tema claro' }).click()
+      state.photoMode = 'fallback'; await page.reload()
+      await page.getByText('Fixture author', { exact: true }).waitFor()
+      await check(page, `anonymous-photo-fallback-${width}`)
       state.photoMode = 'error'; await page.reload()
       await page.getByRole('button', { name: 'Volver a intentar', exact: true }).waitFor()
       state.photoMode = 'success'
