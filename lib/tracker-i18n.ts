@@ -2,6 +2,20 @@ import type { Language } from './tracker'
 
 // Catalan is the source language, matching the existing catalogue and interface.
 const messages: Record<string, [string, string]> = {
+  'Explorar els cims': ['Explorar las cimas', 'Explore summits'],
+  'Fitxes descarregades': ['Fichas descargadas', 'Downloaded summits'],
+  'Cims mostrats': ['Cimas mostradas', 'Summits shown'],
+  'Carregar més cims': ['Cargar más cimas', 'Load more summits'],
+  'Registrar una altra ascensió': ['Registrar otra ascensión', 'Record another ascent'],
+  'Eliminar ascensió': ['Eliminar ascensión', 'Delete ascent'],
+  'S’eliminarà només aquesta visita, amb les seves notes i foto. Les altres ascensions es conservaran.': ['Se eliminará solo esta visita, con sus notas y foto. Se conservarán las otras ascensiones.', 'Only this visit, its notes and photo will be deleted. Other ascents will be kept.'],
+  'Afegir foto a aquesta visita': ['Añadir foto a esta visita', 'Add a photo to this visit'],
+  'Foto d’aquesta visita': ['Foto de esta visita', 'Photo of this visit'],
+  'Amb foto privada': ['Con foto privada', 'With private photo'],
+  'ascensions': ['ascensiones', 'ascents'],
+  'cims diferents': ['cimas distintas', 'unique summits'],
+  'Cada cim compta una sola vegada al repte.': ['Cada cima cuenta una sola vez en el reto.', 'Each summit counts only once towards the challenge.'],
+  'Obrir fitxa completa': ['Abrir ficha completa', 'Open full summit page'],
   'Preferits': ['Favoritos', 'Favorites'],
   'Afegir a preferits': ['Añadir a favoritos', 'Add to favorites'],
   'Treure de preferits': ['Quitar de favoritos', 'Remove from favorites'],

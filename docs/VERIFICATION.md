@@ -1,5 +1,19 @@
 # Validación de funcionalidades y móvil
 
+## Catálogo, fichas e historial — 21 de octubre de 2026
+
+Aplicadas las siete mejoras: fuentes DM Sans y Manrope servidas localmente; acceso a explorar desde la primera pantalla móvil y progreso de invitado compacto; catálogo en bloques de 48 con búsqueda global; 522 fichas públicas estáticas con URL canónica y sitemap; visitas repetidas con fecha, notas y foto independientes; restauración de filtros, posición y mapa en la pestaña; fichas públicas descargables con un lector independiente que funciona sin red.
+
+`npm test`: siete pruebas correctas. Compilación con TypeScript correcta, con 535 páginas estáticas generadas. `scripts/browser-check.cjs` verifica el cuaderno con respuestas simuladas en 320, 375, 390, 768 y 1280 px: visitas repetidas, fotos independientes, borrado aislado, progreso de cimas únicas, favoritos, CSV, recuperación de errores, mapa, idiomas y tema oscuro. No hay desbordamientos ni errores de JavaScript.
+
+`scripts/improvements-check.cjs` confirma la carga real de ambas fuentes, 48/96 tarjetas, búsqueda global, fichas con contenido y metadatos en HTML, restauración del scroll y zoom del mapa, 523 entradas del sitemap y 404 para cimas inexistentes. En modo sin conexión verifica abrir y recargar una ficha guardada, avisar de una cima sin descargar y eliminar una descarga. La caché contiene únicamente el lector público, su script y el icono; no se guardan sesiones, API, fotos ni notas privadas.
+
+La migración `20261021093140_repeated_summit_visits.sql` está aplicada en Supabase. Las primeras ascensiones se conservan y las visitas adicionales se guardan con RLS en `ascent_visits`. Las pruebas SQL verifican que dos visitas a la misma cima se conservan, que editar o borrar una no modifica la otra, y que otras identidades y visitantes anónimos no acceden a ellas. También rechazan fechas futuras, notas excesivas y rutas de fotos ajenas. Las transacciones terminan en ROLLBACK.
+
+La comprobación de cuotas utiliza una copia temporal de la función desplegada y tablas temporales: permite reemplazar tanto fotos originales como de visitas repetidas al alcanzar el límite, y rechaza cargas adicionales, sustituciones sin registro y accesos anónimos. La prueba previa de permisos de Storage continúa pasando. Los asesores de seguridad mantienen los avisos anteriores, sin hallazgos nuevos. Las capturas e informes están en `.next/browser-check` y `.next/improvements-check`.
+
+Las pruebas del cuaderno usan respuestas simuladas; las pruebas SQL comprueban los permisos reales sin conservar datos de prueba. El modo sin conexión permite consultar fichas públicas, no mapas topográficos ni editar el cuaderno.
+
 ## Iconos y metadatos — 20 de octubre de 2026
 
 Añadidos favicon ICO (16, 32 y 48 px), SVG, icono Apple de 180 px y manifest con iconos de 192 y 512 px. La tarjeta Open Graph de 1200 × 630 px también se utiliza en Twitter. La URL canónica y el sitemap usan el dominio de producción ya referenciado en la aplicación. `robots.txt` permite la portada y excluye las rutas de API y autenticación.

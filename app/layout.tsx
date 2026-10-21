@@ -1,11 +1,16 @@
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
+import { DM_Sans, Manrope } from 'next/font/google'
 import { siteDescription, siteTitle, siteUrl } from '@/lib/site'
 import 'leaflet/dist/leaflet.css'
 import './globals.css'
 import './overrides.css'
 import './summit-map.css'
 import './tracker.css'
+import './improvements.css'
+
+const bodyFont = DM_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-body' })
+const headingFont = Manrope({ subsets: ['latin'], display: 'swap', variable: '--font-heading' })
 
 const preferenceBootstrap = `try {
   const root = document.documentElement;
@@ -42,7 +47,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ca" suppressHydrationWarning>
+    <html lang="ca" className={`${bodyFont.variable} ${headingFont.variable}`} suppressHydrationWarning>
       <body>
         <Script id="preferences-before-paint" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: preferenceBootstrap }} />
         {children}

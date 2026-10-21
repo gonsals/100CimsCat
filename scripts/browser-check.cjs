@@ -31,6 +31,7 @@ async function main() {
         document.cookie = `sb-rpizylcabvqzvmdqywyp-auth-token=base64-${btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
       }, session)
       let ascents = [{ summit_id: 'canigo', completed_at: '2024-02-29', photo_path: null, notes: 'Recuerdo de prueba' }]
+      let visits = []
       let favorites = [{ summit_id: 'balandrau' }]
       let testPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=', 'base64')
       await page.route('**/_next/image?*', route => route.fulfill({ contentType: 'image/png', body: testPng }))
@@ -43,6 +44,13 @@ async function main() {
         if (url.pathname.includes('/auth/v1/token')) return json(session)
         if (url.pathname.includes('/auth/v1/logout')) return json({})
         if (url.pathname.includes('/rest/v1/summits')) return json(catalog)
+        if (url.pathname.includes('/rest/v1/ascent_visits')) {
+          if (method === 'GET') return json(visits)
+          if (method === 'POST') { const record = { id: crypto.randomUUID(), photo_path: null, ...request.postDataJSON() }; visits.push(record); return json(record) }
+          const id = url.searchParams.get('id')?.replace('eq.', '')
+          if (method === 'PATCH') { visits = visits.map(row => row.id === id ? { ...row, ...request.postDataJSON() } : row); return json(visits.find(row => row.id === id)) }
+          if (method === 'DELETE') { visits = visits.filter(row => row.id !== id); return json([{ summit_id: 'canigo' }]) }
+        }
         if (url.pathname.includes('/rest/v1/ascent_records')) {
           if (method === 'GET') return json(ascents)
           if (method === 'POST') { const record = request.postDataJSON(); const old = ascents.find(row => row.summit_id === record.summit_id); const updated = { photo_path: null, ...old, ...record }; ascents = ascents.filter(row => row.summit_id !== record.summit_id).concat(updated); return json(updated) }
@@ -96,6 +104,28 @@ async function main() {
       assert.equal(ascents[0].completed_at, '2023-06-15')
       assert.equal(ascents[0].notes, 'Ruta; "bonita"\nCon amigos')
       assert.ok(ascents[0].photo_path)
+      const firstPhoto = ascents[0].photo_path
+      await page.getByRole('button', { name: 'Editar ascensión: Canigó', exact: true }).click()
+      await page.getByRole('button', { name: 'Registrar otra ascensión', exact: true }).click()
+      await page.getByLabel('Fecha de la ascensión', { exact: true }).fill('2024-03-12')
+      await page.getByRole('textbox', { name: 'Notas personales' }).fill('Segunda visita, independiente')
+      await page.getByRole('button', { name: 'Guardar', exact: true }).click()
+      await page.locator('.ascent-editor').waitFor({ state: 'detached' })
+      assert.equal(visits.length, 1)
+      assert.equal(ascents[0].completed_at, '2023-06-15')
+      assert.equal(await page.locator('.history-list li').count(), 2)
+      assert.equal(await page.locator('.progress-numbers strong').innerText(), '1')
+      await page.getByRole('button', { name: 'Editar ascensión: Canigó', exact: true }).click()
+      await page.getByLabel('Foto de esta visita', { exact: true }).setInputFiles({ name: 'visit.png', mimeType: 'image/png', buffer: testPng })
+      await page.locator('.toast').filter({ hasText: 'Foto optimizada y guardada.' }).waitFor()
+      assert.ok(visits[0].photo_path && visits[0].photo_path !== firstPhoto)
+      assert.equal(ascents[0].photo_path, firstPhoto)
+      await page.getByRole('button', { name: 'Eliminar ascensión', exact: true }).click()
+      await page.getByRole('button', { name: 'Sí, eliminar ascensión', exact: true }).click()
+      await page.locator('.ascent-editor').waitFor({ state: 'detached' })
+      assert.equal(visits.length, 0)
+      assert.equal(ascents.length, 1)
+      assert.equal(ascents[0].photo_path, firstPhoto)
       await page.getByRole('button', { name: 'Añadir a favoritos: Canigó', exact: true }).click()
       await page.getByRole('button', { name: 'Quitar de favoritos: Canigó', exact: true }).waitFor()
       const downloaded = page.waitForEvent('download')
@@ -106,10 +136,10 @@ async function main() {
       const content = fs.readFileSync(filename, 'utf8')
       assert.ok(content.includes('2023-06-15') && content.includes('Con amigos') && content.includes('Balandrau'))
       await page.getByRole('button', { name: 'Editar ascensión: Canigó', exact: true }).last().click()
-      await page.getByRole('button', { name: 'Desmarcar cima', exact: true }).click()
+      await page.getByRole('button', { name: 'Eliminar ascensión', exact: true }).click()
       await page.getByRole('button', { name: 'Cancelar', exact: true }).click()
       assert.equal(ascents.length, 1)
-      await page.getByRole('button', { name: 'Desmarcar cima', exact: true }).click()
+      await page.getByRole('button', { name: 'Eliminar ascensión', exact: true }).click()
       await page.getByRole('button', { name: 'Sí, eliminar ascensión', exact: true }).click()
       await page.locator('.ascent-editor').waitFor({ state: 'detached' })
       assert.equal(ascents.length, 0)
@@ -118,10 +148,11 @@ async function main() {
       await page.getByRole('button', { name: 'Guardar', exact: true }).click()
       await page.locator('.ascent-editor').waitFor({ state: 'detached' })
       assert.equal(ascents.length, 1)
-      await page.getByRole('button', { name: 'Explorar cima ↗', exact: true }).click()
-      await page.locator('dialog.summit-modal').waitFor()
-      await page.keyboard.press('Escape')
-      await page.locator('dialog.summit-modal').waitFor({ state: 'detached' })
+      await page.getByRole('link', { name: 'Explorar cima ↗', exact: true }).click()
+      await page.getByRole('heading', { level: 1, name: 'Canigó' }).waitFor()
+      await page.goBack()
+      await page.getByRole('searchbox').waitFor()
+      assert.equal(await page.getByRole('searchbox').inputValue(), 'canigo')
       await page.getByRole('button', { name: 'Limpiar filtros', exact: true }).first().click()
       await page.locator('.nearby-filters summary').click()
       await page.getByLabel('O elige una cima de referencia').selectOption('canigo')
@@ -151,7 +182,7 @@ async function main() {
       await page.getByRole('heading', { name: 'History and statistics' }).waitFor()
       await page.getByRole('button', { name: 'Close', exact: true }).click()
       await page.locator('.catalog').screenshot({ path: path.join(output, `dark-${width}.png`) })
-      report.push({ width, noOverflow: true, journal: true, favorites: true, csv: true, dateAndNotes: true, confirmDelete: true, nearby: true, map: true, errors })
+      report.push({ width, noOverflow: true, journal: true, repeatedVisits: true, independentPhotosAndDeletion: true, favorites: true, csv: true, dateAndNotes: true, confirmDelete: true, nearby: true, map: true, errors })
       console.log(JSON.stringify(report.at(-1)))
       await context.close()
     }
@@ -163,9 +194,10 @@ async function main() {
     await guest.goto(baseUrl)
     await guest.locator('.card').first().waitFor()
     await guest.getByRole('searchbox').fill('canigo')
-    await guest.getByRole('button', { name: 'Explorar cima ↗', exact: true }).click()
-    await guest.locator('dialog.summit-modal').waitFor()
-    await guest.getByRole('button', { name: 'Registrar ascensión', exact: true }).click()
+    await guest.getByRole('link', { name: 'Explorar cima ↗', exact: true }).click()
+    await guest.getByRole('heading', { name: 'Canigó', level: 1 }).waitFor()
+    await guest.getByRole('link', { name: 'Ver en mi cuaderno' }).click()
+    await guest.getByRole('button', { name: 'Registrar ascensión: Canigó', exact: true }).click()
     await guest.locator('.auth-modal').waitFor()
     assert.equal(await guest.locator('dialog.summit-modal').count(), 0)
     await guest.keyboard.press('Escape')
@@ -189,6 +221,7 @@ async function main() {
     })
     await recovery.goto(baseUrl)
     await recovery.getByRole('button', { name: 'Volver a intentar', exact: true }).waitFor()
+    await recovery.getByRole('searchbox').fill('canigo')
     assert.ok(await recovery.getByRole('button', { name: 'Registrar ascensión: Canigó', exact: true }).isDisabled())
     loadFails = false
     await recovery.getByRole('button', { name: 'Volver a intentar', exact: true }).click()

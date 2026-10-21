@@ -2,7 +2,8 @@ import coordinateSeed from '@/data/summit-coordinates.json'
 
 export type Language = 'ca' | 'es' | 'en'
 export type Summit = { id: string; name: string; height: number; region: string; essential: boolean; url: string }
-export type Ascent = { summit_id: string; completed_at: string; photo_path: string | null; notes?: string; photoUrl?: string }
+// Existing first ascents keep their composite key; subsequent visits have a UUID.
+export type Ascent = { id?: string; summit_id: string; completed_at: string; photo_path: string | null; notes?: string; photoUrl?: string; created_at?: string }
 export type Coordinate = { lat: number; lng: number }
 export type SortBy = 'name' | 'height' | 'height-asc' | 'distance'
 export type CatalogFilter = { status: 'all' | 'pending' | 'done'; essential: boolean; favorites: boolean; region: string; minHeight: string; maxHeight: string }
@@ -10,6 +11,19 @@ export const defaultFilters: CatalogFilter = { status: 'all', essential: false, 
 export const coordinates = coordinateSeed as Record<string, Coordinate>
 export const localeFor = (language: Language) => language === 'es' ? 'es-ES' : language === 'en' ? 'en-GB' : 'ca-ES'
 export const regionsOf = (summit: Summit) => summit.region.split(',').map(region => region.trim()).filter(Boolean)
+
+export const ascentKey = (ascent: Ascent) => ascent.id ?? `first:${ascent.summit_id}`
+
+export function latestAscents(visits: Ascent[]) {
+  const latest = new Map<string, Ascent>()
+  for (const visit of visits) {
+    const previous = latest.get(visit.summit_id)
+    const visitOrder = `${visit.completed_at}|${visit.created_at ?? ''}|${visit.id ? '1' : '0'}|${ascentKey(visit)}`
+    const previousOrder = previous ? `${previous.completed_at}|${previous.created_at ?? ''}|${previous.id ? '1' : '0'}|${ascentKey(previous)}` : ''
+    if (!previous || visitOrder > previousOrder) latest.set(visit.summit_id, visit)
+  }
+  return latest
+}
 
 export function normalizeSearch(value: string) {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('ca').replace(/[’'·-]/g, ' ').replace(/\s+/g, ' ').trim()
@@ -65,10 +79,12 @@ export function csvCell(value: string | number) {
   return `"${safe.replace(/"/g, '""')}"`
 }
 
-export function journalCsv(summits: Summit[], ascents: Map<string, Ascent>, favorites: Set<string>, headings: string[], yes: string, no: string) {
-  const rows = summits.filter(summit => ascents.has(summit.id) || favorites.has(summit.id)).map(summit => {
-    const ascent = ascents.get(summit.id)
-    return [summit.name, summit.region, summit.height, summit.essential ? yes : no, ascent?.completed_at ?? '', ascent?.notes ?? '', favorites.has(summit.id) ? yes : no, summit.url].map(csvCell).join(';')
+export function journalCsv(summits: Summit[], ascents: Map<string, Ascent> | Ascent[], favorites: Set<string>, headings: string[], yes: string, no: string) {
+  const visits = Array.isArray(ascents) ? ascents : Array.from(ascents, ([summit_id, ascent]) => ({ ...ascent, summit_id }))
+  const rows = summits.flatMap(summit => {
+    const records = visits.filter(ascent => ascent.summit_id === summit.id)
+    return (records.length ? records : favorites.has(summit.id) ? [undefined] : []).map(ascent =>
+      [summit.name, summit.region, summit.height, summit.essential ? yes : no, ascent?.completed_at ?? '', ascent?.notes ?? '', favorites.has(summit.id) ? yes : no, summit.url].map(csvCell).join(';'))
   })
   return '\uFEFF' + [headings.map(csvCell).join(';'), ...rows].join('\r\n')
 }

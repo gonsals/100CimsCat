@@ -1,6 +1,8 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
+import OfflineButton from '@/components/OfflineButton'
 import { useEffect, useRef, useState } from 'react'
 import { friendlyDate, type Summit } from '@/lib/tracker'
 import { trackerText } from '@/lib/tracker-i18n'
@@ -114,10 +116,12 @@ export default function SummitDetailsModal({ summit, language, onClose, favorite
         <div className="summit-journal-actions"><button className="primary-button" type="button" disabled={busy} onClick={onEdit}>{t(completedAt ? 'Editar ascensió' : 'Registrar ascensió')}{completedAt && ` · ${friendlyDate(completedAt, language)}`}</button><button className="secondary-button" type="button" disabled={busy} aria-pressed={favorite} onClick={onFavorite}>{favorite ? '★' : '☆'} {t(favorite ? 'Treure de preferits' : 'Afegir a preferits')}</button></div>
 
         <div className="summit-detail-links">
+          <Link href={`/cims/${summit.id}`} prefetch={false}>{t('Obrir fitxa completa')} →</Link>
           <a href={summit.url} target="_blank" rel="noreferrer">{labels.route} ↗</a>
           <a href={openMap.toString()} target="_blank" rel="noreferrer">{labels.map} ↗</a>
         </div>
         <p className="summit-map-note">{labels.location}</p>
+        <OfflineButton summit={summit} language={language} />
 
         <div className="commons-heading"><h3>{labels.photos}</h3><a href={openCommons.toString()} target="_blank" rel="noreferrer">{labels.commons} ↗</a></div>
         {loading && <p className="commons-state">{labels.loading}</p>}

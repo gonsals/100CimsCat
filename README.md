@@ -15,6 +15,15 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 
 ## Quadern i planificació
 
+- El catàleg mostra 48 cims per bloc amb «Carregar més cims»; la cerca i els filtres recorren els 522 cims. La pestanya conserva els filtres, l’ordre, la vista, la posició del llistat i el centre/zoom del mapa.
+- Cada cim té una fitxa pública a `/cims/<id>`, amb metadades pròpies i entrada al sitemap. Inclou coordenades orientatives, enllaços FEEC i accés al quadern.
+- «Desar sense cobertura» guarda les dades públiques de la fitxa en aquest dispositiu. El lector `/offline.html` funciona sense connexió, inclosa la recàrrega i l’eliminació de descàrregues. No descarrega mapes, fotos, notes privades ni sessions. Les dades es perden si s’esborra l’emmagatzematge del navegador.
+- Es poden registrar diverses visites a un mateix cim, cadascuna amb data, notes i foto. El progrés compta cims únics; l’historial, les estadístiques anuals i el CSV inclouen totes les visites. Eliminar una visita conserva les altres.
+
+La migració `20261021093140_repeated_summit_visits.sql` afegeix `ascent_visits` amb RLS i amplia la comprovació de quota de fotos. Les primeres ascensions existents es mantenen a `ascent_records`, sense traslladar ni sobreescriure dades. Cal aplicar la migració abans de desplegar aquesta versió.
+
+Les tipografies DM Sans i Manrope es descarreguen durant la compilació i se serveixen des de la web, sense peticions a Google al navegador.
+
 - Filtres combinables: pendent/fet, essencial, preferit, comarca i interval d’altitud. Cerca tolerant als accents i ordenació per nom, altitud ascendent/descendent o distància.
 - Preferits privats sincronitzats amb el compte, disponibles també al mapa.
 - Formulari d’ascensió amb data editable i notes privades (fins a 4.000 caràcters). No es permeten dates futures. Editar el registre o canviar la foto conserva la resta del quadern.
@@ -27,6 +36,8 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 Les migracions `journal_notes_and_favorites` i `restrict_favorite_privileges` afegeixen les notes i els preferits amb RLS i permisos limitats al propietari. Cal aplicar-les en qualsevol entorn nou abans d’utilitzar el quadern.
 
 Verificació de lògica: `node --test tests/tracker.test.cjs`. Verificació del navegador: `node scripts/browser-check.cjs` amb Playwright instal·lat (o `PLAYWRIGHT_MODULE` apuntant al paquet) i `CHECK_URL` apuntant al servidor. Les proves del navegador simulen el compte i el quadern sense modificar dades personals; generen captures i un informe a `.next/browser-check`.
+
+`node scripts/improvements-check.cjs` comprova tipografies, blocs del catàleg, fitxes públiques, restauració del llistat i mapa, i el lector amb el navegador sense connexió. Genera captures i un informe a `.next/improvements-check`. Les proves SQL `tests/ascent-visits-policy.sql` i `tests/visit-photo-quota.sql` verifiquen l’aïllament entre comptes i les quotes de substitució de fotos; totes les dades de prova es reverteixen.
 
 ## Configuració local
 

@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -11,7 +12,8 @@ import SummitDetailsModal from '@/components/SummitDetailsModal'
 import CatalogFilters from '@/components/CatalogFilters'
 import AscentEditor from '@/components/AscentEditor'
 import Journal from '@/components/Journal'
-import { coordinates, defaultFilters, distanceKm, filterCatalog, friendlyDate, localDate, validAscentDate, type Ascent, type CatalogFilter, type Coordinate, type Language, type SortBy, type Summit } from '@/lib/tracker'
+import { ascentKey, latestAscents, coordinates, defaultFilters, distanceKm, filterCatalog, friendlyDate, validAscentDate, type Ascent, type CatalogFilter, type Coordinate, type Language, type SortBy, type Summit } from '@/lib/tracker'
+import { catalogSignature, catalogStateKey, parseCatalogState } from '@/lib/catalog-state'
 import { trackerText } from '@/lib/tracker-i18n'
 import { useModalAccessibility } from '@/lib/use-modal-accessibility'
 
@@ -120,9 +122,11 @@ async function optimizePhoto(file: File) {
 export default function CimTracker() {
   const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
   const supabase = useMemo(() => configured ? createClient() : null, [configured])
-  const [summits, setSummits] = useState<Summit[]>([])
-  const [ascents, setAscents] = useState<Map<string, Ascent>>(new Map())
+  const [summits, setSummits] = useState<Summit[]>(catalogSeed as Summit[])
+  const [visits, setVisits] = useState<Ascent[]>([])
+  const ascents = useMemo(() => latestAscents(visits), [visits])
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null)
+  const [authReady, setAuthReady] = useState(false)
   const [ready, setReady] = useState(false)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState<CatalogFilter>(defaultFilters)
@@ -131,6 +135,8 @@ export default function CimTracker() {
   const [origin, setOrigin] = useState<Coordinate | null>(null)
   const [originLabel, setOriginLabel] = useState('')
   const [editingSummit, setEditingSummit] = useState<Summit | null>(null)
+  const [editingVisitKey, setEditingVisitKey] = useState<string | null>(null)
+  const editingAscent = visits.find(visit => ascentKey(visit) === editingVisitKey)
   const [journalReady, setJournalReady] = useState(false)
   const [journalError, setJournalError] = useState(false)
   const [loadVersion, setLoadVersion] = useState(0)
@@ -148,6 +154,8 @@ export default function CimTracker() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedSummit, setSelectedSummit] = useState<Summit | null>(null)
   const [catalogView, setCatalogView] = useState<'list' | 'map'>('list')
+  const [pagination, setPagination] = useState({ key: '', limit: 48 })
+  const pendingScroll = useRef<number | null>(null)
   const [storageBytes, setStorageBytes] = useState<number | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
@@ -166,6 +174,18 @@ export default function CimTracker() {
       const savedTheme = localStorage.getItem('100cimscat-theme')
       if (savedLanguage === 'ca' || savedLanguage === 'es' || savedLanguage === 'en') setLanguage(savedLanguage)
       if (savedTheme === 'light' || savedTheme === 'dark') setTheme(savedTheme)
+      const saved = parseCatalogState(sessionStorage.getItem(catalogStateKey))
+      const selectedId = new URLSearchParams(window.location.search).get('cim')
+      const selected = catalogSeed.find(summit => summit.id === selectedId)
+      if (selected) {
+        setSearch(selected.name)
+        setFilters(defaultFilters)
+      } else if (saved) {
+        setSearch(saved.search); setFilters(saved.filters); setSortBy(saved.sortBy)
+        setCatalogView(saved.view); setOrigin(saved.origin); setOriginLabel(saved.originLabel)
+        setPagination({ key: catalogSignature(saved.filters, saved.search, saved.sortBy, saved.origin), limit: saved.limit })
+        pendingScroll.current = saved.scrollY
+      }
     } catch { /* Use defaults when browser storage is unavailable. */ }
     finally { setPreferencesReady(true) }
   }, [])
@@ -210,6 +230,7 @@ export default function CimTracker() {
     if (!supabase) {
       setSummits(catalogSeed as Summit[])
       setReady(true)
+      setAuthReady(true)
       return
     }
 
@@ -221,11 +242,11 @@ export default function CimTracker() {
     })
 
     supabase.auth.getUser().then(({ data }) => {
-      if (active) setUser(data.user ? { id: data.user.id, email: data.user.email } : null)
+      if (active) { setUser(data.user ? { id: data.user.id, email: data.user.email } : null); setAuthReady(true) }
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ? { id: session.user.id, email: session.user.email } : null)
-      if (!session) { setAscents(new Map()); setFavorites(new Set()); setJournalReady(false); setEditingSummit(null) }
+      if (!session) { setVisits([]); setFavorites(new Set()); setJournalReady(false); setEditingSummit(null) }
     })
 
     return () => {
@@ -241,27 +262,37 @@ export default function CimTracker() {
     let active = true
     setJournalReady(false)
     setJournalError(false)
-    setAscents(new Map())
+    setVisits([])
     setFavorites(new Set())
     async function loadAscents() {
-      const [{ data, error }, favoriteResult] = await Promise.all([
-        currentSupabase.from('ascent_records').select('summit_id,completed_at,photo_path,notes').eq('user_id', currentUser.id),
+      async function loadAllVisits() {
+        const rows: Ascent[] = []
+        for (let from = 0; ; from += 500) {
+          const result = await currentSupabase.from('ascent_visits').select('id,summit_id,completed_at,photo_path,notes,created_at').eq('user_id', currentUser.id).order('completed_at', { ascending: false }).order('id').range(from, from + 499)
+          if (!active || result.error) return { data: rows, error: result.error }
+          rows.push(...result.data as Ascent[])
+          if (result.data.length < 500) return { data: rows, error: null }
+        }
+      }
+      const [{ data, error }, favoriteResult, repeatedResult] = await Promise.all([
+        currentSupabase.from('ascent_records').select('summit_id,completed_at,photo_path,notes,created_at').eq('user_id', currentUser.id),
         currentSupabase.from('summit_favorites').select('summit_id').eq('user_id', currentUser.id),
+        loadAllVisits(),
       ])
       if (!active) return
-      if (error || favoriteResult.error) {
+      if (error || favoriteResult.error || repeatedResult.error) {
         setJournalError(true)
         return
       }
       setFavorites(new Set((favoriteResult.data ?? []).map(row => row.summit_id)))
-      const rows = (data ?? []) as Ascent[]
+      const rows = [...(data ?? []), ...(repeatedResult.data ?? [])] as Ascent[]
       const paths = rows.flatMap(row => row.photo_path ? [row.photo_path] : [])
       const signed = paths.length
         ? await currentSupabase.storage.from('summit-photos').createSignedUrls(paths, 60 * 60 * 24)
         : { data: [], error: null }
       const urls = new Map((signed.data ?? []).map(item => [item.path, item.signedUrl]))
       if (active) {
-        setAscents(new Map(rows.map(row => [row.summit_id, { ...row, photoUrl: row.photo_path ? urls.get(row.photo_path) ?? undefined : undefined }])))
+        setVisits(rows.map(row => ({ ...row, photoUrl: row.photo_path ? urls.get(row.photo_path) ?? undefined : undefined })))
         setJournalReady(true)
       }
     }
@@ -270,10 +301,33 @@ export default function CimTracker() {
   }, [supabase, user?.id, loadVersion])
 
   const visible = useMemo(() => filterCatalog(summits, ascents, favorites, filters, search, sortBy, origin), [summits, ascents, favorites, filters, search, sortBy, origin])
+  const catalogKey = catalogSignature(filters, search, sortBy, origin)
+  const catalogLimit = pagination.key === catalogKey ? pagination.limit : 48
+
+  useEffect(() => {
+    if (!ready || !authReady || !preferencesReady || (user && !journalReady) || pendingScroll.current === null) return
+    let active = true
+    void document.fonts.ready.then(() => requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (active && pendingScroll.current !== null) { window.scrollTo(0, pendingScroll.current); pendingScroll.current = null }
+    })))
+    return () => { active = false }
+  }, [ready, authReady, preferencesReady, user, journalReady])
+
+  useEffect(() => {
+    if (!preferencesReady) return
+    const persist = () => {
+      if (pendingScroll.current !== null) return
+      try { sessionStorage.setItem(catalogStateKey, JSON.stringify({ version: 1, search, filters, sortBy, view: catalogView, limit: catalogLimit, scrollY: window.scrollY, origin, originLabel })) } catch { /* Browsing works without storage. */ }
+    }
+    persist()
+    window.addEventListener('scroll', persist, { passive: true })
+    window.addEventListener('pagehide', persist)
+    return () => { window.removeEventListener('scroll', persist); window.removeEventListener('pagehide', persist) }
+  }, [preferencesReady, search, filters, sortBy, catalogView, catalogLimit, origin, originLabel])
 
   const completed = [...ascents.values()]
   const essentialDone = completed.filter(ascent => summits.find(summit => summit.id === ascent.summit_id)?.essential).length
-  const photoCount = completed.filter(ascent => ascent.photo_path).length
+  const photoCount = visits.filter(ascent => ascent.photo_path).length
   const essentialTotal = summits.filter(summit => summit.essential).length
   const progress = Math.min(100, Math.round(essentialDone / target * 100))
 
@@ -319,7 +373,7 @@ export default function CimTracker() {
       const response = await fetch('/api/account',{method:'DELETE'})
       if (!response.ok) throw new Error(response.status===503?'config':'delete')
       await supabase?.auth.signOut({scope:'local'})
-      setUser(null); setAscents(new Map()); setDeleteOpen(false); setSettingsOpen(false); setProfileOpen(false)
+      setUser(null); setVisits([]); setDeleteOpen(false); setSettingsOpen(false); setProfileOpen(false)
       setNotice(language==='es'?'Cuenta y fotos eliminadas.':language==='en'?'Account and photos deleted.':'Compte i fotos eliminats.')
     } catch(error) {
       setNotice(error instanceof Error && error.message==='config'?'Falta SUPABASE_SERVICE_ROLE_KEY al servidor per activar el borrat de compte.':language==='es'?'No se pudo borrar la cuenta. Inténtalo de nuevo.':language==='en'?'Could not delete the account. Try again.':'No s’ha pogut esborrar el compte. Torna-ho a provar.')
@@ -361,11 +415,12 @@ export default function CimTracker() {
     }
   }
 
-  function editAscent(summit: Summit) {
+  function editAscent(summit: Summit, visit: Ascent | null | undefined = ascents.get(summit.id)) {
     if (!user || !supabase) { setSelectedSummit(null); setAuthOpen(true); return }
     if (!journalReady || busyId) return
     setSelectedSummit(null)
     setNotice('')
+    setEditingVisitKey(visit ? ascentKey(visit) : null)
     setEditingSummit(summit)
   }
 
@@ -377,13 +432,15 @@ export default function CimTracker() {
     setBusyLabel('Desant…')
     setNotice('')
     try {
-      const existing = ascents.has(summit.id)
+      const existing = editingAscent
+      const table = existing?.id || (!existing && visits.some(visit => visit.summit_id === summit.id)) ? 'ascent_visits' : 'ascent_records'
       const result = existing
-        ? supabase.from('ascent_records').update({ completed_at: date, notes }).eq('user_id', user.id).eq('summit_id', summit.id)
-        : supabase.from('ascent_records').insert({ user_id: user.id, summit_id: summit.id, completed_at: date, notes })
-      const { data, error } = await result.select('summit_id,completed_at,photo_path,notes').single()
+        ? supabase.from(table).update({ completed_at: date, notes }).eq('user_id', user.id).eq(existing.id ? 'id' : 'summit_id', existing.id ?? summit.id)
+        : supabase.from(table).insert({ user_id: user.id, summit_id: summit.id, completed_at: date, notes })
+      const { data, error } = await result.select(table === 'ascent_visits' ? 'id,summit_id,completed_at,photo_path,notes,created_at' : 'summit_id,completed_at,photo_path,notes,created_at').single()
       if (error) throw error
-      setAscents(previous => new Map(previous).set(summit.id, { ...previous.get(summit.id), ...data }))
+      const saved = { ...existing, ...(data as unknown as Ascent) }
+      setVisits(previous => [...previous.filter(visit => !existing || ascentKey(visit) !== ascentKey(existing)), saved])
       setEditingSummit(null)
       setNotice('Ascensió guardada.')
     } catch { setNotice('No s’ha pogut desar l’ascensió. Torna-ho a provar.') }
@@ -393,7 +450,7 @@ export default function CimTracker() {
   async function deleteAscent() {
     if (!user || !supabase || !editingSummit || busyId) return
     const summit = editingSummit
-    const current = ascents.get(summit.id)
+    const current = editingAscent
     if (!current) return
     setBusyId(summit.id)
     setNotice('')
@@ -402,11 +459,11 @@ export default function CimTracker() {
         const { error } = await supabase.storage.from('summit-photos').remove([current.photo_path])
         if (error) { setNotice('No s’ha pogut eliminar la foto. L’ascensió es conserva; torna-ho a provar.'); return }
         // Reflect successful photo removal even if deleting the record fails afterwards.
-        setAscents(previous => new Map(previous).set(summit.id, { ...current, photo_path: null, photoUrl: undefined }))
+        setVisits(previous => previous.map(visit => ascentKey(visit) === ascentKey(current) ? { ...visit, photo_path: null, photoUrl: undefined } : visit))
       }
-      const { data, error } = await supabase.from('ascent_records').delete().eq('user_id', user.id).eq('summit_id', summit.id).select('summit_id')
+      const { data, error } = await supabase.from(current.id ? 'ascent_visits' : 'ascent_records').delete().eq('user_id', user.id).eq(current.id ? 'id' : 'summit_id', current.id ?? summit.id).select('summit_id')
       if (error || !data?.length) throw error ?? new Error('No ascent deleted')
-      setAscents(previous => { const next = new Map(previous); next.delete(summit.id); return next })
+      setVisits(previous => previous.filter(visit => ascentKey(visit) !== ascentKey(current)))
       setEditingSummit(null)
       setNotice('Ascensió eliminada.')
     } catch { setNotice('No s’ha pogut desmarcar aquest cim. Torna-ho a provar.') }
@@ -442,11 +499,12 @@ export default function CimTracker() {
     setSortBy('name')
   }
 
-  async function uploadPhoto(summit: Summit, file?: File) {
+  async function uploadPhoto(summit: Summit, file?: File, selectedVisit?: Ascent) {
     if (!file || busyId) return
     if (!user || !supabase) { setAuthOpen(true); return }
     if (!journalReady) return
-    if (!ascents.has(summit.id)) {
+    const current = selectedVisit ?? ascents.get(summit.id)
+    if (!current) {
       editAscent(summit)
       setNotice(language === 'es' ? 'Registra la fecha de la ascensión antes de añadir una foto.' : language === 'en' ? 'Record the ascent date before adding a photo.' : 'Registra la data de l’ascensió abans d’afegir una foto.')
       return
@@ -479,7 +537,7 @@ export default function CimTracker() {
     setBusyLabel('Pujant foto…')
     const extension = optimized.type === 'image/webp' ? 'webp' : 'jpg'
     const nextPath = `${user.id}/${summit.id}/${crypto.randomUUID()}.${extension}`
-    const oldPath = ascents.get(summit.id)?.photo_path ?? null
+    const oldPath = current.photo_path
     const { data: allowed, error: quotaError } = await supabase.rpc('can_upload_summit_photo', { p_file_size: optimized.size, p_replace_path: oldPath })
     if (quotaError || allowed !== true) { setNotice(quotaError ? 'Actualitza la migració de Supabase abans de pujar fotos.' : 'Has arribat al límit de 280 MB de fotos del teu compte. Esborra fotos per continuar.'); setBusyId(null); return }
     const { error: uploadError } = await supabase.storage.from('summit-photos').upload(nextPath, optimized, { contentType: optimized.type, upsert: false, metadata: oldPath ? { replace_path: oldPath } : {} })
@@ -488,7 +546,7 @@ export default function CimTracker() {
       setBusyId(null)
       return
     }
-    const { data: saved, error: saveError } = await supabase.from('ascent_records').update({ photo_path: nextPath }).eq('user_id', user.id).eq('summit_id', summit.id).select('summit_id').single()
+    const { data: saved, error: saveError } = await supabase.from(current.id ? 'ascent_visits' : 'ascent_records').update({ photo_path: nextPath }).eq('user_id', user.id).eq(current.id ? 'id' : 'summit_id', current.id ?? summit.id).select('summit_id').single()
     if (saveError || !saved) {
       await supabase.storage.from('summit-photos').remove([nextPath])
       setNotice('La foto s’ha pujat, però no hem pogut desar el registre. Torna-ho a provar.')
@@ -497,13 +555,11 @@ export default function CimTracker() {
     }
     const { data: signed } = await supabase.storage.from('summit-photos').createSignedUrl(nextPath, 60 * 60 * 24)
     if (oldPath) await supabase.storage.from('summit-photos').remove([oldPath])
-    setAscents(previous => new Map(previous).set(summit.id, {
-      ...previous.get(summit.id),
-      summit_id: summit.id,
-      completed_at: previous.get(summit.id)?.completed_at ?? localDate(),
+    setVisits(previous => previous.map(visit => ascentKey(visit) === ascentKey(current) ? {
+      ...visit,
       photo_path: nextPath,
       photoUrl: signed?.signedUrl,
-    }))
+    } : visit))
     setBusyId(null)
     setNotice('Foto optimitzada i guardada.')
     } catch { setNotice('No s’ha pogut pujar la foto. Torna-ho a provar.') }
@@ -548,13 +604,13 @@ export default function CimTracker() {
       </header>
 
       <section className="hero" id="inici">
-        <div className="hero-copy"><p className="eyebrow">{t('EL TEU QUADERN DE MUNTANYA')}</p><h1>{t('Cada cim, una')}<br /><em>{t('història.')}</em></h1><p className="intro">{t('Guarda els teus records i descobreix fins on t’ha portat el camí.')}</p></div>
+        <div className="hero-copy"><p className="eyebrow">{t('EL TEU QUADERN DE MUNTANYA')}</p><h1>{t('Cada cim, una')}<br /><em>{t('història.')}</em></h1><p className="intro">{t('Guarda els teus records i descobreix fins on t’ha portat el camí.')}</p><div className="hero-actions"><a className="primary-button" href="#cims">{t('Explorar els cims')} ↓</a><a className="offline-reader-link" href="/offline.html">{t('Fitxes descarregades')}</a></div></div>
         <div className="hero-art" aria-hidden="true"><div className="sun" /><div className="ridge ridge-back" /><div className="ridge ridge-front" /><div className="art-label">PIRINEU<br /><span>42° 32′ N · 1° 36′ E</span></div></div>
       </section>
 
       {!user && <section className="account-hint"><span className="hint-icon">↗</span><span><strong>{t('El teu progrés t’acompanya.')}</strong> {t('Inicia sessió per desar cims i fotos al teu compte.')}</span><button onClick={() => setAuthOpen(true)}>{t('Accedir amb el correu')}</button></section>}
 
-      <section className="progress-panel" aria-label={t('Progrés del repte')}>
+      <section className={`progress-panel ${user ? '' : 'is-guest'}`} aria-label={t('Progrés del repte')}>
         <div className="progress-heading"><div><p className="eyebrow">{t('EL REPTE DELS 100 CIMS')}</p><h2>{t('El teu camí fins als 100')}</h2></div><div className="progress-numbers"><strong>{essentialDone}</strong><span> / 100</span></div></div>
         <div className="progress-track"><div style={{ width: `${progress}%` }} /></div>
         <div className="progress-footer"><span>{completed.length ? (language === 'es' ? `Ya tienes ${completed.length} ${completed.length === 1 ? 'cima' : 'cimas'} en tu cuaderno, ${essentialDone} esenciales.` : language === 'en' ? `${completed.length} ${completed.length === 1 ? 'summit' : 'summits'} in your journal, ${essentialDone} essential.` : `Ja tens ${completed.length} ${completed.length === 1 ? 'cim' : 'cims'} al teu quadern, ${essentialDone} d’essencials.`) : t('Encara no has registrat cap ascensió. Tot comença amb el primer pas.')}</span><span>{progress}%</span></div>
@@ -563,7 +619,7 @@ export default function CimTracker() {
       </section>
 
       {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={() => setLoadVersion(previous => previous + 1)}>{t('Tornar-ho a provar')}</button>}</div>}
-      {user && journalReady && <Journal summits={summits} ascents={ascents} favorites={favorites} language={language} t={t} onEdit={editAscent} />}
+      {user && journalReady && <Journal summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} />}
 
       <section className="catalog" id="cims">
         <div className="section-heading"><div><p className="eyebrow">{t('EL TEU CATÀLEG')}</p><h2>{t('Tria el pròxim cim')}</h2></div><div className="catalog-heading-actions"><span className="catalog-count"><b>{visible.length}</b> {language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes'}</span><div className="catalog-view-toggle" role="group" aria-label={language === 'es' ? 'Vista del catálogo' : language === 'en' ? 'Catalogue view' : 'Vista del catàleg'}><button type="button" className={catalogView === 'list' ? 'active' : ''} aria-pressed={catalogView === 'list'} onClick={() => setCatalogView('list')}><span aria-hidden="true">▦</span>{language === 'es' ? 'Lista' : language === 'en' ? 'List' : 'Llista'}</button><button type="button" className={catalogView === 'map' ? 'active' : ''} aria-pressed={catalogView === 'map'} onClick={() => setCatalogView('map')}><span aria-hidden="true">⌖</span>{language === 'es' ? 'Mapa' : language === 'en' ? 'Map' : 'Mapa'}</button></div></div></div>
@@ -572,7 +628,7 @@ export default function CimTracker() {
         {catalogView === 'map' ? <SummitMap summits={visible} ascents={ascents} language={language} onSelectSummit={id => {
           const summit = summits.find(item => item.id === id)
           if (summit) { setNotice(''); setSelectedSummit(summit) }
-        }} /> : <div className="grid" aria-live="polite">{visible.map(summit => {
+        }} /> : <div className="grid" aria-live="polite">{visible.slice(0, catalogLimit).map(summit => {
           const ascent = ascents.get(summit.id)
           const busy = Boolean(busyId) || Boolean(user && !journalReady)
           return <article className="card" key={summit.id}>
@@ -585,15 +641,16 @@ export default function CimTracker() {
               <h3 title={summit.name}>{summit.name}</h3><div className="card-detail">{summit.height.toLocaleString('ca-ES')} m · {summit.region.replace(/\s*,\s*/g, ' · ')}</div>
               {origin && <div className="card-distance">⌖ {coordinates[summit.id] ? `${distanceKm(origin, coordinates[summit.id]).toLocaleString(language, { maximumFractionDigits: 1 })} km` : t('Sense coordenades')}</div>}
               <div className="card-actions"><button className={`mark-button ${ascent ? 'is-done' : ''}`} onClick={() => editAscent(summit)} aria-label={`${t(ascent ? 'Editar ascensió' : 'Registrar ascensió')}: ${summit.name}`} disabled={busy}>{busyId === summit.id ? t(busyLabel) : ascent ? `✓ ${friendlyDate(ascent.completed_at, language)}` : t('+ Marcar fet')}</button>{ascent ? <label className={`photo-button ${ascent.photo_path ? 'has-photo' : ''}`}>{ascent.photo_path ? `▣ ${t('Canviar foto')}` : t('＋ Foto')}<input type="file" aria-label={`${t('Pujar una foto de')} ${summit.name}`} accept="image/jpeg,image/png,image/webp,image/avif" onChange={event => { void uploadPhoto(summit, event.target.files?.[0]); event.currentTarget.value = '' }} disabled={busy} /></label> : <button type="button" className="photo-button" disabled={busy} onClick={() => editAscent(summit)}>{t('＋ Foto')}</button>}</div>
-              <button className="summit-explore" type="button" onClick={()=>{setNotice('');setSelectedSummit(summit)}}>{language==='es'?'Explorar cima ↗':language==='en'?'Explore summit ↗':'Explorar cim ↗'}</button>
+              <Link className="summit-explore" href={`/cims/${summit.id}`} prefetch={false}>{language==='es'?'Explorar cima ↗':language==='en'?'Explore summit ↗':'Explorar cim ↗'}</Link>
             </div>
           </article>
         })}{ready && visible.length === 0 && <div className="empty">{t('No hem trobat cap cim amb aquests filtres.')}<button type="button" className="secondary-button" onClick={clearFilters}>{t('Netejar filtres')}</button></div>}</div>}
+        {catalogView === 'list' && visible.length > 0 && <div className="catalog-pagination"><p role="status">{t('Cims mostrats')}: {Math.min(catalogLimit, visible.length)} / {visible.length}</p>{catalogLimit < visible.length && <button className="secondary-button" type="button" onClick={() => setPagination({ key: catalogKey, limit: catalogLimit + 48 })}>{t('Carregar més cims')}</button>}</div>}
         <p className="source-note">{language === 'es' ? 'Catálogo oficial de los 100 Cims de la' : language === 'en' ? 'Official 100 Cims catalogue by' : 'Catàleg oficial dels 100 Cims de la'} <a href="https://www.feec.cat/activitats/100-cims/" target="_blank" rel="noreferrer">FEEC ↗</a> · {language === 'es' ? '522 montañas, 150 esenciales. El reto se completa con 100 de esas 150.' : language === 'en' ? '522 summits, 150 essential. Complete 100 of those 150.' : '522 cims, 150 essencials. El repte es completa amb 100 d’aquests 150.'} · {language === 'es' ? 'Ilustración de referencia: ilustración original de 100CimsCat.' : language === 'en' ? 'Reference illustration: original artwork by 100CimsCat.' : 'Il·lustració de referència: il·lustració pròpia de 100CimsCat.'}</p>
       </section>
 
       {notice && <div className="toast show" role="status">{t(notice)}<button onClick={() => setNotice('')} aria-label={t('Tancar avís')}>×</button></div>}
-      {editingSummit && <AscentEditor key={editingSummit.id} summit={editingSummit} ascent={ascents.get(editingSummit.id)} busy={Boolean(busyId)} feedback={notice ? t(notice) : ''} t={t} onClose={() => setEditingSummit(null)} onSave={saveAscent} onDelete={deleteAscent} />}
+      {editingSummit && <AscentEditor key={`${editingSummit.id}:${editingVisitKey ?? 'new'}`} summit={editingSummit} ascent={editingAscent} busy={Boolean(busyId)} feedback={notice ? t(notice) : ''} t={t} onClose={() => setEditingSummit(null)} onSave={saveAscent} onDelete={deleteAscent} onNew={() => editAscent(editingSummit, null)} onPhoto={file => uploadPhoto(editingSummit, file, editingAscent)} />}
       {selectedSummit && <SummitDetailsModal summit={selectedSummit} language={language} favorite={favorites.has(selectedSummit.id)} completedAt={ascents.get(selectedSummit.id)?.completed_at} busy={Boolean(busyId) || Boolean(user && !journalReady)} feedback={notice ? t(notice) : ''} onFavorite={() => void toggleFavorite(selectedSummit)} onEdit={() => editAscent(selectedSummit)} onClose={()=>setSelectedSummit(null)} />}
       <footer>{t('Fet per recordar els camins, no només els cims.')} <span>100CIMS · 2026</span></footer>
 

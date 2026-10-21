@@ -2,7 +2,7 @@
 .catalog-heading-actions{display:flex;align-items:center;gap:18px}
 .catalog-count{white-space:nowrap}
 .catalog-view-toggle{display:flex;align-items:center;gap:3px;padding:3px;border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--paper) 76%,#dce4d8 24%)}
-.catalog-view-toggle button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:0 11px;border:0;border-radius:6px;background:transparent;color:var(--muted);font:600 11px 'DM Sans',sans-serif;cursor:pointer;transition:background .16s,color .16s,box-shadow .16s}
+.catalog-view-toggle button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:0 11px;border:0;border-radius:6px;background:transparent;color:var(--muted);font:600 11px var(--font-body),sans-serif;cursor:pointer;transition:background .16s,color .16s,box-shadow .16s}
 .catalog-view-toggle button span{font-size:14px;line-height:1}
 .catalog-view-toggle button:hover{color:var(--green)}
 .catalog-view-toggle button.active{background:var(--paper);color:var(--green);box-shadow:0 1px 4px #20332b12}
@@ -15,12 +15,12 @@
 .map-zoom-hint{margin-left:auto;font-size:10px}
 .summit-map-frame{overflow:hidden;border:1px solid var(--line);border-radius:13px;background:var(--paper);box-shadow:0 8px 28px #30423208}
 .summit-map-stage{height:460px;background:#edf0e9}
-.summit-map-stage .leaflet-container{width:100%;height:100%;background:#e9ece6;font-family:'DM Sans',sans-serif;outline:none}
+.summit-map-stage .leaflet-container{width:100%;height:100%;background:#e9ece6;font-family:var(--font-body),sans-serif;outline:none}
 .summit-map-stage .leaflet-tile-pane{filter:saturate(.52) contrast(.96)}
-.summit-map-stage .leaflet-control-attribution{margin:0 7px 6px 0;padding:2px 5px;border-radius:4px;background:#fffefaD9;color:#778278;font:9px 'DM Sans',sans-serif}
+.summit-map-stage .leaflet-control-attribution{margin:0 7px 6px 0;padding:2px 5px;border-radius:4px;background:#fffefaD9;color:#778278;font:9px var(--font-body),sans-serif}
 .summit-map-stage .leaflet-control-attribution a{color:#456d50}
 .summit-map-controls{position:absolute;z-index:500;top:13px;right:13px;display:grid;gap:5px;padding:4px;border:1px solid #dfe4da;border-radius:10px;background:#fffefaE8;box-shadow:0 3px 12px #23372917}
-.summit-map-controls button{width:34px;height:34px;border:0;border-radius:6px;background:transparent;color:#405c47;font:500 20px/1 'DM Sans',sans-serif;cursor:pointer}
+.summit-map-controls button{width:34px;height:34px;border:0;border-radius:6px;background:transparent;color:#405c47;font:500 20px/1 var(--font-body),sans-serif;cursor:pointer}
 .summit-map-controls button:last-child{font-size:23px}
 .summit-map-controls button:hover{background:#edf1e9}
 .summit-map-controls button:focus-visible,.catalog-view-toggle button:focus-visible{outline:2px solid #668263;outline-offset:2px}
@@ -28,19 +28,19 @@
 .summit-cluster-count{position:relative;display:flex;align-items:center;justify-content:center;gap:1px;width:40px;height:40px;border:0;border-radius:50%;background:conic-gradient(#456d50 var(--done-share),#c9c6bb 0);color:#34523b;filter:drop-shadow(0 2px 4px #17251d2a);transition:transform .15s}
 .summit-cluster-count:before{position:absolute;inset:3px;border-radius:50%;background:var(--paper);content:''}
 .summit-cluster-count b,.summit-cluster-count small{position:relative;z-index:1}
-.summit-cluster-count b{font:700 12px Manrope,sans-serif}
-.summit-cluster-count small{font:500 9px 'DM Sans',sans-serif;color:#879188}
+.summit-cluster-count b{font:700 12px var(--font-heading),sans-serif}
+.summit-cluster-count small{font:500 9px var(--font-body),sans-serif;color:#879188}
 .leaflet-marker-icon:hover .summit-cluster-count{transform:scale(1.08)}
 .summit-map-stage .leaflet-popup-content-wrapper,.summit-map-stage .leaflet-popup-tip{background:var(--paper);color:var(--green)}
 .summit-map-stage .leaflet-popup-content-wrapper{border:1px solid var(--line);border-radius:9px;box-shadow:0 10px 30px #20332b1a}
 .summit-map-stage .leaflet-popup-content{margin:13px 15px}
 .summit-map-stage .leaflet-popup-close-button{color:var(--muted)!important}
 .map-popup-content{display:grid;min-width:190px;gap:6px;color:var(--green)}
-.map-popup-content strong{font:600 13px/1.35 Manrope,sans-serif}
+.map-popup-content strong{font:600 13px/1.35 var(--font-heading),sans-serif}
 .map-popup-content>span:not(.map-popup-state){color:var(--muted);font-size:10px;line-height:1.45}
 .map-popup-state{color:#82765b;font-size:10px;font-weight:600}
 .map-popup-state.is-done{color:#456d50}
-.map-popup-content button{justify-self:start;margin-top:3px;padding:7px 9px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--green);font:600 10px 'DM Sans',sans-serif;cursor:pointer}
+.map-popup-content button{justify-self:start;margin-top:3px;padding:7px 9px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--green);font:600 10px var(--font-body),sans-serif;cursor:pointer}
 .map-popup-content button:hover{background:#edf1e9}
 .summit-map-credit{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 14px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;line-height:1.5}
 .summit-map-credit a{flex:none;color:#58765b;text-decoration:none}

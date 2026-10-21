@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { localDate, validAscentDate, type Ascent, type Summit } from '@/lib/tracker'
 
-type Props = { summit: Summit; ascent?: Ascent; busy: boolean; feedback: string; t: (value: string) => string; onClose: () => void; onSave: (date: string, notes: string) => Promise<void>; onDelete: () => Promise<void> }
+type Props = { summit: Summit; ascent?: Ascent; busy: boolean; feedback: string; t: (value: string) => string; onClose: () => void; onSave: (date: string, notes: string) => Promise<void>; onDelete: () => Promise<void>; onNew: () => void; onPhoto: (file?: File) => Promise<void> }
 
-export default function AscentEditor({ summit, ascent, busy, feedback, t, onClose, onSave, onDelete }: Props) {
+export default function AscentEditor({ summit, ascent, busy, feedback, t, onClose, onSave, onDelete, onNew, onPhoto }: Props) {
   const dialog = useRef<HTMLDialogElement>(null)
   const [date, setDate] = useState(ascent?.completed_at ?? localDate())
   const [notes, setNotes] = useState(ascent?.notes ?? '')
@@ -31,14 +31,14 @@ export default function AscentEditor({ summit, ascent, busy, feedback, t, onClos
     <p className="eyebrow">{t(ascent ? 'Editar ascensió' : 'Registrar ascensió')}</p>
     <h2 id="ascent-title">{summit.name}</h2>
     {feedback && <p className="form-error" role="status">{feedback}</p>}
-    {confirmDelete ? <div className="ascent-delete-confirm"><h3>{t('Eliminar aquesta ascensió?')}</h3><p>{t('S’eliminaran la data, les notes i la foto privada d’aquest cim.')}</p><div className="editor-actions"><button type="button" className="secondary-button" disabled={busy} onClick={() => setConfirmDelete(false)}>{t('Cancel·lar')}</button><button type="button" className="danger-button" disabled={busy} onClick={() => void onDelete()}>{t(busy ? 'Desant…' : 'Sí, eliminar ascensió')}</button></div></div>
+    {confirmDelete ? <div className="ascent-delete-confirm"><h3>{t('Eliminar aquesta ascensió?')}</h3><p>{t('S’eliminarà només aquesta visita, amb les seves notes i foto. Les altres ascensions es conservaran.')}</p><div className="editor-actions"><button type="button" className="secondary-button" disabled={busy} onClick={() => setConfirmDelete(false)}>{t('Cancel·lar')}</button><button type="button" className="danger-button" disabled={busy} onClick={() => void onDelete()}>{t(busy ? 'Desant…' : 'Sí, eliminar ascensió')}</button></div></div>
       : <form onSubmit={submit}>
         <label htmlFor="ascent-date">{t('Data de l’ascensió')}</label><input id="ascent-date" type="date" required max={localDate()} value={date} disabled={busy} onChange={event => setDate(event.target.value)} />
         <label htmlFor="ascent-notes">{t('Notes personals')}</label><textarea id="ascent-notes" rows={5} maxLength={4000} placeholder={t('Ruta, companyia, records…')} value={notes} disabled={busy} onChange={event => setNotes(event.target.value)} />
         <div className="notes-hint"><span>{t('Les notes són privades.')}</span><span>{notes.length} / 4000</span></div>
         {error && <p className="form-error" role="alert">{t(error)}</p>}
         <div className="editor-actions"><button type="button" className="secondary-button" disabled={busy} onClick={onClose}>{t('Cancel·lar')}</button><button type="submit" className="primary-button" disabled={busy}>{t(busy ? 'Desant…' : 'Desar')}</button></div>
-        {ascent && <button type="button" className="delete-ascent-trigger" disabled={busy} onClick={() => setConfirmDelete(true)}>{t('Desmarcar cim')}</button>}
+        {ascent && <div className="visit-actions"><label className="secondary-button visit-photo">{t(ascent.photo_path ? 'Canviar foto' : 'Afegir foto a aquesta visita')}<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" aria-label={t('Foto d’aquesta visita')} disabled={busy} onChange={event => { const file = event.target.files?.[0]; event.currentTarget.value = ''; void onPhoto(file) }} /></label><button type="button" className="secondary-button" disabled={busy} onClick={onNew}>{t('Registrar una altra ascensió')}</button><button type="button" className="delete-ascent-trigger" disabled={busy} onClick={() => setConfirmDelete(true)}>{t('Eliminar ascensió')}</button></div>}
       </form>}
   </dialog>
 }

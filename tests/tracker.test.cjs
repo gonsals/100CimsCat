@@ -11,7 +11,7 @@ vm.runInNewContext(compiled, { exports: moduleExports, require: name => {
   if (name === '@/data/summit-coordinates.json') return require('../data/summit-coordinates.json')
   throw new Error(`Unexpected import: ${name}`)
 }, Date, Map, Set })
-const { filterCatalog, defaultFilters, coordinates, distanceKm, validAscentDate, localDate, journalCsv, csvCell } = moduleExports
+const { filterCatalog, defaultFilters, coordinates, distanceKm, validAscentDate, localDate, journalCsv, csvCell, latestAscents, ascentKey } = moduleExports
 const catalog = require('../data/summits.json')
 
 test('combines pending, essential, region, height and accent-insensitive search', () => {
@@ -59,4 +59,40 @@ test('CSV quotes multiline notes, preserves dates and includes pending favorites
   assert.ok(!csv.includes('private/path'))
   assert.equal(csvCell('=HYPERLINK("evil")'), '"\'=HYPERLINK(""evil"")"')
   assert.equal(csvCell(' @SUM(1)'), '"\' @SUM(1)"')
+})
+
+test('repeated visits count a summit once and deleting one keeps the remaining ascent', () => {
+  const first = { summit_id: 'canigo', completed_at: '2023-01-01', photo_path: null, notes: 'First visit' }
+  const repeated = { id: 'visit-2', summit_id: 'canigo', completed_at: '2025-05-01', photo_path: 'private/photo', notes: 'Second visit' }
+  const visits = [first, repeated]
+  const latest = latestAscents(visits)
+  assert.equal(latest.size, 1)
+  assert.equal(latest.get('canigo').id, 'visit-2')
+  assert.notEqual(ascentKey(first), ascentKey(repeated))
+  const afterDelete = latestAscents(visits.filter(visit => ascentKey(visit) !== ascentKey(repeated)))
+  assert.equal(afterDelete.size, 1)
+  assert.equal(afterDelete.get('canigo').completed_at, first.completed_at)
+  const sameDay = latestAscents([{ ...first, created_at: '2024-01-01T09:00:00Z' }, { ...repeated, completed_at: first.completed_at, created_at: '2024-01-01T10:00:00Z' }])
+  assert.equal(sameDay.get('canigo').id, repeated.id)
+  const csv = journalCsv(catalog, visits, new Set(['balandrau']), ['Name'], 'Yes', 'No')
+  assert.ok(csv.includes('First visit') && csv.includes('Second visit'))
+  assert.equal(csv.split('\r\n').filter(line => line.includes('Canig')).length, 2)
+  assert.ok(csv.includes('Balandrau') && !csv.includes('private/photo'))
+})
+
+test('catalogue state tolerates corrupt storage and bounds restored values', () => {
+  const stateModule = {}
+  const code = ts.transpileModule(fs.readFileSync(path.join(__dirname, '../lib/catalog-state.ts'), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText
+  vm.runInNewContext(code, { exports: stateModule, require: name => { assert.equal(name, '@/lib/tracker'); return moduleExports }, JSON, Number })
+  const { parseCatalogState } = stateModule
+  assert.equal(parseCatalogState('{broken'), null)
+  assert.equal(parseCatalogState(JSON.stringify({ version: 99 })), null)
+  const saved = parseCatalogState(JSON.stringify({ version: 1, search: 'Canigo', filters: { ...defaultFilters, status: 'invalid', minHeight: '-500' }, sortBy: 'distance', origin: { lat: 999, lng: 1 }, limit: 99999, scrollY: -5, view: 'map' }))
+  assert.equal(saved.view, 'map')
+  assert.equal(saved.filters.status, 'all')
+  assert.equal(saved.filters.minHeight, '')
+  assert.equal(saved.sortBy, 'name')
+  assert.equal(saved.origin, null)
+  assert.equal(saved.limit, 1000)
+  assert.equal(saved.scrollY, 0)
 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import summitCoordinatesJson from '@/data/summit-coordinates.json'
@@ -59,12 +59,27 @@ function makeClusters(points: SummitPoint[], zoom: number): Cluster[] {
 function MapBehavior({ points, bounds, language, onSelectSummit }: { points: SummitPoint[]; bounds: L.LatLngBounds | null; language: Language; onSelectSummit: (id: string) => void }) {
   const map = useMap()
   const [zoom, setZoom] = useState(map.getZoom())
-  useMapEvents({ zoomend: () => setZoom(map.getZoom()) })
+  const previousPoints = useRef('')
+  const pointIds = points.map(point => point.summit.id).sort().join('|')
+  const savePosition = () => {
+    const center = map.getCenter()
+    try { sessionStorage.setItem('100cimscat-map-v1', JSON.stringify({ version: 1, points: pointIds, lat: center.lat, lng: center.lng, zoom: map.getZoom() })) } catch { /* Map remains usable without storage. */ }
+  }
+  useMapEvents({ zoomend: () => { setZoom(map.getZoom()); savePosition() }, moveend: savePosition })
 
   useEffect(() => {
-    if (!bounds || points.length === 0) return
+    if (!bounds || !pointIds || previousPoints.current === pointIds) return
+    previousPoints.current = pointIds
+    try {
+      const saved = JSON.parse(sessionStorage.getItem('100cimscat-map-v1') ?? 'null')
+      if (saved?.version === 1 && saved.points === pointIds && Number.isFinite(saved.lat) && Math.abs(saved.lat) <= 90 && Number.isFinite(saved.lng) && Math.abs(saved.lng) <= 180 && Number.isFinite(saved.zoom) && saved.zoom >= 6 && saved.zoom <= 14) {
+        map.setView([saved.lat, saved.lng], saved.zoom, { animate: false })
+        setZoom(saved.zoom)
+        return
+      }
+    } catch { /* Use the catalogue bounds for invalid saved positions. */ }
     map.fitBounds(bounds, { padding: [26, 26], maxZoom: 8, animate: false })
-  }, [bounds, map, points])
+  }, [bounds, map, pointIds])
 
   const clusters = useMemo(() => makeClusters(points, zoom), [points, zoom])
   const labels = text[language]
