@@ -54,6 +54,8 @@ const messages: Record<string, [string, string]> = {
   'Foto d’aquesta visita': ['Foto de esta visita', 'Photo of this visit'],
   'Amb foto privada': ['Con foto privada', 'With private photo'],
   'ascensions': ['ascensiones', 'ascents'],
+  'ascensió': ['ascensión', 'ascent'],
+  'cim diferent': ['cima distinta', 'unique summit'],
   'cims diferents': ['cimas distintas', 'unique summits'],
   'Cada cim compta una sola vegada al repte.': ['Cada cima cuenta una sola vez en el reto.', 'Each summit counts only once towards the challenge.'],
   'Obrir fitxa completa': ['Abrir ficha completa', 'Open full summit page'],
