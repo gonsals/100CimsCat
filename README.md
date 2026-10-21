@@ -64,7 +64,7 @@ Per fer servir l'enllaç màgic o Google en un domini publicat, afegeix `https:/
 
 ### Il·lustracions amb relleu real
 
-La portada alterna cada 8 segons entre sis cims amb transició suau i metadades sincronitzades. Inclou pausa, represa i navegació manual. La rotació s'atura fora de pantalla, amb la pestanya oculta o mentre el ratolí és sobre la imatge. Amb moviment reduït comença aturada; els controls manuals continuen disponibles.
+La portada alterna automàticament cada 30 segons entre sis cims, sense botons, amb transició suau i metadades sincronitzades. La rotació s'atura fora de pantalla o amb la pestanya oculta. La preferència de moviment reduït manté la portada estàtica.
 
 Els 522 cims tenen un SVG propi generat amb les elevacions del seu entorn: ICGC MET de 15 m a Catalunya i Mapzen Terrarium fora de cobertura. Les vistes dels perfils més característics, com el Pedraforca, estan ajustades expressament. Les fitxes permeten alternar la il·lustració amb la fotografia de Commons quan està disponible. L'escala vertical és adaptada i els colors i el sol són artístics; no representen neu, vegetació o meteorologia actuals. La resolució del model limita els detalls petits.
 
@@ -83,6 +83,6 @@ La generació necessita connexió; les dades font es reutilitzen des de `.npm-ca
 
 `scripts/mountain-art-check.cjs` comprova càrrega real dels SVG, orientació i crèdits, absència de peticions als serveis d'elevacions, memòria cau i desbordaments a 320, 390 i 1280 px. Utilitza les mateixes variables `PLAYWRIGHT_MODULE` i `CHECK_URL` que les altres proves de navegador; desa captures i informe a `.npm-cache/mountain-art-check`.
 
-`scripts/hero-rotation-check.cjs` verifica avanç automàtic, pausa i represa, bucle manual, aturada fora de pantalla, moviment reduït i separació dels controls a les mateixes amplades. Amb `AXE_SCRIPT` comprova les regles automàtiques d'accessibilitat. Desa captures i informe a `.npm-cache/hero-rotation-check`.
+`scripts/hero-rotation-check.cjs` verifica l'interval de 30 segons, l'absència de botons, el bucle automàtic dels sis cims, l'aturada fora de pantalla i el moviment reduït a les mateixes amplades. Amb `AXE_SCRIPT` comprova les regles automàtiques d'accessibilitat. Desa captures i informe a `.npm-cache/hero-rotation-check`.
 
 Les dades normalitzades del catàleg s'inclouen a `data/summits.json` i també es carreguen a `public.summits`. La font és [mcmontseny/backend-100-cims-feec](https://github.com/mcmontseny/backend-100-cims-feec), derivada del catàleg oficial de la [FEEC](https://www.feec.cat/activitats/100-cims/). La [normativa FEEC](https://www.feec.cat/activitats/100-cims/normativa-i-funcionament/) defineix el repte dels 100 cims essencials.

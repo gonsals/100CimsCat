@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'react'
 
 const paths = {
-  pause: 'M9 5v14M15 5v14', play: 'm8 5 11 7-11 7Z',
   arrow: 'M7 17 17 7M7 7h10v10', back: 'm14 6-6 6 6 6', next: 'm10 6 6 6-6 6', down: 'M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4',
   close: 'm6 6 12 12M18 6 6 18', check: 'm5 12 4 4L19 6', plus: 'M12 5v14M5 12h14',
   settings: 'M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4',

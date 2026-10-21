@@ -2,11 +2,11 @@
 
 ## Portada con rotación de cimas — 21 de octubre de 2026
 
-La portada alterna cada 8 segundos entre Pedraforca, Puigmal, Sant Jeroni, Canigó, Matagalls y Puigsacalm. Las imágenes entrantes se decodifican antes de sustituir la actual y se mezclan durante 900 ms; nombre, altura y comarca corresponden a la imagen mostrada. Incluye controles de anterior, pausa/reanudación y siguiente, con etiquetas en los tres idiomas. En móvil se priorizan nombre y altura para separar el texto de los controles táctiles de 44 px.
+La portada alterna automáticamente cada 30 segundos entre Pedraforca, Puigmal, Sant Jeroni, Canigó, Matagalls y Puigsacalm, sin botones. Las imágenes entrantes se decodifican antes de sustituir la actual y se mezclan durante 900 ms; nombre, altura y comarca corresponden a la imagen mostrada. El texto vuelve a disponer de todo el ancho de la imagen, también en móvil.
 
-La rotación se detiene cuando la portada queda fuera de pantalla, la pestaña está oculta o el ratón está sobre la imagen. La navegación manual y el foco en sus controles detienen el avance. La preferencia de movimiento reducido desactiva el inicio automático y las transiciones; se puede navegar manualmente o iniciar la reproducción expresamente.
+La rotación se detiene cuando la portada queda fuera de pantalla o la pestaña está oculta, y continúa aunque el ratón esté sobre la imagen. La preferencia de movimiento reducido mantiene la imagen estática.
 
-Compilación de producción con TypeScript correcta. `scripts/hero-rotation-check.cjs` comprueba avance automático, pausa/reanudación, los seis perfiles y el retorno al inicio, navegación anterior, pausa fuera de pantalla y movimiento reducido a 320, 390 y 1280 px. Sin desbordamientos, superposición de controles ni infracciones en las reglas axe WCAG A/AA ejecutadas. La prueba controla el reloj de los temporizadores y deja avanzar el renderizado para IntersectionObserver. También se ha observado un cambio automático con tiempo real en Chrome. Las pruebas usan únicamente el catálogo público y no modifican cuentas ni cuadernos.
+Compilación de producción con TypeScript correcta. `scripts/hero-rotation-check.cjs` comprueba que no hay botones, que la imagen se conserva antes de los 30 segundos, el avance automático y retorno al inicio de los seis perfiles, la pausa fuera de pantalla y el movimiento reducido a 320, 390 y 1280 px. Sin desbordamientos ni infracciones en las reglas axe WCAG A/AA ejecutadas. La prueba controla el reloj de los temporizadores y deja avanzar el renderizado para IntersectionObserver. Las pruebas usan únicamente el catálogo público y no modifican cuentas ni cuadernos.
 
 ## Ilustraciones de terreno real — 21 de octubre de 2026
 
