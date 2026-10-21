@@ -1,5 +1,13 @@
 # Validación de funcionalidades y móvil
 
+## Tarjeta y menú nativo para compartir — 21 de octubre de 2026
+
+Tarjeta PNG de 1080 × 1350 px con las fuentes de la web, la silueta real del Pedraforca y sus créditos ICGC. Distingue esenciales completados, cimas únicas y visitas, incluyendo singular y plural y cifras superiores al objetivo de 100. Se comprueban visualmente tarjetas con 0, 37 y 150 esenciales y la vista previa móvil.
+
+«Compartir progreso» prepara una vista previa local. «Compartir imagen» llama a Web Share con el archivo ya preparado, dentro de la activación directa del toque, para abrir las opciones nativas del teléfono. Se elimina la descarga automática. La cancelación del menú es silenciosa; otros errores permiten reintentar. Si el navegador no comparte archivos, ofrece copiar la imagen o mantenerla pulsada. La tarjeta no incluye fotos, notas, fechas, correo ni datos del perfil. Los URL temporales se revocan al cerrar y el foco vuelve al botón inicial.
+
+`scripts/progress-share-check.cjs` verifica los tres idiomas a 320, 390 y 1280 px, incluido tema oscuro, con cifras simuladas de 0/0/0, 37/52/54 y 150/522/529. Comprueba PNG válido, activación del toque, archivo recibido por Web Share, cancelación, error, ausencia de descargas, copia alternativa, fallo de preparación y reintento, foco, limpieza y ausencia de detalles privados en el lienzo. Sin infracciones detectadas por las reglas axe WCAG A/AA ejecutadas ni desbordamientos. Las API nativas están simuladas: la prueba no envía mensajes ni usa cuentas o el portapapeles reales, y no sustituye comprobar el selector del sistema en un teléfono físico.
+
 ## Portada con rotación de cimas — 21 de octubre de 2026
 
 La portada alterna automáticamente cada 30 segundos entre Pedraforca, Puigmal, Sant Jeroni, Canigó, Matagalls y Puigsacalm, sin botones. Las imágenes entrantes se decodifican antes de sustituir la actual y se mezclan durante 900 ms; nombre, altura y comarca corresponden a la imagen mostrada. El texto vuelve a disponer de todo el ancho de la imagen, también en móvil.

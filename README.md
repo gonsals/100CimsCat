@@ -12,7 +12,7 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 - Les fitxes públiques i les del mapa comparteixen fotografies de Wikimedia Commons amb autoria, llicència i font. La identitat es comprova amb nom i coordenades de Wikidata i, quan hi consta, altitud. Si la coincidència és ambigua o la llicència no es pot validar, es conserva la il·lustració. No tots els cims tenen una foto disponible.
 - Si la consulta del servidor no està disponible, el navegador pot recuperar les mateixes dades públiques de Wikidata i Commons mitjançant CORS anònim, sense cookies ni credencials. Les comprovacions d’identitat i llicència són compartides entre les dues vies.
 - Cada fitxa pública incorpora un mapa de situació, coordenades i accés a la font FEEC per consultar recorreguts. L’altitud no es presenta com a dificultat, durada ni desnivell d’una ruta.
-- Pots compartir una targeta gràfica del progrés creada al navegador. Les fotos i dades personals no es publiquen.
+- Targeta de progrés de 1080 × 1350 px amb Fraunces, Hanken Grotesk, relleu real del Pedraforca i xifres de cims essencials, cims únics i visites. Es previsualitza abans de compartir i el botó «Compartir imatge» obre el menú natiu del dispositiu quan el navegador permet compartir fitxers. No es descarrega automàticament. Si no és compatible, es pot copiar la imatge o mantenir-la premuda al mòbil. Fotos, notes, dates i dades del compte queden fora de la targeta.
 - Des de Configuració pots esborrar el compte, les ascensions i les fotos privades.
 
 ## Quadern i planificació
@@ -46,6 +46,8 @@ Verificació de lògica: `node --test tests/tracker.test.cjs`. Verificació del 
 `node scripts/improvements-check.cjs` comprova tipografies, blocs del catàleg, fitxes públiques, restauració del llistat i mapa, i el lector amb el navegador sense connexió. Genera captures i un informe a `.next/improvements-check`. Les proves SQL `tests/ascent-visits-policy.sql` i `tests/visit-photo-quota.sql` verifiquen l’aïllament entre comptes i les quotes de substitució de fotos; totes les dades de prova es reverteixen.
 
 `node scripts/product-check.cjs` verifica el formulari amb fallades de pujada i d’enllaç de foto, reintents sense duplicats, galeria, filtre anual, ampliació i focus, fonts de les imatges, navegació, contacte i 404 a 320, 390 i 1280 px. Amb `AXE_SCRIPT` apuntant a `axe-core@4.14.0/axe.min.js`, comprova també les regles WCAG A/AA automàtiques. La verificació automàtica no substitueix una auditoria manual completa. El compte, les dades i les pujades d’aquestes proves són simulats; els informes i captures es guarden a `.next/product-check`.
+
+`scripts/progress-share-check.cjs` verifica la targeta i el flux de compartició a 320, 390 i 1280 px en els tres idiomes. Simula Web Share i el porta-retalls sense enviar missatges ni modificar el porta-retalls real. Comprova activació directa del botó, PNG de mida correcta, dades agregades, cancel·lació, errors, absència de descàrregues, reintents, focus i neteja dels URL temporals. Amb `AXE_SCRIPT` executa les regles automàtiques d'accessibilitat; desa les targetes, captures i informe a `.npm-cache/progress-share-check`.
 
 ## Configuració local
 

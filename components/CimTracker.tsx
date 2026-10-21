@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import catalogSeed from '@/data/summits.json'
 import MountainPlaceholder from '@/components/MountainPlaceholder'
 import HeroMountains from '@/components/HeroMountains'
+import ProgressShare from '@/components/ProgressShare'
 import SummitDetailsModal from '@/components/SummitDetailsModal'
 import CatalogFilters from '@/components/CatalogFilters'
 import AscentEditor from '@/components/AscentEditor'
@@ -168,7 +169,6 @@ export default function CimTracker() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
   const [deletingAccount, setDeletingAccount] = useState(false)
-  const [sharing, setSharing] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const headerActionsRef = useRef<HTMLDivElement>(null)
@@ -353,32 +353,6 @@ export default function CimTracker() {
     })
     return () => { active = false }
   }, [settingsOpen, supabase, user])
-
-  async function shareProgress() {
-    setSharing(true)
-    try {
-      const canvas = document.createElement('canvas')
-      canvas.width = 1080; canvas.height = 1350
-      const ctx = canvas.getContext('2d')
-      if (!ctx) throw new Error('canvas')
-      ctx.fillStyle = '#f1f0e8'; ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.fillStyle = '#234334'; ctx.fillRect(0, 0, canvas.width, 20)
-      ctx.fillStyle = '#70816f'; ctx.font = '600 30px sans-serif'; ctx.fillText('100CIMS CAT', 90, 130)
-      ctx.fillStyle = '#263d30'; ctx.font = '700 62px sans-serif'; ctx.fillText(language === 'es' ? 'MI CAMINO' : language === 'en' ? 'MY JOURNEY' : 'EL MEU CAMÍ', 90, 235)
-      ctx.fillStyle = '#49694c'; ctx.font = '600 205px sans-serif'; ctx.fillText(String(essentialDone), 82, 520)
-      ctx.fillStyle = '#718170'; ctx.font = '500 48px sans-serif'; ctx.fillText('/ 100', 400, 510)
-      ctx.fillStyle = '#536452'; ctx.font = '500 34px sans-serif'; ctx.fillText(language === 'es' ? 'cimas esenciales completadas' : language === 'en' ? 'essential summits completed' : 'cims essencials fets', 95, 590)
-      ctx.fillStyle = '#d4dfd0'; ctx.beginPath(); ctx.moveTo(0,1050); ctx.lineTo(360,690); ctx.lineTo(610,940); ctx.lineTo(820,720); ctx.lineTo(1080,1020); ctx.lineTo(1080,1350); ctx.lineTo(0,1350); ctx.fill()
-      ctx.fillStyle = '#a8bea4'; ctx.beginPath(); ctx.moveTo(0,1180); ctx.lineTo(250,930); ctx.lineTo(470,1120); ctx.lineTo(760,860); ctx.lineTo(1080,1170); ctx.lineTo(1080,1350); ctx.lineTo(0,1350); ctx.fill()
-      ctx.fillStyle = '#263d30'; ctx.font = '600 38px sans-serif'; ctx.fillText(`${completed.length} ${language === 'es' ? 'cimas en mi cuaderno' : language === 'en' ? 'summits in my journal' : 'cims al meu quadern'}`,95,1240)
-      ctx.fillStyle = '#718170'; ctx.font = '500 25px sans-serif'; ctx.fillText('100-cims-cat.vercel.app',95,1300)
-      const blob = await new Promise<Blob>((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('png')),'image/png'))
-      const file = new File([blob],'el-meu-progres-100-cims.png',{type:'image/png'})
-      if (navigator.canShare?.({files:[file]})) await navigator.share({files:[file],title:'100 Cims',text:t('El meu progrés als 100 Cims')})
-      else { const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download=file.name; link.click(); URL.revokeObjectURL(url) }
-    } catch { setNotice(language==='es'?'No se pudo crear la imagen de progreso.':language==='en'?'Could not create the progress image.':'No s’ha pogut crear la imatge de progrés.') }
-    finally { setSharing(false) }
-  }
 
   async function deleteAccount() {
     if (deleteConfirmation !== 'ELIMINAR') return
@@ -647,7 +621,7 @@ export default function CimTracker() {
         <div className="progress-track"><div style={{ width: `${progress}%` }} /></div>
         <div className="progress-footer"><span>{completed.length ? (language === 'es' ? `Ya tienes ${completed.length} ${completed.length === 1 ? 'cima' : 'cimas'} en tu cuaderno, ${essentialDone} esenciales.` : language === 'en' ? `${completed.length} ${completed.length === 1 ? 'summit' : 'summits'} in your journal, ${essentialDone} essential.` : `Ja tens ${completed.length} ${completed.length === 1 ? 'cim' : 'cims'} al teu quadern, ${essentialDone} d’essencials.`) : t('Encara no has registrat cap ascensió. Tot comença amb el primer pas.')}</span><span>{progress}%</span></div>
         <div className="stats"><div><strong>{completed.length}</strong><span>{language === 'es' ? 'cimas hechas' : language === 'en' ? 'summits done' : 'cims fets'}</span></div><div><strong>{essentialDone}<span className="stat-total"> / {essentialTotal}</span></strong><span>{language === 'es' ? 'esenciales hechas' : language === 'en' ? 'essential done' : 'essencials fets'}</span></div><div><strong>{photoCount}</strong><span>{language === 'es' ? 'recuerdos guardados' : language === 'en' ? 'memories saved' : 'records guardats'}</span></div></div>
-        <div className="share-progress"><div><strong>{language==='es'?'Tu camino también merece compartirse':language==='en'?'Your journey is worth sharing':'El teu camí també es pot compartir'}</strong><span>{language==='es'?'La tarjeta se crea aquí. Tus fotos y datos no se publican.':language==='en'?'The card is created here. Your photos and data stay private.':'La targeta es crea aquí. Les fotos i les dades no es publiquen.'}</span></div><button onClick={()=>void shareProgress()} disabled={sharing}>{sharing?'…':language==='es'?'Compartir progreso':language==='en'?'Share progress':'Compartir progrés'}</button></div>
+        <ProgressShare language={language} essential={essentialDone} summits={completed.length} visits={visits.length} ready={ready && authReady && (!user || journalReady)} />
       </section>
 
       {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={() => setLoadVersion(previous => previous + 1)}>{t('Tornar-ho a provar')}</button>}</div>}
