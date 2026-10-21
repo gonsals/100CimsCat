@@ -22,7 +22,7 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 
 La migració `20261021093140_repeated_summit_visits.sql` afegeix `ascent_visits` amb RLS i amplia la comprovació de quota de fotos. Les primeres ascensions existents es mantenen a `ascent_records`, sense traslladar ni sobreescriure dades. Cal aplicar la migració abans de desplegar aquesta versió.
 
-Les tipografies DM Sans i Manrope es descarreguen durant la compilació i se serveixen des de la web, sense peticions a Google al navegador.
+La tipografia editorial Fraunces (títols i cursives) i Hanken Grotesk (textos i controls) es descarreguen durant la compilació i se serveixen des de la web, sense peticions a Google al navegador.
 
 - Filtres combinables: pendent/fet, essencial, preferit, comarca i interval d’altitud. Cerca tolerant als accents i ordenació per nom, altitud ascendent/descendent o distància.
 - Preferits privats sincronitzats amb el compte, disponibles també al mapa.

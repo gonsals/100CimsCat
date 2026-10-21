@@ -1,5 +1,9 @@
 # Validación de funcionalidades y móvil
 
+## Revisión tipográfica — 21 de octubre de 2026
+
+Fraunces en títulos y cursivas, combinada con Hanken Grotesk en textos, controles y cifras. Ajustados pesos, tamaños e interletrado de portada, marca, catálogo, fichas y diálogos. Fuentes servidas desde la propia web. Compilación de producción correcta y carga real de ambas familias verificada. Las pruebas del navegador pasan en 320, 375, 390, 768 y 1280 px sin desbordamientos ni errores de JavaScript; revisadas las capturas de portada y catálogo en escritorio y móvil.
+
 ## Catálogo, fichas e historial — 21 de octubre de 2026
 
 Aplicadas las siete mejoras: fuentes DM Sans y Manrope servidas localmente; acceso a explorar desde la primera pantalla móvil y progreso de invitado compacto; catálogo en bloques de 48 con búsqueda global; 522 fichas públicas estáticas con URL canónica y sitemap; visitas repetidas con fecha, notas y foto independientes; restauración de filtros, posición y mapa en la pestaña; fichas públicas descargables con un lector independiente que funciona sin red.

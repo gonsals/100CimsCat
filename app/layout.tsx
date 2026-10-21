@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
-import { DM_Sans, Manrope } from 'next/font/google'
+import { Fraunces, Hanken_Grotesk } from 'next/font/google'
 import { siteDescription, siteTitle, siteUrl } from '@/lib/site'
 import 'leaflet/dist/leaflet.css'
 import './globals.css'
@@ -9,8 +9,8 @@ import './summit-map.css'
 import './tracker.css'
 import './improvements.css'
 
-const bodyFont = DM_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-body' })
-const headingFont = Manrope({ subsets: ['latin'], display: 'swap', variable: '--font-heading' })
+const bodyFont = Hanken_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-body' })
+const headingFont = Fraunces({ subsets: ['latin'], style: ['normal', 'italic'], display: 'swap', variable: '--font-heading' })
 
 const preferenceBootstrap = `try {
   const root = document.documentElement;

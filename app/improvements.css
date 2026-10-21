@@ -2,3 +2,26 @@
 @media(max-width:560px){.hero{padding:24px 0;gap:20px}.hero h1{font-size:38px}.hero .intro{margin-bottom:0}.hero-art{height:110px}.hero-actions{margin-top:18px;gap:14px}.hero-actions .primary-button{min-height:46px}.account-hint{font-size:13px}.account-hint strong{font-size:14px}.account-hint button{font-size:13px}.progress-panel.is-guest{padding:16px}.progress-panel.is-guest .progress-footer{font-size:13px}.progress-panel.is-guest .progress-heading h2{font-size:16px}.progress-panel.is-guest .eyebrow{margin-bottom:6px}.progress-panel.is-guest .progress-track{margin-top:12px}.catalog{padding-top:28px}.card h3{font-size:14px}.card-detail{font-size:12px}.card-actions button,.card-actions .photo-button,.summit-explore{font-size:12px}.thumb-badge{font-size:10px}.card-body{min-height:190px}.sort-row{font-size:13px}.summit-page .topbar{flex-wrap:nowrap;gap:12px}.summit-page .topbar .secondary-button{font-size:12px}.summit-page-heading{grid-template-columns:1fr;gap:20px}.summit-page-art{height:190px}.summit-page-section{padding:20px}.summit-page-actions{flex-direction:column}.summit-page-actions a{width:100%}.related-summits{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.progress-track div,.toast{transition:none}}
 .primary-button,.secondary-button{text-decoration:none}
+
+/* Editorial mountain journal: expressive titles, quiet and readable controls. */
+.hero h1{font-size:56px;font-weight:500;line-height:1.04;letter-spacing:-1.8px}
+.hero h1 em{font-family:var(--font-heading),Georgia,serif;font-weight:500}
+.brand{font-weight:700;font-size:22px;letter-spacing:-.7px}
+.brand-light{font-weight:400}
+.progress-heading h2,.section-heading h2,.journal-heading h2{font-size:26px;font-weight:500;line-height:1.2;letter-spacing:-.5px}
+.summit-page h1{font-weight:500;letter-spacing:-1.5px;line-height:1.08}
+.summit-page-section h2{font-weight:500;font-size:29px;letter-spacing:-.45px}
+.card h3{font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-.25px;min-height:2.6em}
+.ascent-editor h2,.summit-modal h2,.auth-modal h2{font-size:30px;font-weight:500;letter-spacing:-.6px;line-height:1.2}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:1.9px}
+.progress-numbers,.stats strong,.summit-cluster-count b{font-family:var(--font-body),sans-serif;font-variant-numeric:tabular-nums}
+.intro{font-size:15px;line-height:1.75}
+@media(max-width:560px){
+  .hero h1{font-size:43px;letter-spacing:-1.3px}
+  .progress-heading h2,.section-heading h2,.journal-heading h2{font-size:23px}
+  .progress-panel.is-guest .progress-heading h2{font-size:21px}
+  .card h3{font-size:18px}
+  .summit-page-section h2{font-size:26px}
+  .eyebrow{font-size:10px;letter-spacing:1.6px}
+}
+@media(max-width:370px){.hero h1{font-size:38px}.card h3{font-size:17px}}
