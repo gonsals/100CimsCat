@@ -1,5 +1,6 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
+import { siteDescription, siteTitle, siteUrl } from '@/lib/site'
 import 'leaflet/dist/leaflet.css'
 import './globals.css'
 import './overrides.css'
@@ -15,8 +16,28 @@ const preferenceBootstrap = `try {
 } catch {}`
 
 export const metadata: Metadata = {
-  title: '100CimsCat · El teu quadern de muntanya',
-  description: 'Segueix els teus 100 Cims FEEC i guarda una foto per cada ascensió.',
+  metadataBase: new URL(siteUrl),
+  applicationName: '100CimsCat',
+  title: siteTitle,
+  description: siteDescription,
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    locale: 'ca_ES',
+    siteName: '100CimsCat',
+    url: '/',
+    title: siteTitle,
+    description: siteDescription,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteTitle,
+    description: siteDescription,
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#263d30',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

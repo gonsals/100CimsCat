@@ -1,5 +1,13 @@
 # Validación de funcionalidades y móvil
 
+## Iconos y metadatos — 20 de octubre de 2026
+
+Añadidos favicon ICO (16, 32 y 48 px), SVG, icono Apple de 180 px y manifest con iconos de 192 y 512 px. La tarjeta Open Graph de 1200 × 630 px también se utiliza en Twitter. La URL canónica y el sitemap usan el dominio de producción ya referenciado en la aplicación. `robots.txt` permite la portada y excluye las rutas de API y autenticación.
+
+Compilación de producción con TypeScript y los cinco tests existentes correctos. Chromium verifica las etiquetas generadas, las respuestas HTTP de todos los iconos y la tarjeta social, las dimensiones de las imágenes, el manifest, robots y sitemap. La búsqueda de invitado funciona a 320, 390 y 1280 px, sin desbordamiento horizontal ni errores de JavaScript. Revisados visualmente el icono y la tarjeta social. Las capturas están en `.next/metadata-check/`.
+
+Esta revisión es local; no se ha desplegado ni se han probado cuentas o datos privados.
+
 ## Corrección de subida de fotos — 13 de octubre de 2026
 
 La política INSERT rechazaba la comprobación previa de Supabase Storage: en ese momento `metadata.size` todavía no existe, aunque la llamada de cuota desde el navegador permita la foto. Se reprodujo el rechazo usando una copia temporal de `storage.objects` con la política real y el rol `authenticated`.
