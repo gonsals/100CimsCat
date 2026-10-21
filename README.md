@@ -1,6 +1,6 @@
 # 100CimsCat
 
-Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, amb una foto privada per cim i progrés sincronitzat al teu compte.
+Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, amb una foto privada per visita i progrés sincronitzat al teu compte.
 
 ## Funcions
 
@@ -9,7 +9,8 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 - Inici de sessió amb enllaç màgic de correu i seguiment personal sincronitzat amb Supabase.
 - Fotos privades a Supabase Storage, amb accés restringit al seu propietari.
 - Cada foto es redimensiona fins a 1.440 px, es converteix a WebP (o JPEG si cal) i es comprimeix per sota de 512 KB. Es treuen les metadades originals; el límit també s'aplica al bucket. Quota per compte: 280 MB, amb un màxim global de 900 MB per no superar la quota gratuïta.
-- La fitxa de cada cim enllaça amb informació de la FEEC, obre una cerca a OpenStreetMap i cerca fotos de Wikimedia Commons amb autoria, llicència i font visibles. Cal confirmar que el mapa i les imatges corresponen exactament a la cima.
+- Les fitxes públiques i les del mapa comparteixen fotografies de Wikimedia Commons amb autoria, llicència i font. La identitat es comprova amb nom i coordenades de Wikidata i, quan hi consta, altitud. Si la coincidència és ambigua o la llicència no es pot validar, es conserva la il·lustració. No tots els cims tenen una foto disponible.
+- Cada fitxa pública incorpora un mapa de situació, coordenades i accés a la font FEEC per consultar recorreguts. L’altitud no es presenta com a dificultat, durada ni desnivell d’una ruta.
 - Pots compartir una targeta gràfica del progrés creada al navegador. Les fotos i dades personals no es publiquen.
 - Des de Configuració pots esborrar el compte, les ascensions i les fotos privades.
 
@@ -19,6 +20,10 @@ Quadern personal per seguir les ascensions del repte dels 100 Cims de la FEEC, a
 - Cada cim té una fitxa pública a `/cims/<id>`, amb metadades pròpies i entrada al sitemap. Inclou coordenades orientatives, enllaços FEEC i accés al quadern.
 - «Desar sense cobertura» guarda les dades públiques de la fitxa en aquest dispositiu. El lector `/offline.html` funciona sense connexió, inclosa la recàrrega i l’eliminació de descàrregues. No descarrega mapes, fotos, notes privades ni sessions. Les dades es perden si s’esborra l’emmagatzematge del navegador.
 - Es poden registrar diverses visites a un mateix cim, cadascuna amb data, notes i foto. El progrés compta cims únics; l’historial, les estadístiques anuals i el CSV inclouen totes les visites. Eliminar una visita conserva les altres.
+- Data, notes i foto opcional es desen des d’un sol formulari. Si falla la foto després de desar la visita, es conserven les dades i el fitxer per reintentar-ho sense duplicar el registre. Sortir d’un formulari modificat requereix descartar els canvis pendents.
+- La galeria privada inclou les fotos de totes les visites, filtre per any, ampliació, navegació amb fletxes i renovació dels enllaços temporals.
+- Capçalera, peu, icones SVG, idioma i tema compartits; pàgines de projecte, ajuda, fonts, privacitat i contacte. Responsable: Marc Gonzalez Tarrio; contacte: marcgonzaleztarrio@gmail.com.
+- Pàgines pròpies de 404 i error recuperable, enllaç per saltar al contingut, diàlegs amb gestió del focus i controls del mapa accessibles amb teclat.
 
 La migració `20261021093140_repeated_summit_visits.sql` afegeix `ascent_visits` amb RLS i amplia la comprovació de quota de fotos. Les primeres ascensions existents es mantenen a `ascent_records`, sense traslladar ni sobreescriure dades. Cal aplicar la migració abans de desplegar aquesta versió.
 
@@ -38,6 +43,8 @@ Les migracions `journal_notes_and_favorites` i `restrict_favorite_privileges` af
 Verificació de lògica: `node --test tests/tracker.test.cjs`. Verificació del navegador: `node scripts/browser-check.cjs` amb Playwright instal·lat (o `PLAYWRIGHT_MODULE` apuntant al paquet) i `CHECK_URL` apuntant al servidor. Les proves del navegador simulen el compte i el quadern sense modificar dades personals; generen captures i un informe a `.next/browser-check`.
 
 `node scripts/improvements-check.cjs` comprova tipografies, blocs del catàleg, fitxes públiques, restauració del llistat i mapa, i el lector amb el navegador sense connexió. Genera captures i un informe a `.next/improvements-check`. Les proves SQL `tests/ascent-visits-policy.sql` i `tests/visit-photo-quota.sql` verifiquen l’aïllament entre comptes i les quotes de substitució de fotos; totes les dades de prova es reverteixen.
+
+`node scripts/product-check.cjs` verifica el formulari amb fallades de pujada i d’enllaç de foto, reintents sense duplicats, galeria, filtre anual, ampliació i focus, fonts de les imatges, navegació, contacte i 404 a 320, 390 i 1280 px. Amb `AXE_SCRIPT` apuntant a `axe-core@4.14.0/axe.min.js`, comprova també les regles WCAG A/AA automàtiques. La verificació automàtica no substitueix una auditoria manual completa. El compte, les dades i les pujades d’aquestes proves són simulats; els informes i captures es guarden a `.next/product-check`.
 
 ## Configuració local
 

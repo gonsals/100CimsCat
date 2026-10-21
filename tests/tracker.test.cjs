@@ -96,3 +96,23 @@ test('catalogue state tolerates corrupt storage and bounds restored values', () 
   assert.equal(saved.limit, 1000)
   assert.equal(saved.scrollY, 0)
 })
+
+test('public photos require an unambiguous summit identity and safe licensed metadata', () => {
+  const contextModule = {}
+  const code = ts.transpileModule(fs.readFileSync(path.join(__dirname, '../lib/summit-context.ts'), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2017 } }).outputText
+  vm.runInNewContext(code, { exports: contextModule, require: name => { assert.equal(name, '@/lib/tracker'); return moduleExports }, URL, Number, Map, Set })
+  const { matchingEntity, safeCommonsPhoto, plainMetadata } = contextModule
+  const summit = catalog.find(item => item.id === 'canigo')
+  const entity = { id: 'Q6650', labels: { ca: { value: summit.name } }, claims: { P625: [{ mainsnak: { datavalue: { value: { latitude: coordinates.canigo.lat, longitude: coordinates.canigo.lng, globe: 'http://www.wikidata.org/entity/Q2' } } } }], P2044: [{ mainsnak: { datavalue: { value: { amount: '+2784', unit: 'http://www.wikidata.org/entity/Q11573' } } } }] } }
+  assert.equal(matchingEntity(summit, [entity]).id, 'Q6650')
+  assert.equal(matchingEntity(summit, [entity, { ...entity, id: 'Q999' }]), null)
+  assert.equal(matchingEntity(summit, [{ ...entity, claims: {} }]), null)
+  const other = JSON.parse(JSON.stringify(entity)); other.claims.P625[0].mainsnak.datavalue.value.latitude = 40
+  assert.equal(matchingEntity(summit, [other]), null)
+  const info = { thumburl: 'https://upload.wikimedia.org/wikipedia/commons/test.jpg', descriptionurl: 'https://commons.wikimedia.org/wiki/File:Test.jpg', mime: 'image/jpeg', extmetadata: { Artist: { value: '<a href="https://example.org">Photographer</a>' }, LicenseShortName: { value: 'CC BY-SA 4.0' }, LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0/' } } }
+  assert.equal(safeCommonsPhoto(info).author, 'Photographer')
+  assert.equal(safeCommonsPhoto({ ...info, thumburl: 'https://evil.invalid/photo.jpg' }), null)
+  assert.equal(safeCommonsPhoto({ ...info, descriptionurl: 'javascript:alert(1)' }), null)
+  assert.equal(safeCommonsPhoto({ ...info, extmetadata: { ...info.extmetadata, LicenseShortName: { value: 'All rights reserved' } } }), null)
+  assert.equal(plainMetadata('<b>Name</b> &amp; Co'), 'Name & Co')
+})

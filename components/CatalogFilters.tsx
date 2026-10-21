@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Icon from '@/components/Icon'
 import { coordinates, regionsOf, type CatalogFilter, type Coordinate, type Summit } from '@/lib/tracker'
 
 type Props = {
@@ -30,11 +31,11 @@ export default function CatalogFilters({ summits, filters, onChange, search, onS
   }
 
   return <div className="catalog-filters">
-    <label className="search"><span aria-hidden="true">⌕</span><input type="search" value={search} onChange={event => onSearch(event.target.value)} placeholder={t('Cerca un cim o una comarca...')} aria-label={t('Cerca per cim o comarca')} /></label>
+    <label className="search"><Icon name="search" size={20} /><input type="search" value={search} onChange={event => onSearch(event.target.value)} placeholder={t('Cerca un cim o una comarca...')} aria-label={t('Cerca per cim o comarca')} /></label>
     <div className="filters" role="group" aria-label={t('Filtrar cims')}>
       {([['all', 'Tots'], ['pending', 'Pendents'], ['done', 'Fets']] as const).map(([value, label]) => <button key={value} type="button" className={`filter ${filters.status === value ? 'active' : ''}`} aria-pressed={filters.status === value} onClick={() => onChange({ ...filters, status: value })}>{t(label)}</button>)}
-      <button type="button" className={`filter essential-filter ${filters.essential ? 'active' : ''}`} aria-pressed={filters.essential} onClick={() => onChange({ ...filters, essential: !filters.essential })}>{t('✦ Essencials')}</button>
-      <button type="button" className={`filter ${filters.favorites ? 'active' : ''}`} aria-pressed={filters.favorites} onClick={() => onChange({ ...filters, favorites: !filters.favorites })}>☆ {t('Preferits')}</button>
+      <button type="button" className={`filter essential-filter ${filters.essential ? 'active' : ''}`} aria-pressed={filters.essential} onClick={() => onChange({ ...filters, essential: !filters.essential })}><Icon name="star" size={15} />{t('✦ Essencials').replace('✦ ', '')}</button>
+      <button type="button" className={`filter ${filters.favorites ? 'active' : ''}`} aria-pressed={filters.favorites} onClick={() => onChange({ ...filters, favorites: !filters.favorites })}><Icon name="star" size={15} />{t('Preferits')}</button>
     </div>
     <details className="advanced-filters">
       <summary>{t('Més filtres')}{advancedCount > 0 && <span className="filter-count">{advancedCount}</span>}</summary>
@@ -46,7 +47,7 @@ export default function CatalogFilters({ summits, filters, onChange, search, onS
       {invalidRange && <p className="form-error" role="alert">{t('La mínima no pot superar la màxima.')}</p>}
     </details>
     <details className="nearby-filters">
-      <summary>⌖ {t('Cims propers')}{origin && <span className="origin-label"> · {t(originLabel)}</span>}</summary>
+      <summary><Icon name="pin" size={16} /> {t('Cims propers')}{origin && <span className="origin-label"> · {t(originLabel)}</span>}</summary>
       <div className="nearby-fields"><button type="button" className="secondary-button" disabled={locating} onClick={locate}>{locating ? t('Localitzant…') : t('Fer servir la meva ubicació')}</button><label>{t('O tria un cim de referència')}<select value={referenceSummits.find(summit => summit.name === originLabel)?.id ?? ''} onChange={event => {
         const summit = summits.find(item => item.id === event.target.value)
         onOrigin(summit ? coordinates[summit.id] : null, summit?.name ?? '')

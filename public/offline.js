@@ -9,6 +9,8 @@
     en: { title: 'Your offline summits', all: 'Downloaded summits', intro: 'Data saved on this device. Maps, links and your private journal need a connection.', warning: 'Coordinates are for reference. This page does not replace a topographic map or route planning.', empty: 'No downloaded summits yet. Open a summit while online and choose “Save for offline”.', missing: 'This summit has not been downloaded.', error: 'Could not read saved summits. Check your browser storage permissions.', remove: 'Remove download', essential: '✦ Essential summit', saved: 'Saved on', coordinates: 'Coordinates', source: 'FEEC page (online)', noCoordinates: 'No coordinates available.' },
   }
   const t = copy[language] || copy.ca
+  const navigation = language === 'es' ? { catalogue: 'Explorar', 'footer-note': 'Proyecto independiente', 'storage-note': 'Solo se guardan datos públicos de las cimas en este dispositivo.', help: 'Ayuda con conexión' } : language === 'en' ? { catalogue: 'Explore', 'footer-note': 'Independent project', 'storage-note': 'Only public summit data is saved on this device.', help: 'Help while online' } : { catalogue: 'Explorar', 'footer-note': 'Projecte independent', 'storage-note': 'Només es desen dades públiques de les cimes en aquest dispositiu.', help: 'Ajuda amb connexió' }
+  for (const [id, text] of Object.entries(navigation)) document.getElementById(id).textContent = text
   document.documentElement.lang = copy[language] ? language : 'ca'
   for (const id of ['title', 'all', 'intro', 'warning']) document.getElementById(id).textContent = t[id]
   const container = document.getElementById('summits')

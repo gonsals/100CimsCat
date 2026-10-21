@@ -1,6 +1,6 @@
 // Only public summit information is saved. Auth, API responses and private photos
 // are never intercepted or cached by this worker.
-const CACHE = '100cimscat-offline-v1'
+const CACHE = '100cimscat-offline-v2'
 const READER = ['/offline.html', '/offline.js', '/icon.svg']
 
 self.addEventListener('install', event => {

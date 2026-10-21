@@ -1,5 +1,21 @@
 # Validación de funcionalidades y móvil
 
+## Producto y uso diario — 21 de octubre de 2026
+
+Identidad e iconos SVG compartidos, cabecera y pie coherentes, páginas de proyecto, ayuda, fuentes, privacidad y contacto. Se publica el responsable Marc Gonzalez Tarrio y el correo marcgonzaleztarrio@gmail.com, facilitados por el propietario. Se mantienen Fraunces y Hanken Grotesk, servidas desde la propia web.
+
+Las fichas públicas y las ventanas del mapa comparten una consulta de contexto restringida a los identificadores del catálogo. Wikidata debe coincidir en nombre y coordenadas (a menos de 1 km), sin ambigüedad y con altitud compatible cuando esté disponible. Solo se muestran fotos de Commons con autor y licencia permitida; las demás fichas mantienen una ilustración. Se ha comprobado también la respuesta real de Canigó, Q6650, con foto de Robert66 en dominio público. No se afirma que los 522 cims dispongan de fotografía. La antigua búsqueda abierta de imágenes se retira.
+
+Formulario único de fecha, notas y foto opcional, con previsualización, compresión y confirmación al descartar cambios. Un error de foto después de guardar la visita mantiene el formulario y el archivo para reintentar sobre el mismo registro. Si falla el enlace del archivo al registro, se solicita eliminar el archivo recién subido. La galería privada incorpora todas las visitas, filtro por año, visor con flechas, edición y renovación de enlaces temporales. Las fotos privadas se cargan directamente desde Storage, sin pasar por el optimizador público de imágenes de Next.js.
+
+Mapa con agrupación en coordenadas de pantalla para separar los controles de selección. La barra de zoom se sitúa fuera del área de puntos; las cimas individuales permiten abrir la ficha con Enter o espacio. Los grupos que persisten con el zoom máximo ofrecen una lista de cimas. Se corrige asimismo el guardado de búsquedas al recargar inmediatamente y se conservan idioma y tema en la página 404.
+
+Compilación de producción con TypeScript correcta (540 páginas generadas); ocho pruebas unitarias correctas. `scripts/product-check.cjs` realiza 57 comprobaciones automáticas con axe-core 4.14.0 sobre portada, ajustes, acceso, mapas, fichas, páginas informativas, 404, formulario, galería y visor a 320, 390 y 1280 px, incluyendo tema oscuro. Sin infracciones detectadas en las reglas WCAG A/AA ejecutadas ni desbordamientos. Esto no constituye una auditoría manual completa de accesibilidad.
+
+El mismo script verifica fallos de subida y de enlace de foto, limpieza del archivo de prueba, reintento sin duplicados, dos visitas con fotos independientes, filtro anual, navegación, actualización de URL y restauración del foco. La cuenta y los servicios privados son simulados; no se modifican datos personales reales. Los informes y capturas están en `.next/product-check`. Esta versión no cambia tablas, permisos ni migraciones de Supabase.
+
+`scripts/improvements-check.cjs` vuelve a comprobar fuentes reales, bloques de 48/96 tarjetas, metadatos, restauración de filtros/scroll/mapa, 528 entradas del sitemap y descargas públicas con la red desactivada. `scripts/browser-check.cjs` cubre el cuaderno completo en 320, 375, 390, 768 y 1280 px. No se cachean credenciales, notas, API ni fotos privadas en el lector sin conexión.
+
 ## Revisión tipográfica — 21 de octubre de 2026
 
 Fraunces en títulos y cursivas, combinada con Hanken Grotesk en textos, controles y cifras. Ajustados pesos, tamaños e interletrado de portada, marca, catálogo, fichas y diálogos. Fuentes servidas desde la propia web. Compilación de producción correcta y carga real de ambas familias verificada. Las pruebas del navegador pasan en 320, 375, 390, 768 y 1280 px sin desbordamientos ni errores de JavaScript; revisadas las capturas de portada y catálogo en escritorio y móvil.

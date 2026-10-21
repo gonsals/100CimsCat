@@ -8,6 +8,7 @@ import './overrides.css'
 import './summit-map.css'
 import './tracker.css'
 import './improvements.css'
+import './product.css'
 
 const bodyFont = Hanken_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-body' })
 const headingFont = Fraunces({ subsets: ['latin'], style: ['normal', 'italic'], display: 'swap', variable: '--font-heading' })

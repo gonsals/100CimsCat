@@ -2,145 +2,47 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import OfflineButton from '@/components/OfflineButton'
 import { useEffect, useRef, useState } from 'react'
-import { friendlyDate, type Summit } from '@/lib/tracker'
+import OfflineButton from '@/components/OfflineButton'
+import MountainPlaceholder from '@/components/MountainPlaceholder'
+import Icon from '@/components/Icon'
+import { coordinates, friendlyDate, type Summit } from '@/lib/tracker'
 import { trackerText } from '@/lib/tracker-i18n'
+import { useSummitContext } from '@/lib/use-summit-context'
 
-type CommonsMetadata = { value?: string }
-type CommonsImage = {
-  title: string
-  imageinfo?: Array<{
-    thumburl?: string
-    descriptionurl?: string
-    extmetadata?: Record<string, CommonsMetadata>
-  }>
-}
-
-type Props = {
-  summit: Summit
-  language: 'ca' | 'es' | 'en'
-  onClose: () => void
-  favorite: boolean
-  completedAt?: string
-  busy: boolean
-  onFavorite: () => void
-  onEdit: () => void
-  feedback: string
-}
-
-const commonsCache = new Map<string, Promise<CommonsImage[]>>()
-
-function plainText(value?: string) {
-  if (!value) return ''
-  return new DOMParser().parseFromString(value, 'text/html').body.textContent?.trim() ?? ''
-}
-
-function normalized(value: string) {
-  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
-}
-
-function getCommonsImages(summitName: string) {
-  const cacheKey = normalized(summitName)
-  const cached = commonsCache.get(cacheKey)
-  if (cached) return cached
-
-  const request = fetch(`/api/commons?name=${encodeURIComponent(summitName)}`)
-    .then(async response => {
-      if (!response.ok) throw new Error('Commons is not available')
-      const payload = await response.json()
-      const pages = Object.values((payload.query?.pages ?? {}) as Record<string, CommonsImage>)
-      const stopWords = new Set(['d', 'de', 'del', 'la', 'les', 'el', 'els', 'l', 'i', 'o'])
-      const targetWords = normalized(summitName).split(' ').filter(word => word.length > 1 && !stopWords.has(word))
-      const requiredWords = targetWords.length > 1 ? targetWords : normalized(summitName).split(' ').filter(Boolean)
-      return pages.filter(page => {
-        const fileName = normalized(page.title.replace(/^File:/i, ''))
-        return requiredWords.every(word => fileName.includes(word))
-      })
-    })
-
-  request.catch(() => { commonsCache.delete(cacheKey) })
-  commonsCache.set(cacheKey, request)
-  return request
-}
+type Props = { summit: Summit; language: 'ca' | 'es' | 'en'; onClose: () => void; favorite: boolean; completedAt?: string; busy: boolean; onFavorite: () => void; onEdit: () => void; feedback: string }
 
 export default function SummitDetailsModal({ summit, language, onClose, favorite, completedAt, busy, onFavorite, onEdit, feedback }: Props) {
   const dialog = useRef<HTMLDialogElement>(null)
   const t = (value: string) => trackerText(language, value)
-  const [images, setImages] = useState<CommonsImage[]>([])
-  const [loading, setLoading] = useState(true)
-  const [loadError, setLoadError] = useState(false)
-
-  useEffect(() => {
-    let active = true
-    setImages([])
-    setLoadError(false)
-    setLoading(true)
-    getCommonsImages(summit.name).then(results => {
-      if (active) setImages(results)
-    }).catch(() => {
-      if (active) setLoadError(true)
-    }).finally(() => {
-      if (active) setLoading(false)
-    })
-    return () => { active = false }
-  }, [summit.name])
-
+  const { data, loading, error, retry } = useSummitContext(summit.id)
+  const [imageFailed, setImageFailed] = useState(false)
+  const photo = !imageFailed ? data?.photo : null
+  useEffect(() => { setImageFailed(false) }, [summit.id])
   useEffect(() => {
     const element = dialog.current
+    const previousFocus = document.activeElement as HTMLElement | null
     element?.showModal()
     const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    return () => { element?.close(); document.body.style.overflow = previous }
+    return () => { element?.close(); document.body.style.overflow = previous; previousFocus?.focus() }
   }, [])
-
-  const openMap = new URL('https://www.openstreetmap.org/search')
-  openMap.searchParams.set('query', `${summit.name}, ${summit.region}`)
-  const openCommons = new URL('https://commons.wikimedia.org/wiki/Special:MediaSearch')
-  openCommons.searchParams.set('type', 'image')
-  openCommons.searchParams.set('search', `${summit.name} ${summit.region}`)
+  const point = coordinates[summit.id]
+  const mapUrl = point ? `https://www.openstreetmap.org/?mlat=${point.lat}&mlon=${point.lng}#map=14/${point.lat}/${point.lng}` : `https://www.openstreetmap.org/search?query=${encodeURIComponent(`${summit.name}, ${summit.region}`)}`
   const labels = language === 'es'
-    ? { details: 'Ficha de la cima', close: 'Cerrar', essential: 'Esencial', map: 'Buscar en el mapa', route: 'Ficha y recorrido FEEC', photos: 'Fotos de referencia', loading: 'Buscando imágenes con licencia libre…', empty: 'No hemos encontrado una foto con el nombre exacto.', error: 'No se han podido cargar las imágenes.', commons: 'Buscar más fotos en Wikimedia Commons', attribution: 'Cada foto conserva su autoría, licencia y enlace a la fuente. Comprueba que corresponde exactamente a esta cima antes de usarla.', location: 'La búsqueda del mapa usa el nombre y la comarca; confirma el punto exacto antes de salir.' }
+    ? { details: 'Ficha de la cima', essential: 'Esencial', map: 'Abrir el mapa', route: 'Ficha y recorrido FEEC', illustration: 'Ilustración de referencia', photos: 'Imagen de referencia', location: 'Consulta accesos, variantes y recorridos en la ficha FEEC. Las coordenadas son orientativas; no sustituyen un mapa de ruta.' }
     : language === 'en'
-      ? { details: 'Summit details', close: 'Close', essential: 'Essential', map: 'Search the map', route: 'FEEC summit page and route', photos: 'Reference photos', loading: 'Looking for freely licensed images…', empty: 'No photo with an exact summit name was found.', error: 'Images could not be loaded.', commons: 'Find more photos on Wikimedia Commons', attribution: 'Each photo keeps its author, license and source link. Check that it shows this exact summit before using it.', location: 'The map search uses the summit and region names; confirm the exact point before setting out.' }
-      : { details: 'Fitxa de la cima', close: 'Tancar', essential: 'Essencial', map: 'Cercar al mapa', route: 'Fitxa i recorregut FEEC', photos: 'Fotos de referència', loading: 'Cercant imatges amb llicència lliure…', empty: 'No hem trobat cap foto amb el nom exacte del cim.', error: 'No s’han pogut carregar les imatges.', commons: 'Cercar més fotos a Wikimedia Commons', attribution: 'Cada foto manté l’autoria, la llicència i l’enllaç a la font. Comprova que correspon exactament a aquest cim abans de fer-la servir.', location: 'La cerca del mapa fa servir el nom i la comarca; confirma el punt exacte abans de sortir.' }
-
-  return (
-      <dialog ref={dialog} className="summit-modal" aria-labelledby="summit-modal-title" onCancel={onClose}>
-        <button className="modal-close" onClick={onClose} aria-label={labels.close}>×</button>
-        <p className="eyebrow">{labels.details}</p>
-        <h2 id="summit-modal-title">{summit.name}</h2>
-        {feedback && <p className="form-error" role="status">{feedback}</p>}
-        <div className="summit-facts"><strong>{summit.height.toLocaleString(language === 'en' ? 'en-GB' : language === 'es' ? 'es-ES' : 'ca-ES')} m</strong><span>{summit.region.replace(/\s*,\s*/g, ' · ')}</span>{summit.essential && <span className="essential-tag">✦ {labels.essential}</span>}</div>
-
-        <div className="summit-journal-actions"><button className="primary-button" type="button" disabled={busy} onClick={onEdit}>{t(completedAt ? 'Editar ascensió' : 'Registrar ascensió')}{completedAt && ` · ${friendlyDate(completedAt, language)}`}</button><button className="secondary-button" type="button" disabled={busy} aria-pressed={favorite} onClick={onFavorite}>{favorite ? '★' : '☆'} {t(favorite ? 'Treure de preferits' : 'Afegir a preferits')}</button></div>
-
-        <div className="summit-detail-links">
-          <Link href={`/cims/${summit.id}`} prefetch={false}>{t('Obrir fitxa completa')} →</Link>
-          <a href={summit.url} target="_blank" rel="noreferrer">{labels.route} ↗</a>
-          <a href={openMap.toString()} target="_blank" rel="noreferrer">{labels.map} ↗</a>
-        </div>
-        <p className="summit-map-note">{labels.location}</p>
-        <OfflineButton summit={summit} language={language} />
-
-        <div className="commons-heading"><h3>{labels.photos}</h3><a href={openCommons.toString()} target="_blank" rel="noreferrer">{labels.commons} ↗</a></div>
-        {loading && <p className="commons-state">{labels.loading}</p>}
-        {!loading && loadError && <p className="commons-state">{labels.error}</p>}
-        {!loading && !loadError && images.length === 0 && <p className="commons-state">{labels.empty}</p>}
-        {images.length > 0 && <div className="commons-grid">{images.map(image => {
-          const info = image.imageinfo?.[0]
-          if (!info?.thumburl || !info.descriptionurl) return null
-          const author = plainText(info.extmetadata?.Artist?.value || info.extmetadata?.Credit?.value)
-          const license = plainText(info.extmetadata?.LicenseShortName?.value || info.extmetadata?.UsageTerms?.value)
-          return <article className="commons-image" key={image.title}>
-            <a href={info.descriptionurl} target="_blank" rel="noreferrer" aria-label={`${image.title} — Wikimedia Commons`}>
-              <Image src={info.thumburl} alt={image.title.replace(/^File:/i, '')} width={640} height={420} unoptimized />
-            </a>
-            <p>{author || image.title.replace(/^File:/i, '')}</p>
-            {license && <small>{license}</small>}
-          </article>
-        })}</div>}
-        <p className="commons-attribution">{labels.attribution}</p>
-      </dialog>
-  )
+      ? { details: 'Summit details', essential: 'Essential', map: 'Open map', route: 'FEEC summit page and route', illustration: 'Reference illustration', photos: 'Reference image', location: 'See the FEEC page for access and route variants. Coordinates are for reference and do not replace route mapping.' }
+      : { details: 'Fitxa del cim', essential: 'Essencial', map: 'Obrir al mapa', route: 'Fitxa i recorregut FEEC', illustration: 'Il·lustració de referència', photos: 'Imatge de referència', location: 'Consulta accessos, variants i recorreguts a la fitxa FEEC. Les coordenades són orientatives; no substitueixen un mapa de ruta.' }
+  return <dialog ref={dialog} className="summit-modal" aria-labelledby="summit-modal-title" onCancel={onClose}>
+    <button className="modal-close icon-button" type="button" onClick={onClose} aria-label={t('Tancar')}><Icon name="close" /></button>
+    <p className="eyebrow">{labels.details}</p><h2 id="summit-modal-title">{summit.name}</h2>
+    {feedback && <p className="form-error" role="status">{feedback}</p>}
+    <div className="summit-facts"><strong>{summit.height.toLocaleString(language === 'en' ? 'en-GB' : language === 'es' ? 'es-ES' : 'ca-ES')} m</strong><span>{summit.region.replace(/\s*,\s*/g, ' · ')}</span>{summit.essential && <span className="essential-tag"><Icon name="star" size={12} />{labels.essential}</span>}</div>
+    {data?.description[language] && <p className="summit-description">{data.description[language]}</p>}
+    <div className="summit-journal-actions"><button className="primary-button" type="button" disabled={busy} onClick={onEdit}><Icon name={completedAt ? 'check' : 'plus'} />{t(completedAt ? 'Editar ascensió' : 'Registrar ascensió')}{completedAt && ` · ${friendlyDate(completedAt, language)}`}</button><button className="secondary-button" type="button" disabled={busy} aria-pressed={favorite} onClick={onFavorite}><Icon name="star" style={favorite ? { fill: 'currentColor' } : undefined} />{t(favorite ? 'Treure de preferits' : 'Afegir a preferits')}</button></div>
+    <div className="summit-detail-links"><Link href={`/cims/${summit.id}`} prefetch={false}>{t('Obrir fitxa completa')}<Icon name="next" size={16} /></Link><a href={summit.url} target="_blank" rel="noreferrer">{labels.route}<Icon name="arrow" size={16} /></a><a href={mapUrl} target="_blank" rel="noreferrer">{labels.map}<Icon name="arrow" size={16} /></a></div>
+    <p className="summit-map-note">{labels.location}</p><OfflineButton summit={summit} language={language} />
+    <h3 className="modal-photo-heading">{labels.photos}</h3><figure className="summit-reference"><div className="summit-page-art">{photo ? <Image src={photo.url} alt={summit.name} width={1280} height={853} unoptimized onError={() => setImageFailed(true)} /> : <><MountainPlaceholder name={summit.name} height={summit.height} region={summit.region} /><span>{labels.illustration}</span></>}</div><figcaption>{photo ? <>{photo.author} · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.license}</a> · <a href={photo.sourceUrl} target="_blank" rel="noreferrer">Wikimedia Commons<Icon name="arrow" size={12} /></a><small>{t('Imatge vinculada a la cima per nom i coordenades a Wikidata.')}</small></> : loading ? <span role="status">{t('Comprovant imatges i fonts…')}</span> : (error || imageFailed) ? <span>{t('La imatge no està disponible ara.')} <button type="button" className="text-button" onClick={() => { setImageFailed(false); retry() }}>{t('Tornar-ho a provar')}</button></span> : t('Il·lustració de referència; no representa una fotografia del cim.')}</figcaption></figure>
+  </dialog>
 }

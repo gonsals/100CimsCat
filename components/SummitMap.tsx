@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import L from 'leaflet'
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import summitCoordinatesJson from '@/data/summit-coordinates.json'
+import Icon from '@/components/Icon'
 
 type Summit = {
   id: string
@@ -34,29 +36,36 @@ function formatDate(value: string | undefined, language: Language) {
 }
 
 function makeClusters(points: SummitPoint[], zoom: number): Cluster[] {
-  const latStep = Math.max(0.002, (34 * 156543.03392 / 2 ** zoom) / 111320)
-  const lngStep = latStep / Math.cos(42 * Math.PI / 180)
-  const groups = new Map<string, SummitPoint[]>()
-
+  // Merge in screen space so neighboring grid cells cannot produce overlapping
+  // targets. Recheck weighted centers after a merge, including at mobile widths.
+  const groups: { x: number; y: number; points: SummitPoint[] }[] = []
+  const gap = 56
   for (const point of points) {
-    const key = `${Math.round(point.position[0] / latStep)}:${Math.round(point.position[1] / lngStep)}`
-    const group = groups.get(key) ?? []
-    group.push(point)
-    groups.set(key, group)
+    const projected = L.CRS.EPSG3857.latLngToPoint(L.latLng(point.position), zoom)
+    const group = groups.find(item => Math.hypot(item.x - projected.x, item.y - projected.y) < gap)
+    if (!group) groups.push({ x: projected.x, y: projected.y, points: [point] })
+    else { const size = group.points.length; group.x = (group.x * size + projected.x) / (size + 1); group.y = (group.y * size + projected.y) / (size + 1); group.points.push(point) }
   }
-
-  return [...groups].map(([key, group]) => ({
-    key,
-    points: group,
-    done: group.filter(point => point.done).length,
-    position: [
-      group.reduce((sum, point) => sum + point.position[0], 0) / group.length,
-      group.reduce((sum, point) => sum + point.position[1], 0) / group.length,
-    ],
-  }))
+  let merged = true
+  while (merged) {
+    merged = false
+    outer: for (let i = 0; i < groups.length; i++) for (let j = i + 1; j < groups.length; j++) {
+      const first = groups[i], second = groups[j]
+      if (Math.hypot(first.x - second.x, first.y - second.y) >= gap) continue
+      const count = first.points.length + second.points.length
+      first.x = (first.x * first.points.length + second.x * second.points.length) / count
+      first.y = (first.y * first.points.length + second.y * second.points.length) / count
+      first.points.push(...second.points); groups.splice(j, 1); merged = true
+      break outer
+    }
+  }
+  return groups.map(group => {
+    const center = L.CRS.EPSG3857.pointToLatLng(L.point(group.x, group.y), zoom)
+    return { key: group.points[0].summit.id, points: group.points, done: group.points.filter(point => point.done).length, position: [center.lat, center.lng] }
+  })
 }
 
-function MapBehavior({ points, bounds, language, onSelectSummit }: { points: SummitPoint[]; bounds: L.LatLngBounds | null; language: Language; onSelectSummit: (id: string) => void }) {
+function MapBehavior({ points, bounds, language, onSelectSummit, controlsTarget }: { points: SummitPoint[]; bounds: L.LatLngBounds | null; language: Language; onSelectSummit: (id: string) => void; controlsTarget: HTMLDivElement | null }) {
   const map = useMap()
   const [zoom, setZoom] = useState(map.getZoom())
   const previousPoints = useRef('')
@@ -85,11 +94,11 @@ function MapBehavior({ points, bounds, language, onSelectSummit }: { points: Sum
   const labels = text[language]
 
   return <>
-    <div className="summit-map-controls" aria-label={labels.recenter}>
+    {controlsTarget && createPortal(<div className="summit-map-controls" role="group" aria-label={labels.recenter}>
       <button type="button" onClick={() => map.zoomIn()} aria-label={language === 'es' ? 'Acercar' : language === 'en' ? 'Zoom in' : 'Apropar'}>+</button>
       <button type="button" onClick={() => map.zoomOut()} aria-label={language === 'es' ? 'Alejar' : language === 'en' ? 'Zoom out' : 'Allunyar'}>−</button>
-      <button type="button" onClick={() => bounds && map.fitBounds(bounds, { padding: [26, 26], maxZoom: 8 })} aria-label={labels.recenter}>⌖</button>
-    </div>
+      <button type="button" onClick={() => bounds && map.fitBounds(bounds, { padding: [26, 26], maxZoom: 8 })} aria-label={labels.recenter}><Icon name="pin" /></button>
+    </div>, controlsTarget)}
     {clusters.map(cluster => {
       if (cluster.points.length === 1) {
         const point = cluster.points[0]
@@ -98,14 +107,18 @@ function MapBehavior({ points, bounds, language, onSelectSummit }: { points: Sum
           center={point.position}
           radius={point.done ? 7 : 5}
           pathOptions={{ color: point.done ? '#fffefa' : '#f7f5ee', weight: 2, fillColor: point.done ? '#456d50' : '#a69c85', fillOpacity: point.done ? 0.96 : 0.76 }}
-          eventHandlers={{ click: () => map.flyTo(point.position, Math.max(map.getZoom(), 10), { duration: 0.35 }) }}
+          eventHandlers={{
+            click: () => map.flyTo(point.position, Math.max(map.getZoom(), 10), { duration: 0.35 }),
+            add: event => { const node = event.target.getElement(); if (node) { node.setAttribute('tabindex', '0'); node.setAttribute('role', 'button'); node.setAttribute('aria-label', `${point.summit.name}, ${point.summit.height} m`); } },
+            keydown: event => { if (event.originalEvent.key === 'Enter' || event.originalEvent.key === ' ') { event.originalEvent.preventDefault(); onSelectSummit(point.summit.id) } },
+          }}
         >
           <Popup className="summit-map-popup">
             <div className="map-popup-content">
               <span className={`map-popup-state ${point.done ? 'is-done' : ''}`}>{point.done ? `✓ ${labels.done} · ${formatDate(point.completedAt, language)}` : labels.pending}</span>
               <strong>{point.summit.name}</strong>
               <span>{point.summit.height.toLocaleString(language === 'es' ? 'es-ES' : language === 'en' ? 'en-GB' : 'ca-ES')} m · {point.summit.region.replace(/\s*,\s*/g, ' · ')}</span>
-              <button type="button" onClick={() => onSelectSummit(point.summit.id)}>{labels.open} ↗</button>
+              <button type="button" onClick={() => onSelectSummit(point.summit.id)}>{labels.open} <Icon name="arrow" size={14} /></button>
             </div>
           </Popup>
         </CircleMarker>
@@ -123,8 +136,8 @@ function MapBehavior({ points, bounds, language, onSelectSummit }: { points: Sum
         position={cluster.position}
         icon={icon}
         title={language === 'es' ? `${cluster.done} hechas de ${cluster.points.length}` : language === 'en' ? `${cluster.done} done of ${cluster.points.length}` : `${cluster.done} fetes de ${cluster.points.length}`}
-        eventHandlers={{ click: () => map.flyTo(cluster.position, Math.min(12, map.getZoom() + 2), { duration: 0.4 }) }}
-      />
+        eventHandlers={{ click: () => { if (map.getZoom() < map.getMaxZoom()) map.flyTo(cluster.position, Math.min(map.getMaxZoom(), map.getZoom() + 2), { duration: 0.4 }) } }}
+      >{zoom >= map.getMaxZoom() && <Popup className="summit-map-popup"><div className="cluster-summit-list">{cluster.points.map(point => <button type="button" key={point.summit.id} onClick={() => onSelectSummit(point.summit.id)}>{point.summit.name}<Icon name="next" size={14} /></button>)}</div></Popup>}</Marker>
     })}
   </>
 }
@@ -141,6 +154,7 @@ export default function SummitMap({
   onSelectSummit: (id: string) => void
 }) {
   const labels = text[language]
+  const [controlsTarget, setControlsTarget] = useState<HTMLDivElement | null>(null)
   const points = useMemo(() => summits.flatMap(summit => {
     const coordinate = summitCoordinates[summit.id]
     if (!coordinate) return []
@@ -160,6 +174,7 @@ export default function SummitMap({
       <span className="map-zoom-hint">{language === 'es' ? 'Acerca para descubrir cada cima' : language === 'en' ? 'Zoom in to explore each summit' : 'Apropa’t per descobrir cada cim'}</span>
     </div>
     <div className="summit-map-frame">
+      <div className="summit-map-toolbar"><span>{language === 'es' ? 'Controles del mapa' : language === 'en' ? 'Map controls' : 'Controls del mapa'}</span><div ref={setControlsTarget} /></div>
       <div className="summit-map-stage">
       <MapContainer center={[42.15, 1.7]} zoom={7} minZoom={6} maxZoom={14} zoomControl={false} scrollWheelZoom={false} attributionControl>
         <TileLayer
@@ -167,7 +182,7 @@ export default function SummitMap({
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
-        <MapBehavior points={points} bounds={bounds} language={language} onSelectSummit={onSelectSummit} />
+        <MapBehavior points={points} bounds={bounds} language={language} onSelectSummit={onSelectSummit} controlsTarget={controlsTarget} />
       </MapContainer>
       </div>
       <div className="summit-map-credit">
