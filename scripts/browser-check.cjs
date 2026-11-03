@@ -6,6 +6,7 @@ const path = require('node:path')
 const assert = require('node:assert/strict')
 const catalog = require('../data/summits.json')
 const baseUrl = process.env.CHECK_URL || 'http://127.0.0.1:3000'
+const supabaseOrigin = process.env.CHECK_SUPABASE_ORIGIN || 'https://rpizylcabvqzvmdqywyp.supabase.co'
 const output = process.env.CHECK_OUTPUT || path.join(__dirname, '../.next/browser-check')
 const userId = '00000000-0000-4000-8000-000000000001'
 const user = { id: userId, aud: 'authenticated', role: 'authenticated', email: 'browser-check@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: '2026-01-01T00:00:00Z' }
@@ -36,7 +37,7 @@ async function main() {
       let testPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=', 'base64')
       await page.route('**/_next/image?*', route => route.fulfill({ contentType: 'image/png', body: testPng }))
       await page.route('**/api/summit-context?*', route => route.fulfill({ json: { description: {}, photo: null } }))
-      await page.route('https://*.supabase.co/**', async route => {
+      await page.route(`${supabaseOrigin}/**`, async route => {
         const request = route.request(), url = new URL(request.url()), method = request.method()
         const json = data => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data), headers: { 'access-control-allow-origin': '*' } })
         if (method === 'OPTIONS') return route.fulfill({ status: 204, headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' } })
@@ -192,7 +193,7 @@ async function main() {
     const guestContext = await browser.newContext({ viewport: { width: 390, height: 844 } })
     const guest = await guestContext.newPage()
     await guest.addInitScript(() => localStorage.setItem('100cimscat-language', 'es'))
-    await guest.route('https://*.supabase.co/rest/v1/summits?*', route => route.fulfill({ json: catalog }))
+    await guest.route(`${supabaseOrigin}/rest/v1/summits?*`, route => route.fulfill({ json: catalog }))
     await guest.route('**/api/summit-context?*', route => route.fulfill({ json: { description: {}, photo: null } }))
     await guest.goto(baseUrl)
     await guest.locator('.card').first().waitFor()
@@ -214,7 +215,7 @@ async function main() {
       document.cookie = `sb-rpizylcabvqzvmdqywyp-auth-token=base64-${btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
     }, session)
     let loadFails = true
-    await recovery.route('https://*.supabase.co/**', route => {
+    await recovery.route(`${supabaseOrigin}/**`, route => {
       const request = route.request(), url = new URL(request.url())
       if (url.pathname.includes('/auth/v1/user')) return route.fulfill({ json: user })
       if (url.pathname.includes('/rest/v1/summits')) return route.fulfill({ json: catalog })

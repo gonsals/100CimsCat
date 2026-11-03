@@ -6,6 +6,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const catalog = require('../data/summits.json')
 const base = process.env.CHECK_URL || 'http://127.0.0.1:3000'
+const supabaseOrigin = process.env.CHECK_SUPABASE_ORIGIN || 'https://rpizylcabvqzvmdqywyp.supabase.co'
 const output = path.join(__dirname, '../.next/product-check')
 const userId = '00000000-0000-4000-8000-000000000001'
 const user = { id: userId, aud: 'authenticated', role: 'authenticated', email: 'product-check@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: '2026-01-01T00:00:00Z' }
@@ -54,7 +55,7 @@ async function fixture(browser, width, signedIn = false) {
     const json = url.hostname === 'commons.wikimedia.org' ? { query: { pages: { 1: { imageinfo: [info] } } } } : url.searchParams.get('action') === 'wbsearchentities' ? { search: [{ id: 'Q6650' }] } : { entities: { Q6650: entity } }
     return route.fulfill({ json, headers: { 'access-control-allow-origin': '*' } })
   })
-  await page.route('https://*.supabase.co/**', async route => {
+  await page.route(`${supabaseOrigin}/**`, async route => {
     const request = route.request(), url = new URL(request.url()), method = request.method()
     const json = data => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data), headers: { 'access-control-allow-origin': '*' } })
     const failure = () => route.fulfill({ status: 503, json: { message: 'Intentional fixture failure', error: 'Unavailable' } })

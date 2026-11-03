@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { localDate, validAscentDate, type Ascent, type Summit } from '@/lib/tracker'
 import Icon from '@/components/Icon'
+import { validatePhoto } from '@/lib/ascent-photos'
 
 type Props = { summit: Summit; ascent?: Ascent; busy: boolean; busyLabel: string; feedback: string; t: (value: string) => string; onClose: () => void; onSave: (date: string, notes: string, file?: File) => Promise<void>; onDelete: () => Promise<void>; onNew: () => void }
 
@@ -39,8 +40,8 @@ export default function AscentEditor({ summit, ascent, busy, busyLabel, feedback
   }
   function chooseFile(next?: File) {
     if (!next) return
-    if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif'].includes(next.type)) { setError('Fes servir una imatge JPEG, PNG, WebP o AVIF.'); return }
-    if (next.size > 24 * 1024 * 1024) { setError('La imatge original ha de pesar menys de 24 MB per poder optimitzar-la amb seguretat.'); return }
+    const validation = validatePhoto(next)
+    if (validation) { setError(validation); return }
     setFile(next); setError('')
   }
   async function submit(event: FormEvent) {

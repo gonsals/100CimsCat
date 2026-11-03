@@ -1,5 +1,23 @@
 # Validación de funcionalidades y móvil
 
+## Sesión, carga del cuaderno y fotos — 3 de noviembre de 2026
+
+`CimTracker.tsx` pasa de 667 a 539 líneas. La suscripción de sesión vive en `use-account`, el estado del cuaderno en `use-journal`, las consultas paginadas en `journal-data` y la validación, compresión y subida de fotos en `ascent-photos`. El editor y el catálogo comparten la validación de imágenes.
+
+La respuesta inicial de autenticación no sobrescribe eventos de sesión posteriores. El cuaderno oculta datos de otra identidad durante los cambios de cuenta e ignora sus cargas y mutaciones tardías. El catálogo conserva los datos locales y termina de cargar también si una consulta rechaza la promesa.
+
+Verificación: 24 pruebas automatizadas, TypeScript y compilación de producción con 540 páginas correctos. Las cuatro pruebas nuevas usan el SDK real de Supabase con transporte HTTP simulado: 501 visitas paginadas, fallo de una página posterior, cancelación y fallo de firma de fotos sin perder visitas ni favoritos. `browser-check.cjs` pasa a 320, 375, 390, 768 y 1280 px; `product-check.cjs` completa 66 comprobaciones, incluidos reintentos de fotos sin duplicados, limpieza de subidas fallidas, galería, renovación de URL y conservación de borradores. Sin errores de JavaScript detectados. No se ejecutó axe en esta revisión.
+
+Los servicios privados se simulan contra `https://rpizylcabvqzvmdqywyp.supabase.test`, con una clave ficticia y `CHECK_SUPABASE_ORIGIN` configurado en los scripts. Los informes y capturas de esta revisión se conservan en `.npm-cache/refactor-check/`. No se han modificado datos remotos ni desplegado cambios. La compilación final se vuelve a generar con la configuración local habitual, sin las variables ficticias de las pruebas.
+
+## Retornos de acceso y lector sin conexión — 3 de noviembre de 2026
+
+El retorno de autenticación restringe `next` a rutas internas del mismo origen. Los destinos externos, relativos y los que contienen barras inversas o caracteres de control vuelven a la portada. Se conservan los parámetros y fragmentos de las rutas internas, y el retorno de error existente.
+
+El lector sin conexión tolera escapes de URL malformados, actualiza las descargas al recibir cambios de almacenamiento o restaurarse la página y vuelve a leer la lista antes de borrar. Esto evita sobrescribir cambios que otra pestaña haya guardado desde el último renderizado. Al recuperarse de almacenamiento corrupto se limpia el estado de error. La caché pública pasa a v3 para actualizar el script en instalaciones existentes.
+
+Verificación local: las 20 pruebas de `npm test`, `npm run typecheck`, la compilación de producción con 540 páginas generadas y `git diff --check` pasan. Las siete pruebas nuevas ejecutan el retorno con `NextRequest` y `NextResponse` reales y Supabase simulado, y el lector con DOM y almacenamiento simulados. No se ha ejecutado una prueba de navegador en esta revisión, ni se han modificado cuentas o datos remotos ni desplegado cambios.
+
 ## Tarjeta y menú nativo para compartir — 21 de octubre de 2026
 
 Tarjeta PNG de 1080 × 1350 px con las fuentes de la web, la silueta real del Pedraforca y sus créditos ICGC. Distingue esenciales completados, cimas únicas y visitas, incluyendo singular y plural y cifras superiores al objetivo de 100. Se comprueban visualmente tarjetas con 0, 37 y 150 esenciales y la vista previa móvil.

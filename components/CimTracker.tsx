@@ -17,6 +17,9 @@ import Journal from '@/components/Journal'
 import { SiteHeader, SiteFooter, SkipLink } from '@/components/SiteChrome'
 import Icon from '@/components/Icon'
 import { preferenceEvent } from '@/lib/use-preferences'
+import { useAccount } from '@/lib/use-account'
+import { useJournal } from '@/lib/use-journal'
+import { PhotoUploadError, persistAscentPhoto, validatePhoto } from '@/lib/ascent-photos'
 import { ascentKey, latestAscents, coordinates, defaultFilters, distanceKm, filterCatalog, friendlyDate, validAscentDate, type Ascent, type CatalogFilter, type Coordinate, type Language, type SortBy, type Summit } from '@/lib/tracker'
 import { catalogSignature, catalogStateKey, parseCatalogState } from '@/lib/catalog-state'
 import { trackerText } from '@/lib/tracker-i18n'
@@ -82,62 +85,17 @@ const translations: Record<Language, Record<string, string>> = {
 }
 
 const target = 100
-class PhotoUploadError extends Error {}
-const imageLimit = 512 * 1024
-const rawImageLimit = 24 * 1024 * 1024
-const preferredImageSize = imageLimit
-async function encodeCanvas(canvas: HTMLCanvasElement, type: string, quality: number) {
-  return new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('No s’ha pogut processar la imatge.')), type, quality)
-  })
-}
-
-async function optimizePhoto(file: File) {
-  const bitmap = await createImageBitmap(file)
-  try {
-    const maxDimension = 1440
-    const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height))
-    const canvas = document.createElement('canvas')
-    canvas.width = Math.max(1, Math.round(bitmap.width * scale))
-    canvas.height = Math.max(1, Math.round(bitmap.height * scale))
-    const context = canvas.getContext('2d', { alpha: false })
-    if (!context) throw new Error('Aquest navegador no pot processar la imatge.')
-    context.fillStyle = '#f5f4ef'
-    context.fillRect(0, 0, canvas.width, canvas.height)
-    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
-
-    let output = await encodeCanvas(canvas, 'image/webp', 0.78)
-    if (output.type !== 'image/webp') output = await encodeCanvas(canvas, 'image/jpeg', 0.78)
-    for (const quality of [0.68, 0.58, 0.48]) {
-      if (output.size <= preferredImageSize) break
-      output = await encodeCanvas(canvas, output.type, quality)
-    }
-    if (output.size > preferredImageSize) throw new Error('La imatge no es pot comprimir prou.')
-
-    const extension = output.type === 'image/webp' ? 'webp' : 'jpg'
-    const baseName = file.name.replace(/\.[^.]+$/, '') || 'foto-cim'
-    return new File([output], `${baseName}.${extension}`, {
-      type: output.type,
-      lastModified: Date.now(),
-    })
-  } finally {
-    bitmap.close()
-  }
-}
-
 export default function CimTracker() {
   const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
   const supabase = useMemo(() => configured ? createClient() : null, [configured])
   const [summits, setSummits] = useState<Summit[]>(catalogSeed as Summit[])
-  const [visits, setVisits] = useState<Ascent[]>([])
+  const { user, setUser, ready: authReady } = useAccount(supabase)
+  const { visits, setVisits, favorites, setFavorites, ready: journalReady, error: journalError, reload: reloadJournal } = useJournal(supabase, user?.id ?? null)
   const ascents = useMemo(() => latestAscents(visits), [visits])
-  const [user, setUser] = useState<{ id: string; email?: string } | null>(null)
-  const [authReady, setAuthReady] = useState(false)
   const [ready, setReady] = useState(false)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState<CatalogFilter>(defaultFilters)
   const [sortBy, setSortBy] = useState<SortBy>('name')
-  const [favorites, setFavorites] = useState<Set<string>>(new Set())
   const [origin, setOrigin] = useState<Coordinate | null>(null)
   const [originLabel, setOriginLabel] = useState('')
   const [editingSummit, setEditingSummit] = useState<Summit | null>(null)
@@ -146,9 +104,6 @@ export default function CimTracker() {
   const userIdRef = useRef<string | null>(null)
   userIdRef.current = user?.id ?? null
   const editingAscent = visits.find(visit => ascentKey(visit) === editingVisitKey)
-  const [journalReady, setJournalReady] = useState(false)
-  const [journalError, setJournalError] = useState(false)
-  const [loadVersion, setLoadVersion] = useState(0)
   const [authOpen, setAuthOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [sendingLink, setSendingLink] = useState(false)
@@ -236,79 +191,24 @@ export default function CimTracker() {
   }, [settingsOpen, profileOpen])
 
   useEffect(() => {
-    let active = true
-    if (!supabase) {
-      setSummits(catalogSeed as Summit[])
-      setReady(true)
-      setAuthReady(true)
-      return
-    }
-
-    supabase.from('summits').select('id,name,height,region,essential,url').order('name').then(({ data, error }) => {
-      if (!active) return
-      setSummits(data?.length ? data as Summit[] : catalogSeed as Summit[])
-      if (error) setNotice('No hem pogut llegir el catàleg de Supabase. Comprovarem la connexió aviat.')
-      setReady(true)
-    })
-
-    supabase.auth.getUser().then(({ data }) => {
-      if (active) { setUser(data.user ? { id: data.user.id, email: data.user.email } : null); setAuthReady(true) }
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ? { id: session.user.id, email: session.user.email } : null)
-      if (!session) { setVisits([]); setFavorites(new Set()); setJournalReady(false); setEditingSummit(null) }
-    })
-
-    return () => {
-      active = false
-      subscription.unsubscribe()
-    }
-  }, [supabase])
+    setEditingSummit(null)
+  }, [user?.id])
 
   useEffect(() => {
-    if (!supabase || !user) return
-    const currentSupabase = supabase
-    const currentUser = user
     let active = true
-    setJournalReady(false)
-    setJournalError(false)
-    setVisits([])
-    setFavorites(new Set())
-    async function loadAscents() {
-      async function loadAllVisits() {
-        const rows: Ascent[] = []
-        for (let from = 0; ; from += 500) {
-          const result = await currentSupabase.from('ascent_visits').select('id,summit_id,completed_at,photo_path,notes,created_at').eq('user_id', currentUser.id).order('completed_at', { ascending: false }).order('id').range(from, from + 499)
-          if (!active || result.error) return { data: rows, error: result.error }
-          rows.push(...result.data as Ascent[])
-          if (result.data.length < 500) return { data: rows, error: null }
-        }
-      }
-      const [{ data, error }, favoriteResult, repeatedResult] = await Promise.all([
-        currentSupabase.from('ascent_records').select('summit_id,completed_at,photo_path,notes,created_at').eq('user_id', currentUser.id),
-        currentSupabase.from('summit_favorites').select('summit_id').eq('user_id', currentUser.id),
-        loadAllVisits(),
-      ])
-      if (!active) return
-      if (error || favoriteResult.error || repeatedResult.error) {
-        setJournalError(true)
-        return
-      }
-      setFavorites(new Set((favoriteResult.data ?? []).map(row => row.summit_id)))
-      const rows = [...(data ?? []), ...(repeatedResult.data ?? [])] as Ascent[]
-      const paths = rows.flatMap(row => row.photo_path ? [row.photo_path] : [])
-      const signed = paths.length
-        ? await currentSupabase.storage.from('summit-photos').createSignedUrls(paths, 60 * 60 * 24)
-        : { data: [], error: null }
-      const urls = new Map((signed.data ?? []).map(item => [item.path, item.signedUrl]))
-      if (active) {
-        setVisits(rows.map(row => ({ ...row, photoUrl: row.photo_path ? urls.get(row.photo_path) ?? undefined : undefined })))
-        setJournalReady(true)
-      }
+    async function loadCatalog() {
+      try {
+        if (!supabase) return
+        const { data, error } = await supabase.from('summits').select('id,name,height,region,essential,url').order('name')
+        if (error) throw error
+        if (active && data?.length) setSummits(data as Summit[])
+      } catch {
+        if (active) setNotice('No hem pogut llegir el catàleg de Supabase. Comprovarem la connexió aviat.')
+      } finally { if (active) setReady(true) }
     }
-    void loadAscents().catch(() => { if (active) setJournalError(true) })
+    void loadCatalog()
     return () => { active = false }
-  }, [supabase, user?.id, loadVersion])
+  }, [supabase])
 
   const visible = useMemo(() => filterCatalog(summits, ascents, favorites, filters, search, sortBy, origin), [summits, ascents, favorites, filters, search, sortBy, origin])
   const catalogKey = catalogSignature(filters, search, sortBy, origin)
@@ -502,38 +402,10 @@ export default function CimTracker() {
     setSortBy('name')
   }
 
-  function validatePhoto(file: File) {
-    if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif'].includes(file.type)) return 'Fes servir una imatge JPEG, PNG, WebP o AVIF.'
-    if (file.size > rawImageLimit) return 'La imatge original ha de pesar menys de 24 MB per poder optimitzar-la amb seguretat.'
-    return ''
-  }
-
-  async function persistPhoto(summit: Summit, file: File, current: Ascent, accountId: string): Promise<Ascent> {
+  async function persistPhoto(summit: Summit, file: File, current: Ascent, accountId: string) {
     if (!supabase) throw new PhotoUploadError('No s’ha pogut pujar la foto. Torna-ho a provar.')
-    const validation = validatePhoto(file)
-    if (validation) throw new PhotoUploadError(validation)
-    setBusyLabel('Optimitzant…')
-    let optimized: File
-    try { optimized = await optimizePhoto(file) }
-    catch { throw new PhotoUploadError('No hem pogut llegir aquesta imatge. Prova amb un JPEG, PNG o WebP.') }
-    if (optimized.size > imageLimit) throw new PhotoUploadError('La foto encara pesa massa després d’optimitzar-la. Tria una imatge més petita.')
-    if (userIdRef.current !== accountId) throw new PhotoUploadError('No s’ha pogut pujar la foto. Torna-ho a provar.')
-    setBusyLabel('Pujant foto…')
-    const nextPath = `${accountId}/${summit.id}/${crypto.randomUUID()}.${optimized.type === 'image/webp' ? 'webp' : 'jpg'}`
-    const oldPath = current.photo_path
-    const { data: allowed, error: quotaError } = await supabase.rpc('can_upload_summit_photo', { p_file_size: optimized.size, p_replace_path: oldPath })
-    if (quotaError) throw new PhotoUploadError('Actualitza la migració de Supabase abans de pujar fotos.')
-    if (allowed !== true) throw new PhotoUploadError('Has arribat al límit de 280 MB de fotos del teu compte. Esborra fotos per continuar.')
-    const { error: uploadError } = await supabase.storage.from('summit-photos').upload(nextPath, optimized, { contentType: optimized.type, upsert: false, metadata: oldPath ? { replace_path: oldPath } : {} })
-    if (uploadError) throw new PhotoUploadError('No s’ha pogut pujar la foto. Torna-ho a provar.')
-    const { data, error } = await supabase.from(current.id ? 'ascent_visits' : 'ascent_records').update({ photo_path: nextPath }).eq('user_id', accountId).eq(current.id ? 'id' : 'summit_id', current.id ?? summit.id).select('summit_id').single()
-    if (error || !data) {
-      await supabase.storage.from('summit-photos').remove([nextPath])
-      throw new PhotoUploadError('La foto s’ha pujat, però no hem pogut desar el registre. Torna-ho a provar.')
-    }
-    const { data: signed } = await supabase.storage.from('summit-photos').createSignedUrl(nextPath, 60 * 60 * 24)
-    if (oldPath) await supabase.storage.from('summit-photos').remove([oldPath])
-    return { ...current, photo_path: nextPath, photoUrl: signed?.signedUrl }
+    return persistAscentPhoto(supabase, { summitId: summit.id, file, current, accountId,
+      isCurrentAccount: () => userIdRef.current === accountId, onStage: setBusyLabel })
   }
 
   async function uploadPhoto(summit: Summit, file?: File, selectedVisit?: Ascent) {
@@ -624,7 +496,7 @@ export default function CimTracker() {
         <ProgressShare language={language} essential={essentialDone} summits={completed.length} visits={visits.length} ready={ready && authReady && (!user || journalReady)} />
       </section>
 
-      {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={() => setLoadVersion(previous => previous + 1)}>{t('Tornar-ho a provar')}</button>}</div>}
+      {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={reloadJournal}>{t('Tornar-ho a provar')}</button>}</div>}
       {user && journalReady && <Journal summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} onRefreshPhoto={refreshPhoto} />}
 
       <section className="catalog" id="cims">

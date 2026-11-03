@@ -15,15 +15,21 @@
   for (const id of ['title', 'all', 'intro', 'warning']) document.getElementById(id).textContent = t[id]
   const container = document.getElementById('summits')
   const status = document.getElementById('status')
-  const requested = new URLSearchParams(location.search).get('cim') || (location.pathname.startsWith('/cims/') ? decodeURIComponent(location.pathname.split('/')[2]) : null)
+  let pathId = location.pathname.startsWith('/cims/') ? location.pathname.split('/')[2] : null
+  try { if (pathId) pathId = decodeURIComponent(pathId) } catch { /* A malformed URL must not prevent the reader from opening. */ }
+  const requested = new URLSearchParams(location.search).get('cim') || pathId
   const text = (tag, value, className) => { const node = document.createElement(tag); node.textContent = value; if (className) node.className = className; return node }
+  function readSummits() {
+    const stored = JSON.parse(localStorage.getItem(key) || '[]')
+    if (!Array.isArray(stored)) throw new Error('Invalid saved summits')
+    return stored.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string' && typeof item.region === 'string' && Number.isFinite(item.height))
+  }
   function render() {
     container.replaceChildren()
     try {
-      const stored = JSON.parse(localStorage.getItem(key) || '[]')
-      if (!Array.isArray(stored)) throw new Error('Invalid saved summits')
-      const all = stored.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string' && typeof item.region === 'string' && Number.isFinite(item.height))
+      const all = readSummits()
       const items = requested ? all.filter(item => item.id === requested) : all
+      status.className = ''
       status.textContent = items.length ? '' : requested ? t.missing : t.empty
       for (const item of items) {
         const card = document.createElement('article')
@@ -36,10 +42,12 @@
         const actions = document.createElement('div'); actions.className = 'actions'
         try { const url = new URL(item.url); if (url.protocol === 'https:' && (url.hostname === 'www.feec.cat' || url.hostname === 'feec.cat')) { const link = text('a', t.source); link.href = url.href; actions.append(link) } } catch { /* Invalid external URL is not linked. */ }
         const remove = text('button', t.remove); remove.type = 'button'
-        remove.addEventListener('click', () => { try { localStorage.setItem(key, JSON.stringify(all.filter(other => other.id !== item.id))); render() } catch { status.textContent = t.error } })
+        remove.addEventListener('click', () => { try { localStorage.setItem(key, JSON.stringify(readSummits().filter(other => other.id !== item.id))); render() } catch { status.textContent = t.error; status.className = 'error' } })
         actions.append(remove); card.append(actions); container.append(card)
       }
     } catch { status.textContent = t.error; status.className = 'error' }
   }
+  window.addEventListener('storage', event => { if (event.key === key || event.key === null) render() })
+  window.addEventListener('pageshow', render)
   render()
 })()
