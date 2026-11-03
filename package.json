@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test tests/tracker.test.cjs tests/mountain-art.test.cjs tests/auth-callback.test.cjs tests/offline.test.cjs tests/journal-data.test.cjs",
-    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/tracker.test.cjs tests/mountain-art.test.cjs tests/auth-callback.test.cjs tests/auth-actions.test.cjs tests/offline.test.cjs tests/journal-data.test.cjs",
+    "typecheck": "next typegen && tsc --noEmit",
+    "check:auth": "node scripts/auth-check.cjs",
     "art:generate": "node scripts/generate-mountain-art.cjs"
   },
   "dependencies": {

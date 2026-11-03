@@ -2,6 +2,7 @@ import type { Language } from './tracker'
 
 // Catalan is the source language, matching the existing catalogue and interface.
 const messages: Record<string, [string, string]> = {
+  'Has tancat la sessió en aquest dispositiu. No hem pogut confirmar la sortida dels altres dispositius.': ['Has cerrado la sesión en este dispositivo. No hemos podido confirmar el cierre en los demás dispositivos.', 'You have signed out on this device. We could not confirm sign-out on your other devices.'],
   'Relleu il·lustrat': ['Relieve ilustrado', 'Illustrated terrain'],
   'Il·lustracions basades en el relleu real: ICGC i Mapzen.': ['Ilustraciones basadas en el relieve real: ICGC y Mapzen.', 'Illustrations based on real terrain: ICGC and Mapzen.'],
   'Imatge del cim': ['Imagen de la cima', 'Summit image'],

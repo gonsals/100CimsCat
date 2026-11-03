@@ -107,6 +107,7 @@ export default function CimTracker() {
   const [authOpen, setAuthOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [sendingLink, setSendingLink] = useState(false)
+  const [emailError, setEmailError] = useState('')
   const [signingInWithGoogle, setSigningInWithGoogle] = useState(false)
   const [googleError, setGoogleError] = useState('')
   const [notice, setNotice] = useState('')
@@ -270,37 +271,47 @@ export default function CimTracker() {
 
   async function sendMagicLink(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (sendingLink || signingInWithGoogle) return
     if (!supabase) {
       setNotice('Falta configurar Supabase. Revisa les variables del fitxer .env.local.')
       return
     }
     setSendingLink(true)
     setNotice('')
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: getAuthCallbackUrl() },
-    })
-    setSendingLink(false)
-    setNotice(error ? 'No s’ha pogut enviar l’enllaç. Revisa el correu i torna-ho a provar.' : 'T’hem enviat un enllaç d’accés al correu. Obre’l per continuar.')
-    if (!error) setAuthOpen(false)
+    setEmailError('')
+    setGoogleError('')
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: getAuthCallbackUrl() },
+      })
+      if (error) throw error
+      setNotice('T’hem enviat un enllaç d’accés al correu. Obre’l per continuar.')
+      setAuthOpen(false)
+    } catch {
+      setEmailError('No s’ha pogut enviar l’enllaç. Revisa el correu i torna-ho a provar.')
+    } finally { setSendingLink(false) }
   }
 
   async function signInWithGoogle() {
+    if (signingInWithGoogle || sendingLink) return
     if (!supabase) {
       setNotice('Falta configurar Supabase. Revisa les variables del fitxer .env.local.')
       return
     }
     setSigningInWithGoogle(true)
     setGoogleError('')
+    setEmailError('')
     setNotice('')
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: getAuthCallbackUrl() },
-    })
-    if (error) {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: getAuthCallbackUrl() },
+      })
+      if (error) throw error
+    } catch {
       setGoogleError(t('No s’ha pogut iniciar sessió amb Google. Revisa que el proveïdor estigui activat a Supabase i torna-ho a provar.'))
-      setSigningInWithGoogle(false)
-    }
+    } finally { setSigningInWithGoogle(false) }
   }
 
   function editAscent(summit: Summit, visit: Ascent | null | undefined = ascents.get(summit.id)) {
@@ -447,12 +458,29 @@ export default function CimTracker() {
   }, [authReady, ready, user?.id, journalReady])
 
   async function signOut() {
-    if (!supabase) return
+    if (!supabase || signingOut) return
     setSigningOut(true)
-    const { error } = await supabase.auth.signOut()
-    setSigningOut(false)
-    setProfileOpen(false)
-    setNotice(error ? t('No s’ha pogut tancar la sessió. Torna-ho a provar.') : 'Has tancat la sessió.')
+    setNotice('')
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+      setProfileOpen(false)
+      setNotice('Has tancat la sessió.')
+    } catch {
+      // Some SDK failures still remove the local session and emit SIGNED_OUT.
+      let locallySignedOut = false
+      try {
+        const { data, error } = await supabase.auth.getSession()
+        locallySignedOut = !error && !data.session
+      } catch { /* Keep the retry message if local session state is unavailable. */ }
+      if (locallySignedOut) {
+        setUser(null)
+        setProfileOpen(false)
+        setNotice('Has tancat la sessió en aquest dispositiu. No hem pogut confirmar la sortida dels altres dispositius.')
+      } else {
+        setNotice(t('No s’ha pogut tancar la sessió. Torna-ho a provar.'))
+      }
+    } finally { setSigningOut(false) }
   }
 
   return (
@@ -533,7 +561,7 @@ export default function CimTracker() {
       </main><SiteFooter language={language} />
 
       {deleteOpen && <div className="modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget&&!deletingAccount)setDeleteOpen(false)}}><section className="auth-modal delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-title"><button className="modal-close" disabled={deletingAccount} onClick={()=>setDeleteOpen(false)} aria-label={t('Tancar')}>×</button><p className="eyebrow">100CIMS CAT</p><h2 id="delete-title">{language==='es'?'Borrar cuenta para siempre':language==='en'?'Permanently delete account':'Esborrar el compte definitivament'}</h2><p>{language==='es'?'Se eliminarán tu cuenta, ascensiones y todas tus fotos privadas. Esta acción no se puede deshacer.':language==='en'?'Your account, ascents and all private photos will be deleted. This cannot be undone.':'S’eliminaran el compte, les ascensions i totes les fotos privades. Aquesta acció no es pot desfer.'}</p><label className="confirm-delete-label" htmlFor="delete-confirm">{language==='es'?'Escribe ELIMINAR para confirmar':language==='en'?'Type ELIMINAR to confirm':'Escriu ELIMINAR per confirmar'}</label><input id="delete-confirm" value={deleteConfirmation} onChange={event=>setDeleteConfirmation(event.target.value)} autoComplete="off" /><button className="delete-confirm-button" disabled={deleteConfirmation!=='ELIMINAR'||deletingAccount} onClick={()=>void deleteAccount()}>{deletingAccount?'…':language==='es'?'Borrar cuenta y fotos':language==='en'?'Delete account and photos':'Esborrar compte i fotos'}</button></section></div>}
-      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label={t('Tancar')}>×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><button type="button" className="google-signin" onClick={() => void signInWithGoogle()} disabled={signingInWithGoogle}>{signingInWithGoogle ? '…' : <><span className="google-mark" aria-hidden="true">G</span>{t('Continua amb Google')}</>}</button>{googleError && <p className="google-error" role="alert">{googleError}</p>}<div className="auth-divider"><span>{t('o bé')}</span></div><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} /><button className="mark-button" disabled={sendingLink}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
+      {authOpen && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setAuthOpen(false) }}><section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button className="modal-close" onClick={() => setAuthOpen(false)} aria-label={t('Tancar')}>×</button><p className="eyebrow">{t('El teu quadern, sempre amb tu.')}</p><h2 id="auth-title">{t('Entra al teu camí')}</h2><p>{t('T’enviarem un enllaç segur al correu per guardar les ascensions i les fotos al teu compte.')}</p><button type="button" className="google-signin" onClick={() => void signInWithGoogle()} disabled={signingInWithGoogle || sendingLink}>{signingInWithGoogle ? '…' : <><span className="google-mark" aria-hidden="true">G</span>{t('Continua amb Google')}</>}</button>{googleError && <p className="google-error" role="alert">{googleError}</p>}<div className="auth-divider"><span>{t('o bé')}</span></div><form onSubmit={sendMagicLink}><label htmlFor="email">{t('Correu electrònic')}</label><input id="email" type="email" required autoComplete="email" placeholder="tu@exemple.cat" value={email} onChange={event => setEmail(event.target.value)} disabled={sendingLink || signingInWithGoogle} aria-invalid={Boolean(emailError)} aria-describedby={emailError ? "auth-email-error" : undefined} />{emailError && <p id="auth-email-error" className="form-error" role="alert">{t(emailError)}</p>}<button className="mark-button" disabled={sendingLink || signingInWithGoogle}>{sendingLink ? t('Enviant…') : t('Envia’m l’enllaç d’accés')}</button></form><small>{t('Les teves fotos són privades i només les pot veure el teu compte.')}</small></section></div>}
     </div>
   )
 }
