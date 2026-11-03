@@ -43,6 +43,10 @@ Les migracions `journal_notes_and_favorites` i `restrict_favorite_privileges` af
 
 Verificació automatitzada: `npm test` comprova el quadern, les il·lustracions, els retorns d'autenticació i el lector sense connexió; `npm run typecheck` comprova TypeScript. Els retorns d'autenticació només accepten rutes internes. El lector tolera URL malformades i actualitza les descàrregues quan canvien en una altra pestanya o es restaura la pàgina. Verificació del navegador: `node scripts/browser-check.cjs` amb Playwright instal·lat (o `PLAYWRIGHT_MODULE` apuntant al paquet) i `CHECK_URL` apuntant al servidor. Les proves del navegador simulen el compte i el quadern sense modificar dades personals; generen captures i un informe a `.next/browser-check`.
 
+GitHub Actions executa `npm ci`, `npm test`, `npm run typecheck` i `npm run build` a cada pull request i en publicar a `main`, amb Node.js 24 i sense secrets. `typecheck` genera abans els tipus de Next.js perquè també funcioni en una còpia acabada de clonar. Les accions estan fixades a commits concrets i el workflow només té permisos de lectura del repositori. Les proves de navegador es continuen executant per separat.
+
+`npm run check:auth` comprova reintents de correu i Google després d'errors i excepcions, controls desactivats durant l'enviament i tancament de sessió a 320, 390 i 1280 px. Necessita Playwright instal·lat o `PLAYWRIGHT_MODULE`, igual que les altres proves de navegador. Per defecte espera un servidor a `http://127.0.0.1:3101` compilat amb `NEXT_PUBLIC_SUPABASE_URL=https://auth-check.supabase.test` i una clau publicable fictícia. `CHECK_URL` i `CHECK_SUPABASE_ORIGIN` permeten canviar aquests valors; la cookie de prova es deriva de l'origen configurat. Totes les peticions privades són simulades i no s'envien correus. Els informes i captures es desen a `.npm-cache/auth-check`. Després de la comprovació cal recompilar amb la configuració habitual.
+
 `node scripts/improvements-check.cjs` comprova tipografies, blocs del catàleg, fitxes públiques, restauració del llistat i mapa, i el lector amb el navegador sense connexió. Genera captures i un informe a `.next/improvements-check`. Les proves SQL `tests/ascent-visits-policy.sql` i `tests/visit-photo-quota.sql` verifiquen l’aïllament entre comptes i les quotes de substitució de fotos; totes les dades de prova es reverteixen.
 
 `node scripts/product-check.cjs` verifica el formulari amb fallades de pujada i d’enllaç de foto, reintents sense duplicats, galeria, filtre anual, ampliació i focus, fonts de les imatges, navegació, contacte i 404 a 320, 390 i 1280 px. Amb `AXE_SCRIPT` apuntant a `axe-core@4.14.0/axe.min.js`, comprova també les regles WCAG A/AA automàtiques. La verificació automàtica no substitueix una auditoria manual completa. El compte, les dades i les pujades d’aquestes proves són simulats; els informes i captures es guarden a `.next/product-check`.
@@ -53,7 +57,7 @@ Verificació automatitzada: `npm test` comprova el quadern, les il·lustracions,
 
 ## Configuració local
 
-Requereix Bun i Node.js 20.9 o posterior. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase. Per activar l'esborrat del compte, configura `SUPABASE_SERVICE_ROLE_KEY` només com a variable de servidor local/Vercel; no la pugis al repo. Els retorns d'autenticació es construeixen amb l'origen del navegador.
+Requereix Node.js 22 o posterior per les dependències de Supabase; la CI utilitza Node.js 24. Pots instal·lar les dependències amb `npm ci` o amb Bun. Copia `.env.example` a `.env.local` i afegeix-hi la URL i la clau publicable del teu projecte Supabase. Per activar l'esborrat del compte, configura `SUPABASE_SERVICE_ROLE_KEY` només com a variable de servidor local/Vercel; no la pugis al repo. Els retorns d'autenticació es construeixen amb l'origen del navegador.
 
 ```sh
 bun install

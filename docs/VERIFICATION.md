@@ -1,5 +1,13 @@
 # Validación de funcionalidades y móvil
 
+## Validación automática y fallos de autenticación — 3 de noviembre de 2026
+
+El workflow `.github/workflows/ci.yml` ejecuta instalación desde el lockfile, pruebas, TypeScript y compilación de producción en pull requests y pushes a `main`, con Node.js 24, acciones fijadas a commits, permisos de lectura y sin secretos de Supabase. `typecheck` genera primero los tipos y `next-env.d.ts` mediante `next typegen`, de forma que funciona en instalaciones limpias.
+
+Correo, Google y cierre de sesión manejan errores devueltos y excepciones inesperadas, liberan el estado de espera y evitan peticiones duplicadas. El error de correo aparece dentro del diálogo, asociado al campo, conservando la dirección escrita. Si falla el cierre remoto después de que Supabase haya eliminado la sesión local, se informa de ambas circunstancias y se oculta el cuaderno. Si la sesión local sigue abierta, se permite reintentar.
+
+Verificación local: 36 pruebas automatizadas correctas, incluidos doce casos nuevos de autenticación; TypeScript y compilación de 540 páginas correctos. `npm run check:auth` pasa a 320, 390 y 1280 px con el SDK real, peticiones privadas simuladas y excepciones inducidas en WebCrypto: errores de Google y correo, reintentos, correo conservado, controles desactivados mientras se espera, fallo de revocación remota y cierre correcto. Sin errores de JavaScript ni desbordamientos detectados; captura móvil revisada. Informes en `.npm-cache/auth-check/`. No se ejecutó axe ni se modificaron cuentas reales. El workflow de GitHub se comprueba por separado en el PR; las pruebas de navegador todavía no forman parte de la CI.
+
 ## Sesión, carga del cuaderno y fotos — 3 de noviembre de 2026
 
 `CimTracker.tsx` pasa de 667 a 539 líneas. La suscripción de sesión vive en `use-account`, el estado del cuaderno en `use-journal`, las consultas paginadas en `journal-data` y la validación, compresión y subida de fotos en `ascent-photos`. El editor y el catálogo comparten la validación de imágenes.
