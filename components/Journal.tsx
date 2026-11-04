@@ -4,10 +4,13 @@ import { useMemo, useState } from 'react'
 import { ascentKey, friendlyDate, journalCsv, regionsOf, type Ascent, type Language, type Summit } from '@/lib/tracker'
 import PhotoViewer, { PrivatePhoto } from '@/components/PhotoViewer'
 import Icon from '@/components/Icon'
+import JournalImport from '@/components/JournalImport'
+import type { ImportPayload } from '@/lib/journal-import'
+import type { ImportResult } from '@/lib/trip-planning'
 
-type Props = { summits: Summit[]; ascents: Map<string, Ascent>; visits: Ascent[]; favorites: Set<string>; language: Language; t: (value: string) => string; onEdit: (summit: Summit, ascent: Ascent) => void; onRefreshPhoto: (ascent: Ascent) => Promise<void> }
+type Props = { summits: Summit[]; ascents: Map<string, Ascent>; visits: Ascent[]; favorites: Set<string>; language: Language; t: (value: string) => string; onEdit: (summit: Summit, ascent: Ascent) => void; onRefreshPhoto: (ascent: Ascent) => Promise<void>; onImport: (rows: ImportPayload[]) => Promise<ImportResult> }
 
-export default function Journal({ summits, ascents, visits, favorites, language, t, onEdit, onRefreshPhoto }: Props) {
+export default function Journal({ summits, ascents, visits, favorites, language, t, onEdit, onRefreshPhoto, onImport }: Props) {
   const [year, setYear] = useState('')
   const [limit, setLimit] = useState(8)
   const [view, setView] = useState<'history' | 'gallery'>('history')
@@ -44,7 +47,7 @@ export default function Journal({ summits, ascents, visits, favorites, language,
   }
 
   return <section className="journal" id="quadern" aria-labelledby="journal-title">
-    <div className="journal-heading"><div><p className="eyebrow">{t('El meu quadern')}</p><h2 id="journal-title">{t('Historial i estadístiques')}</h2></div><button type="button" className="secondary-button" disabled={!ascents.size && !favorites.size} onClick={exportCsv}><Icon name="down" />{t('Exportar CSV')}</button></div>
+    <div className="journal-heading"><div><p className="eyebrow">{t('El meu quadern')}</p><h2 id="journal-title">{t('Historial i estadístiques')}</h2></div><div className="journal-file-actions"><JournalImport summits={summits} visits={visits} favorites={favorites} language={language} onImport={onImport} /><button type="button" className="secondary-button" disabled={!ascents.size && !favorites.size} onClick={exportCsv}><Icon name="down" />{t('Exportar CSV')}</button></div></div>
     <p className="field-hint">{t('El CSV inclou les ascensions, les notes i els preferits; les fotos es queden al compte.')}</p>
     <p className="journal-totals"><strong>{visits.length}</strong> {t(visits.length === 1 ? 'ascensió' : 'ascensions')} · <strong>{ascents.size}</strong> {t(ascents.size === 1 ? 'cim diferent' : 'cims diferents')}<span>{t('Cada cim compta una sola vegada al repte.')}</span></p>
     <div className="journal-stats">

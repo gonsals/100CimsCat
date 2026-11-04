@@ -14,6 +14,10 @@ import SummitDetailsModal from '@/components/SummitDetailsModal'
 import CatalogFilters from '@/components/CatalogFilters'
 import AscentEditor from '@/components/AscentEditor'
 import Journal from '@/components/Journal'
+import TripPlanner from '@/components/TripPlanner'
+import { importJournal } from '@/lib/trip-planning'
+import { loadJournal } from '@/lib/journal-data'
+import type { ImportPayload } from '@/lib/journal-import'
 import { SiteHeader, SiteFooter, SkipLink } from '@/components/SiteChrome'
 import Icon from '@/components/Icon'
 import { preferenceEvent } from '@/lib/use-preferences'
@@ -483,6 +487,21 @@ export default function CimTracker() {
     } finally { setSigningOut(false) }
   }
 
+  async function importAscents(rows: ImportPayload[]) {
+    if (!supabase || !user || !journalReady || busyId) throw new Error('Journal unavailable')
+    const accountId = user.id
+    setBusyId('csv-import')
+    try {
+      const result = await importJournal(supabase, rows, accountId)
+      // Refresh even on a successful retry: the previous response may have been
+      // lost after the transaction committed, and that retry adds no new rows.
+      const fresh = await loadJournal(supabase, accountId, () => userIdRef.current === accountId)
+      if (!fresh) throw new Error('Account changed')
+      setVisits(fresh.visits); setFavorites(fresh.favorites)
+      return result
+    } finally { setBusyId(null) }
+  }
+
   return (
     <div className="shell"><SkipLink language={language} />
       <SiteHeader language={language} onJournal={() => { if (!user) setAuthOpen(true); else document.getElementById('quadern')?.scrollIntoView() }}>
@@ -525,7 +544,7 @@ export default function CimTracker() {
       </section>
 
       {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={reloadJournal}>{t('Tornar-ho a provar')}</button>}</div>}
-      {user && journalReady && <Journal summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} onRefreshPhoto={refreshPhoto} />}
+      {user && journalReady && <><Journal summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} onRefreshPhoto={refreshPhoto} onImport={importAscents} />{supabase && <TripPlanner key={user.id} supabase={supabase} userId={user.id} summits={summits} ascents={ascents} language={language} onSummit={id => setSelectedSummit(summits.find(summit => summit.id === id) ?? null)} />}</>}
 
       <section className="catalog" id="cims">
         <div className="section-heading"><div><p className="eyebrow">{t('EL TEU CATÀLEG')}</p><h2>{t('Tria el pròxim cim')}</h2></div><div className="catalog-heading-actions"><span className="catalog-count"><b>{visible.length}</b> {language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes'}</span><div className="catalog-view-toggle" role="group" aria-label={language === 'es' ? 'Vista del catálogo' : language === 'en' ? 'Catalogue view' : 'Vista del catàleg'}><button type="button" className={catalogView === 'list' ? 'active' : ''} aria-pressed={catalogView === 'list'} onClick={() => setCatalogView('list')}><Icon name="grid" size={16} />{language === 'es' ? 'Lista' : language === 'en' ? 'List' : 'Llista'}</button><button type="button" className={catalogView === 'map' ? 'active' : ''} aria-pressed={catalogView === 'map'} onClick={() => setCatalogView('map')}><Icon name="map" size={16} />{language === 'es' ? 'Mapa' : language === 'en' ? 'Map' : 'Mapa'}</button></div></div></div>

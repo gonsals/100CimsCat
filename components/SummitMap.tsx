@@ -65,12 +65,13 @@ function makeClusters(points: SummitPoint[], zoom: number): Cluster[] {
   })
 }
 
-function MapBehavior({ points, bounds, language, onSelectSummit, controlsTarget }: { points: SummitPoint[]; bounds: L.LatLngBounds | null; language: Language; onSelectSummit: (id: string) => void; controlsTarget: HTMLDivElement | null }) {
+function MapBehavior({ points, bounds, language, onSelectSummit, controlsTarget, rememberPosition }: { points: SummitPoint[]; bounds: L.LatLngBounds | null; language: Language; onSelectSummit: (id: string) => void; controlsTarget: HTMLDivElement | null; rememberPosition: boolean }) {
   const map = useMap()
   const [zoom, setZoom] = useState(map.getZoom())
   const previousPoints = useRef('')
   const pointIds = points.map(point => point.summit.id).sort().join('|')
   const savePosition = () => {
+    if (!rememberPosition) return
     const center = map.getCenter()
     try { sessionStorage.setItem('100cimscat-map-v1', JSON.stringify({ version: 1, points: pointIds, lat: center.lat, lng: center.lng, zoom: map.getZoom() })) } catch { /* Map remains usable without storage. */ }
   }
@@ -80,7 +81,7 @@ function MapBehavior({ points, bounds, language, onSelectSummit, controlsTarget 
     if (!bounds || !pointIds || previousPoints.current === pointIds) return
     previousPoints.current = pointIds
     try {
-      const saved = JSON.parse(sessionStorage.getItem('100cimscat-map-v1') ?? 'null')
+      const saved = rememberPosition ? JSON.parse(sessionStorage.getItem('100cimscat-map-v1') ?? 'null') : null
       if (saved?.version === 1 && saved.points === pointIds && Number.isFinite(saved.lat) && Math.abs(saved.lat) <= 90 && Number.isFinite(saved.lng) && Math.abs(saved.lng) <= 180 && Number.isFinite(saved.zoom) && saved.zoom >= 6 && saved.zoom <= 14) {
         map.setView([saved.lat, saved.lng], saved.zoom, { animate: false })
         setZoom(saved.zoom)
@@ -88,7 +89,7 @@ function MapBehavior({ points, bounds, language, onSelectSummit, controlsTarget 
       }
     } catch { /* Use the catalogue bounds for invalid saved positions. */ }
     map.fitBounds(bounds, { padding: [26, 26], maxZoom: 8, animate: false })
-  }, [bounds, map, pointIds])
+  }, [bounds, map, pointIds, rememberPosition])
 
   const clusters = useMemo(() => makeClusters(points, zoom), [points, zoom])
   const labels = text[language]
@@ -147,11 +148,13 @@ export default function SummitMap({
   ascents,
   language,
   onSelectSummit,
+  rememberPosition = true,
 }: {
   summits: Summit[]
   ascents: Map<string, { completed_at: string }>
   language: Language
   onSelectSummit: (id: string) => void
+  rememberPosition?: boolean
 }) {
   const labels = text[language]
   const [controlsTarget, setControlsTarget] = useState<HTMLDivElement | null>(null)
@@ -182,7 +185,7 @@ export default function SummitMap({
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
-        <MapBehavior points={points} bounds={bounds} language={language} onSelectSummit={onSelectSummit} controlsTarget={controlsTarget} />
+        <MapBehavior points={points} bounds={bounds} language={language} onSelectSummit={onSelectSummit} controlsTarget={controlsTarget} rememberPosition={rememberPosition} />
       </MapContainer>
       </div>
       <div className="summit-map-credit">
