@@ -128,6 +128,7 @@ async function main() {
       await noOverflow(page)
       await page.locator('.trip-planner').screenshot({path:path.join(output,`trip-list-${width}.png`)})
 
+      await page.locator('.journal-tools > summary').click()
       await page.getByRole('button',{name:'Importar CSV',exact:true}).click()
       dialog=page.locator('.feature-dialog')
       await dialog.getByLabel('Archivo CSV',{exact:true}).setInputFiles({name:'visits.csv',mimeType:'text/csv',buffer:Buffer.from(csv)})
