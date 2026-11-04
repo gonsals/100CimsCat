@@ -1,7 +1,7 @@
-// Only public summit information is saved. Auth, API responses and private photos
-// are never intercepted or cached by this worker.
-const CACHE = '100cimscat-offline-v3'
-const READER = ['/offline.html', '/offline.js', '/icon.svg']
+// The cache contains only public assets. Opt-in pending notes live separately
+// in account-bound IndexedDB, never in the service worker cache.
+const CACHE = '100cimscat-offline-v4'
+const READER = ['/offline.html', '/offline.js', '/offline-journal.js', '/journal-store.js', '/summits-catalog.json', '/icon.svg']
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(READER)).then(() => self.skipWaiting()))

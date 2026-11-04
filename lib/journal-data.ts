@@ -4,7 +4,7 @@ import type { Ascent } from '@/lib/tracker'
 export type JournalData = { visits: Ascent[]; favorites: Set<string> }
 
 // Stop paginating after the component has left or the account has changed.
-export async function loadJournal(supabase: SupabaseClient, userId: string, isActive: () => boolean): Promise<JournalData | null> {
+export async function loadJournal(supabase: SupabaseClient, userId: string, isActive: () => boolean, includePhotoUrls = true): Promise<JournalData | null> {
   async function loadRepeatedVisits() {
     const rows: Ascent[] = []
     for (let from = 0; isActive(); from += 500) {
@@ -28,7 +28,7 @@ export async function loadJournal(supabase: SupabaseClient, userId: string, isAc
   if (first.error || favorites.error) throw first.error ?? favorites.error
   const visits = [...(first.data ?? []), ...repeated] as Ascent[]
   const paths = visits.flatMap(visit => visit.photo_path ? [visit.photo_path] : [])
-  const signed = paths.length
+  const signed = includePhotoUrls && paths.length
     ? await supabase.storage.from('summit-photos').createSignedUrls(paths, 60 * 60 * 24)
     : { data: [] }
   if (!isActive()) return null
