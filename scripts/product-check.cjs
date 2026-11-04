@@ -268,7 +268,7 @@ async function main() {
       assert.equal(await page.locator('.photo-gallery figure').count(), 1)
       await page.getByRole('button', { name: 'Limpiar búsqueda', exact: true }).click()
       await check(page, `simple-journal-${width}`)
-      report.push({ width, photoRetryWithoutDuplicates: true, failedPhotoLinkCleanup: true, galleryIncludesRepeatedVisits: true, dateFilterAndNavigation: true, refreshPrivateUrl: true, draftProtectionAndFocus: true })
+      report.push({ width, photoRetryWithoutDuplicates: true, failedPhotoLinkCleanup: true, galleryIncludesRepeatedVisits: true, dateFilterAndNavigation: true, refreshPrivateUrl: true, draftProtectionAndFocus: true, quickRecordPreservesPreviousVisits: true, journalSearchAndYear: true })
       await context.close()
     }
     assert.deepEqual(errors, [])
