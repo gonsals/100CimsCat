@@ -37,7 +37,11 @@ export default function OfflineJournal({
     [message, setMessage] = useState(''),
     [summit, setSummit] = useState(summits[0]?.id ?? ''),
     [date, setDate] = useState(localDate()),
-    [notes, setNotes] = useState('')
+    [notes, setNotes] = useState(''),
+    [expanded, setExpanded] = useState(false)
+  useEffect(() => {
+    if (rows.length) setExpanded(true)
+  }, [rows.length])
   const active = useRef(true),
     syncing = useRef(false),
     refresh = useRef(onRefresh)
@@ -142,105 +146,117 @@ export default function OfflineJournal({
     }
   }
   return (
-    <section className="mountain-panel" aria-label={t('offline')}>
-      <h2>{t('offline')}</h2>
-      <p className="field-hint">{t('local')}</p>
-      {!enabled ? (
-        <button
-          className="secondary-button"
-          disabled={busy}
-          onClick={() => void enable()}
-        >
-          {t('enable')}
-        </button>
-      ) : (
-        <details>
-          <summary>{t('queue')}</summary>
-          <div className="mountain-form">
-            <label>
-              {t('summit')}
-              <select
-                aria-label={t('summit')}
-                value={summit}
-                disabled={busy}
-                onChange={(e) => setSummit(e.target.value)}
-              >
-                {summits.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              {t('date')}
-              <input
-                aria-label={t('date')}
-                type="date"
-                value={date}
-                max={localDate()}
-                disabled={busy}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </label>
-            <label>
-              {t('notes')}
-              <textarea
-                aria-label={t('notes')}
-                maxLength={4000}
-                value={notes}
-                disabled={busy}
-                onChange={(e) => setNotes(e.target.value)}
-              />
-            </label>
-            <button
-              className="primary-button"
-              type="button"
-              disabled={busy || !summit}
-              onClick={() => void save()}
-            >
-              {t('queue')}
-            </button>
-          </div>
-          <a href="/offline.html">{t('offline')} →</a>
-        </details>
-      )}
-      <p>
-        {t('pending')}: <strong>{rows.length}</strong>
-      </p>
-      {rows.length > 0 && (
-        <>
+    <section className="offline-journal" aria-label={t('offline')}>
+      <details
+        open={expanded}
+        onToggle={(event) => setExpanded(event.currentTarget.open)}
+      >
+        <summary>
+          {t('offline')}
+          {rows.length > 0 && (
+            <span className="pending-count">{rows.length}</span>
+          )}
+        </summary>
+        <p className="field-hint">{t('local')}</p>
+        {!enabled ? (
           <button
             className="secondary-button"
             disabled={busy}
-            onClick={() => void sync()}
+            onClick={() => void enable()}
           >
-            {busy ? '…' : t('sync')}
+            {t('enable')}
           </button>
-          <ul className="pending-visits">
-            {rows.map((row) => (
-              <li key={row.id}>
-                <span>
-                  {summits.find((s) => s.id === row.summit_id)?.name} ·{' '}
-                  {row.completed_at}
-                </span>
-                <button
-                  className="secondary-button"
+        ) : (
+          <details>
+            <summary>{t('queue')}</summary>
+            <div className="mountain-form">
+              <label>
+                {t('summit')}
+                <select
+                  aria-label={t('summit')}
+                  value={summit}
                   disabled={busy}
-                  onClick={() =>
-                    void removePending(row.id)
-                      .then(read)
-                      .catch(() => setMessage('storageError'))
-                  }
+                  onChange={(e) => setSummit(e.target.value)}
                 >
-                  {t('remove')}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-      {message && <p role="status">{t(message as Parameters<typeof t>[0])}</p>}
+                  {summits.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                {t('date')}
+                <input
+                  aria-label={t('date')}
+                  type="date"
+                  value={date}
+                  max={localDate()}
+                  disabled={busy}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+              </label>
+              <label>
+                {t('notes')}
+                <textarea
+                  aria-label={t('notes')}
+                  maxLength={4000}
+                  value={notes}
+                  disabled={busy}
+                  onChange={(e) => setNotes(e.target.value)}
+                />
+              </label>
+              <button
+                className="primary-button"
+                type="button"
+                disabled={busy || !summit}
+                onClick={() => void save()}
+              >
+                {t('queue')}
+              </button>
+            </div>
+            <a href="/offline.html">{t('offline')} →</a>
+          </details>
+        )}
+        <p>
+          {t('pending')}: <strong>{rows.length}</strong>
+        </p>
+        {rows.length > 0 && (
+          <>
+            <button
+              className="secondary-button"
+              disabled={busy}
+              onClick={() => void sync()}
+            >
+              {busy ? '…' : t('sync')}
+            </button>
+            <ul className="pending-visits">
+              {rows.map((row) => (
+                <li key={row.id}>
+                  <span>
+                    {summits.find((s) => s.id === row.summit_id)?.name} ·{' '}
+                    {row.completed_at}
+                  </span>
+                  <button
+                    className="secondary-button"
+                    disabled={busy}
+                    onClick={() =>
+                      void removePending(row.id)
+                        .then(read)
+                        .catch(() => setMessage('storageError'))
+                    }
+                  >
+                    {t('remove')}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {message && (
+          <p role="status">{t(message as Parameters<typeof t>[0])}</p>
+        )}
+      </details>
     </section>
   )
 }

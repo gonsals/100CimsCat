@@ -132,6 +132,7 @@ try {
     }
     form.onsubmit = async (event) => {
       event.preventDefault()
+      status.textContent = ''
       button.disabled = true
       try {
         const value = date.value,

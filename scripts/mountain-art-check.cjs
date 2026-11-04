@@ -23,7 +23,7 @@ async function main() {
       await page.route('**/api/summit-context?*', route => route.fulfill({ json: { description: {}, photo: null } }))
       await page.route('https://*.tile.openstreetmap.org/**', route => route.abort())
       await page.goto(base)
-      await page.getByRole('searchbox').fill('pedraforca')
+      await page.locator('#cims').getByRole('searchbox').fill('pedraforca')
       assert.equal(await page.locator('.card').count(), 2)
       const card = page.locator('.card').first()
       await card.scrollIntoViewIfNeeded()

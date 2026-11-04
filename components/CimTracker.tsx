@@ -14,6 +14,7 @@ import SummitDetailsModal from '@/components/SummitDetailsModal'
 import CatalogFilters from '@/components/CatalogFilters'
 import AscentEditor from '@/components/AscentEditor'
 import Journal from '@/components/Journal'
+import QuickRecord from '@/components/QuickRecord'
 import TripPlanner from '@/components/TripPlanner'
 import OfflineJournal from '@/components/OfflineJournal'
 import {getOwner,putPending} from '@/public/journal-store'
@@ -550,7 +551,7 @@ export default function CimTracker() {
       </SiteHeader><main id="main-content" tabIndex={-1}>
 
       <section className="hero" id="inici">
-        <div className="hero-copy"><p className="eyebrow">{t('EL TEU QUADERN DE MUNTANYA')}</p><h1>{t('Cada cim, una')}<br /><em>{t('història.')}</em></h1><p className="intro">{t('Guarda els teus records i descobreix fins on t’ha portat el camí.')}</p><div className="hero-actions"><a className="primary-button" href="#cims">{t('Explorar els cims')}<Icon name="down" /></a><a className="offline-reader-link" href="/offline.html">{t('Fitxes descarregades')}</a></div></div>
+        <div className="hero-copy"><p className="eyebrow">{t('EL TEU QUADERN DE MUNTANYA')}</p><h1>{t('Cada cim, una')}<br /><em>{t('història.')}</em></h1><p className="intro">{t('Guarda els teus records i descobreix fins on t’ha portat el camí.')}</p><div className="hero-actions">{user ? <QuickRecord key={user.id} summits={summits} visits={visits} language={language} disabled={!journalReady || Boolean(busyId)} onSelect={summit => editAscent(summit, null)} /> : <a className="primary-button" href="#cims">{t('Explorar els cims')}<Icon name="down" /></a>}<a className="offline-reader-link" href="/offline.html">{t('Fitxes descarregades')}</a></div></div>
         <HeroMountains language={language} />
       </section>
 
@@ -566,7 +567,7 @@ export default function CimTracker() {
 
       {user && supabase && <OfflineJournal key={user.id} supabase={supabase} userId={user.id} summits={summits} language={language} onRefresh={refreshJournal} />}
       {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={reloadJournal}>{t('Tornar-ho a provar')}</button>}</div>}
-      {user && journalReady && <><Journal key={user.id} client={supabase!} userId={user.id} onRefresh={refreshJournal} summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} onRefreshPhoto={refreshPhoto} onImport={importAscents} />{supabase && <TripPlanner key={user.id} supabase={supabase} userId={user.id} summits={summits} ascents={ascents} language={language} onSummit={id => setSelectedSummit(summits.find(summit => summit.id === id) ?? null)} />}</>}
+      {user && journalReady && <><Journal busy={Boolean(busyId)} onRecord={summit => editAscent(summit, null)} key={user.id} client={supabase!} userId={user.id} onRefresh={refreshJournal} summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} onRefreshPhoto={refreshPhoto} onImport={importAscents} />{supabase && <TripPlanner key={user.id} supabase={supabase} userId={user.id} summits={summits} ascents={ascents} language={language} onSummit={id => setSelectedSummit(summits.find(summit => summit.id === id) ?? null)} />}</>}
 
       <section className="catalog" id="cims">
         <div className="section-heading"><div><p className="eyebrow">{t('EL TEU CATÀLEG')}</p><h2>{t('Tria el pròxim cim')}</h2></div><div className="catalog-heading-actions"><span className="catalog-count"><b>{visible.length}</b> {language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes'}</span><div className="catalog-view-toggle" role="group" aria-label={language === 'es' ? 'Vista del catálogo' : language === 'en' ? 'Catalogue view' : 'Vista del catàleg'}><button type="button" className={catalogView === 'list' ? 'active' : ''} aria-pressed={catalogView === 'list'} onClick={() => setCatalogView('list')}><Icon name="grid" size={16} />{language === 'es' ? 'Lista' : language === 'en' ? 'List' : 'Llista'}</button><button type="button" className={catalogView === 'map' ? 'active' : ''} aria-pressed={catalogView === 'map'} onClick={() => setCatalogView('map')}><Icon name="map" size={16} />{language === 'es' ? 'Mapa' : language === 'en' ? 'Map' : 'Mapa'}</button></div></div></div>

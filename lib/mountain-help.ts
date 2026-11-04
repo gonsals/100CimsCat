@@ -2,6 +2,7 @@ import type { Language } from '@/lib/tracker'
 
 export const mountainHelp: Record<Language, [string, string][]> = {
   ca: [
+    ['Registra una sortida', 'Prem «Registrar sortida», cerca el cim o tria’n un de recent i desa la data, les notes i una foto opcional. Cada sortida crea una visita nova, encara que repeteixis cim. Al quadern pots cercar per cim, comarca o notes i filtrar per any. Les còpies, importacions i estadístiques són a «Eines del quadern».'],
     [
       'Visites sense cobertura',
       'Activa el registre al teu compte abans de sortir. A Descàrregues podràs desar data i notes sense xarxa, fins a 100 visites pendents. Torna a obrir la web amb connexió i el mateix compte per sincronitzar-les. Esborrar les dades del navegador elimina les visites pendents. Les fotos i els mapes necessiten connexió.',
@@ -16,6 +17,7 @@ export const mountainHelp: Record<Language, [string, string][]> = {
     ],
   ],
   es: [
+    ['Registra una salida', 'Pulsa «Registrar salida», busca la cima o elige una reciente y guarda la fecha, las notas y una foto opcional. Cada salida crea una visita nueva, aunque repitas cima. En el cuaderno puedes buscar por cima, comarca o notas y filtrar por año. Las copias, importaciones y estadísticas están en «Herramientas del cuaderno».'],
     [
       'Visitas sin cobertura',
       'Activa el registro en tu cuenta antes de salir. En Descargas podrás guardar fecha y notas sin red, hasta 100 visitas pendientes. Abre de nuevo la web con conexión y la misma cuenta para sincronizarlas. Borrar los datos del navegador elimina las visitas pendientes. Las fotos y los mapas necesitan conexión.',
@@ -30,6 +32,7 @@ export const mountainHelp: Record<Language, [string, string][]> = {
     ],
   ],
   en: [
+    ['Record an outing', 'Choose “Record outing”, search for a summit or pick a recent one, then save the date, notes and an optional photo. Each outing creates a new visit, even on a familiar summit. Search your journal by summit, region or notes and filter by year. Backups, imports and statistics are under “Journal tools”.'],
     [
       'Offline visits',
       'Enable recording in your account before setting out. Downloads lets you save dates and notes offline, up to 100 pending visits. Reopen the app online with the same account to sync. Clearing browser storage deletes pending visits. Photos and maps need a connection.',

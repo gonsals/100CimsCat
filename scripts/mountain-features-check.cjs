@@ -144,9 +144,12 @@ async function main() {
   }
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(Number(new URL(origin).port), '127.0.0.1', resolve) })
   browser = await chromium.launch({ channel: 'chrome', headless: true })
+    if (process.env.CHECK_SKIP_MOUNTAIN !== '1') {
     for (const width of [320, 390, 1280]) {
       reset(); const { context, page, errors } = await fixture(browser, width)
       await page.goto(base); await page.locator('#quadern').waitFor()
+      assert.equal(await page.locator('.journal-tools').getAttribute('open'), null)
+      await page.locator('.journal-tools > summary').click()
       // Annual goals and calendar preserve repeated visit semantics.
       const insights = page.getByRole('region', { name: 'Objetivos y calendario' })
       await insights.locator('summary').filter({ hasText: 'Objetivo anual' }).click()
@@ -189,6 +192,7 @@ async function main() {
       await revoked.getByText('Este enlace ha caducado o ya no está disponible.').waitFor(); await revoked.close()
       await dialog.getByRole('button', { name: 'Cerrar', exact: true }).click()
       // Install offline assets, really go offline, reload and record a visit.
+      await page.locator('.offline-journal > details > summary').click()
       await page.getByRole('button', { name: 'Activar en este dispositivo' }).click()
       await page.waitForFunction(async () => (await navigator.serviceWorker.ready).active?.state === 'activated')
       await context.setOffline(true); await page.goto(`${base}/offline.html`)
@@ -200,7 +204,9 @@ async function main() {
       await page.getByLabel('Fecha', { exact: true }).fill('2024-03-02')
       await page.getByLabel('Notas (máximo 4.000 caracteres)').fill('Second offline private note')
       await page.getByRole('button', { name: 'Guardar pendiente', exact: true }).click()
+      await page.waitForFunction(() => document.querySelectorAll('#pending-journal li').length === 2)
       await page.reload(); await page.getByRole('button', { name: 'Eliminar pendiente', exact: true }).first().waitFor()
+      assert.equal(await page.getByRole('button', { name: 'Eliminar pendiente', exact: true }).count(), 2)
       await context.setOffline(false); await page.goto(base)
       const offline = page.getByRole('region', { name: 'Visitas sin cobertura' })
       await offline.getByText('No se ha podido sincronizar. Se conservan las visitas pendientes.').waitFor()
@@ -209,6 +215,7 @@ async function main() {
       await offline.getByText('Visitas sincronizadas.', { exact: true }).waitFor()
       assert.equal(state.visits.length, 2); assert.equal(state.syncIds.length, 3); assert.equal(state.syncIds[1], state.syncIds[2])
       // Complete ZIP and preview, with failed metadata response and photo retry.
+      await page.locator('.journal-tools > summary').click()
       await page.getByRole('button', { name: 'Copia de seguridad', exact: true }).click()
       const downloadPromise = page.waitForEvent('download')
       await dialog.getByRole('button', { name: 'Descargar ZIP completo' }).click()
@@ -237,9 +244,10 @@ async function main() {
     }
     for (const [language, heading, backup] of [['ca', 'Objectius i calendari', 'Còpia de seguretat'], ['en', 'Goals and calendar', 'Backup']]) {
       reset(); const { context, page, errors } = await fixture(browser, 390, language)
-      await page.goto(base); await page.getByRole('heading', { name: heading, exact: true }).waitFor()
+      await page.goto(base); await page.locator('.journal-tools > summary').click(); await page.getByRole('heading', { name: heading, exact: true }).waitFor()
       await page.getByRole('button', { name: backup, exact: true }).click(); await page.locator('.feature-dialog').waitFor()
       await noOverflow(page); assert.deepEqual(errors, []); await context.close(); report.push({ language, translated: true })
+    }
     }
     if (process.env.CHECK_REGRESSIONS === '1') {
       for (const script of (process.env.CHECK_REGRESSION_SCRIPTS || 'planning-check.cjs,auth-check.cjs,product-check.cjs').split(',')) {
@@ -247,6 +255,7 @@ async function main() {
           const child = spawn(process.execPath, [path.join(__dirname, script)], { windowsHide: true, stdio: 'inherit', env: { ...process.env, CHECK_URL: base, CHECK_SUPABASE_ORIGIN: origin } })
           child.on('error', reject); child.on('exit', code => code === 0 ? resolve() : reject(Error(`${script} exited ${code}`)))
         })
+        report.push({ regression: script, passed: true })
       }
     }
     fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify({ report, output }, null, 2))

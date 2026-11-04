@@ -1,6 +1,6 @@
 // The cache contains only public assets. Opt-in pending notes live separately
 // in account-bound IndexedDB, never in the service worker cache.
-const CACHE = '100cimscat-offline-v4'
+const CACHE = '100cimscat-offline-v5'
 const READER = ['/offline.html', '/offline.js', '/offline-journal.js', '/journal-store.js', '/summits-catalog.json', '/icon.svg']
 
 self.addEventListener('install', event => {
