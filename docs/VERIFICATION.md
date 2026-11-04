@@ -1,5 +1,15 @@
 # Validación de funcionalidades y móvil
 
+## Listas de salidas e importación CSV — 4 de noviembre de 2026
+
+Listas privadas con nombre, fecha prevista, notas y cimas ordenadas; creación, edición, borrado confirmado y mapa de las cimas seleccionadas. Los borradores requieren confirmación antes de descartarse y un fallo al guardar conserva los datos. Cada lista nueva conserva su UUID durante los reintentos. El mapa de planificación no modifica la posición del catálogo.
+
+Importación de CSV UTF-8 con previsualización y selección de filas, encabezados en tres idiomas, coma/punto y coma, notas multilínea y comillas escapadas. Se reconocen nombres sin acentos o identificadores y se marcan duplicados por cima/fecha, errores y favoritos pendientes. Solo se importan filas seleccionadas y válidas. No se sustituyen registros ni fotos existentes. La RPC es transaccional e idempotente; después de confirmar se recarga el cuaderno, también cuando un reintento no añade filas porque el primer intento ya se había confirmado.
+
+La migración `20261103235223_trip_lists_and_csv_import.sql` está aplicada en Supabase. Ambas tablas tienen RLS, permisos de propietario y referencias compuestas que impiden añadir cimas a listas ajenas. Las funciones son `SECURITY INVOKER`, limitan el tamaño de entrada y comprueban la identidad prevista. Las pruebas SQL con cuentas sintéticas pasan y revierten todos sus datos: acceso privado y anónimo, cambio de cuenta, orden, borrado en cascada, guardados atómicos, importaciones repetidas y conservación de notas/fotos. El asesor de seguridad no añade avisos a los anteriores. El nombre local de la migración coincide con el historial remoto.
+
+47 pruebas automatizadas y TypeScript correctos. `planning-check.cjs` pasa a 320, 390 y 1280 px con el SDK real y servicios privados simulados: persistencia tras recarga, fallo y reintento de listas, reordenación, descarte de borrador, mapa, revisión sin escrituras, filas no seleccionadas y reintento tras una respuesta perdida. Sin errores de JavaScript ni desbordamiento horizontal del documento; la tabla del CSV se desplaza dentro de su contenedor en móvil. También se comprueban los textos de catalán e inglés. Capturas de editor, lista y CSV revisadas visualmente; informes en `.npm-cache/planning-check/`. `browser-check.cjs` sigue pasando en cinco anchos y `product-check.cjs` completa las 15 comprobaciones de flujos privados de fotos y borradores. No se ejecutó axe en esta revisión.
+
 ## Validación automática y fallos de autenticación — 3 de noviembre de 2026
 
 El workflow `.github/workflows/ci.yml` ejecuta instalación desde el lockfile, pruebas, TypeScript y compilación de producción en pull requests y pushes a `main`, con Node.js 24, acciones fijadas a commits, permisos de lectura y sin secretos de Supabase. `typecheck` genera primero los tipos y `next-env.d.ts` mediante `next typegen`, de forma que funciona en instalaciones limpias.

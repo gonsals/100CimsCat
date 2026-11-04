@@ -7,6 +7,7 @@ const assert = require('node:assert/strict')
 const catalog = require('../data/summits.json')
 const baseUrl = process.env.CHECK_URL || 'http://127.0.0.1:3000'
 const supabaseOrigin = process.env.CHECK_SUPABASE_ORIGIN || 'https://rpizylcabvqzvmdqywyp.supabase.co'
+const cookieName = `sb-${new URL(supabaseOrigin).hostname.split('.')[0]}-auth-token`
 const output = process.env.CHECK_OUTPUT || path.join(__dirname, '../.next/browser-check')
 const userId = '00000000-0000-4000-8000-000000000001'
 const user = { id: userId, aud: 'authenticated', role: 'authenticated', email: 'browser-check@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: '2026-01-01T00:00:00Z' }
@@ -27,10 +28,10 @@ async function main() {
       page.on('console', message => { if (message.type() === 'error') console.log('console:', message.text().slice(0, 350)) })
       page.on('requestfailed', request => console.log('request failed:', request.url(), request.failure()?.errorText))
       page.on('response', response => { if (response.status() >= 400) console.log('http:', response.status(), response.url()) })
-      await page.addInitScript(value => {
+      await page.addInitScript(({ value, cookieName }) => {
         localStorage.setItem('100cimscat-language', 'es')
-        document.cookie = `sb-rpizylcabvqzvmdqywyp-auth-token=base64-${btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
-      }, session)
+        document.cookie = `${cookieName}=base64-${btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
+      }, { value: session, cookieName })
       let ascents = [{ summit_id: 'canigo', completed_at: '2024-02-29', photo_path: null, notes: 'Recuerdo de prueba' }]
       let visits = []
       let favorites = [{ summit_id: 'balandrau' }]
@@ -45,6 +46,7 @@ async function main() {
         if (url.pathname.includes('/auth/v1/token')) return json(session)
         if (url.pathname.includes('/auth/v1/logout')) return json({})
         if (url.pathname.includes('/rest/v1/summits')) return json(catalog)
+        if (url.pathname.includes('/rest/v1/trip_lists')) return json([])
         if (url.pathname.includes('/rest/v1/ascent_visits')) {
           if (method === 'GET') return json(visits)
           if (method === 'POST') { const record = { id: crypto.randomUUID(), photo_path: null, ...request.postDataJSON() }; visits.push(record); return json(record) }
@@ -210,10 +212,10 @@ async function main() {
 
     const recoveryContext = await browser.newContext({ viewport: { width: 390, height: 844 } })
     const recovery = await recoveryContext.newPage()
-    await recovery.addInitScript(value => {
+    await recovery.addInitScript(({ value, cookieName }) => {
       localStorage.setItem('100cimscat-language', 'es')
-      document.cookie = `sb-rpizylcabvqzvmdqywyp-auth-token=base64-${btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
-    }, session)
+      document.cookie = `${cookieName}=base64-${btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
+    }, { value: session, cookieName })
     let loadFails = true
     await recovery.route(`${supabaseOrigin}/**`, route => {
       const request = route.request(), url = new URL(request.url())

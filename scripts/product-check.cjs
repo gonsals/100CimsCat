@@ -7,6 +7,7 @@ const path = require('node:path')
 const catalog = require('../data/summits.json')
 const base = process.env.CHECK_URL || 'http://127.0.0.1:3000'
 const supabaseOrigin = process.env.CHECK_SUPABASE_ORIGIN || 'https://rpizylcabvqzvmdqywyp.supabase.co'
+const cookieName = `sb-${new URL(supabaseOrigin).hostname.split('.')[0]}-auth-token`
 const output = path.join(__dirname, '../.next/product-check')
 const userId = '00000000-0000-4000-8000-000000000001'
 const user = { id: userId, aud: 'authenticated', role: 'authenticated', email: 'product-check@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: '2026-01-01T00:00:00Z' }
@@ -36,10 +37,10 @@ async function fixture(browser, width, signedIn = false) {
   const context = await browser.newContext({ viewport: { width, height: 900 } })
   const page = await context.newPage()
   page.on('pageerror', error => errors.push(error.message))
-  await page.addInitScript(({ session, signedIn }) => {
+  await page.addInitScript(({ session, signedIn, cookieName }) => {
     localStorage.setItem('100cimscat-language', 'es')
-    if (signedIn) document.cookie = `sb-rpizylcabvqzvmdqywyp-auth-token=base64-${btoa(JSON.stringify(session)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
-  }, { session, signedIn })
+    if (signedIn) document.cookie = `${cookieName}=base64-${btoa(JSON.stringify(session)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}; path=/; SameSite=Lax`
+  }, { session, signedIn, cookieName })
   const state = { records: [], visits: [], inserts: 0, uploads: 0, removals: [], signings: 0, failUpload: false, failLink: false, photoMode: 'success' }
   await page.route('https://*.tile.openstreetmap.org/**', route => route.fulfill({ contentType: 'image/png', body: png }))
   await page.route('https://upload.wikimedia.org/**', route => route.fulfill({ contentType: 'image/png', body: png }))
@@ -63,6 +64,7 @@ async function fixture(browser, width, signedIn = false) {
     if (url.pathname.includes('/auth/v1/user')) return json(signedIn ? user : { user: null })
     if (url.pathname.includes('/auth/v1/token')) return json(session)
     if (url.pathname.includes('/rest/v1/summits')) return json(catalog)
+    if (url.pathname.includes('/rest/v1/trip_lists')) return json([])
     if (/\/rest\/v1\/(ascent_records|ascent_visits)/.test(url.pathname)) {
       const key = url.pathname.includes('ascent_visits') ? 'visits' : 'records'
       if (method === 'GET') return json(state[key])
