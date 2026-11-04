@@ -15,6 +15,9 @@ import CatalogFilters from '@/components/CatalogFilters'
 import AscentEditor from '@/components/AscentEditor'
 import Journal from '@/components/Journal'
 import TripPlanner from '@/components/TripPlanner'
+import OfflineJournal from '@/components/OfflineJournal'
+import {getOwner,putPending} from '@/public/journal-store'
+import {mountainText} from '@/lib/mountain-i18n'
 import { importJournal } from '@/lib/trip-planning'
 import { loadJournal } from '@/lib/journal-data'
 import type { ImportPayload } from '@/lib/journal-import'
@@ -94,7 +97,7 @@ export default function CimTracker() {
   const supabase = useMemo(() => configured ? createClient() : null, [configured])
   const [summits, setSummits] = useState<Summit[]>(catalogSeed as Summit[])
   const { user, setUser, ready: authReady } = useAccount(supabase)
-  const { visits, setVisits, favorites, setFavorites, ready: journalReady, error: journalError, reload: reloadJournal } = useJournal(supabase, user?.id ?? null)
+  const { visits, setVisits, favorites, setFavorites, ready: journalReady, error: journalError, reload: reloadJournal, replace: replaceJournal } = useJournal(supabase, user?.id ?? null)
   const ascents = useMemo(() => latestAscents(visits), [visits])
   const [ready, setReady] = useState(false)
   const [search, setSearch] = useState('')
@@ -265,6 +268,7 @@ export default function CimTracker() {
     try {
       const response = await fetch('/api/account',{method:'DELETE'})
       if (!response.ok) throw new Error(response.status===503?'config':'delete')
+      if (user) await import('@/public/journal-store').then(store => store.clearPending(user.id)).catch(() => {})
       await supabase?.auth.signOut({scope:'local'})
       setUser(null); setVisits([]); setDeleteOpen(false); setSettingsOpen(false); setProfileOpen(false)
       setNotice(language==='es'?'Cuenta y fotos eliminadas.':language==='en'?'Account and photos deleted.':'Compte i fotos eliminats.')
@@ -333,6 +337,16 @@ export default function CimTracker() {
     if (!validAscentDate(date) || notes.length > 4000) { setNotice('Tria una data vàlida que no sigui futura.'); return }
     const summit = editingSummit
     const accountId = user.id
+    if (!navigator.onLine && !editingAscent && !file) {
+      setBusyId(summit.id)
+      try {
+        if (await getOwner() !== accountId) throw new Error('Offline recording not enabled')
+        await putPending({id:crypto.randomUUID(),owner:accountId,summit_id:summit.id,completed_at:date,notes})
+        setEditingSummit(null);setNotice(mountainText(language,'saved'));window.dispatchEvent(new Event('pending-journal-changed'))
+      } catch { setNotice(mountainText(language,'storageError')) }
+      finally { setBusyId(null) }
+      return
+    }
     if (file) { const validation = validatePhoto(file); if (validation) { setNotice(validation); return } }
     setBusyId(summit.id)
     setBusyLabel('Desant…')
@@ -502,6 +516,13 @@ export default function CimTracker() {
     } finally { setBusyId(null) }
   }
 
+  async function refreshJournal() {
+    if(!supabase||!user)return
+    const accountId=user.id
+    const fresh=await loadJournal(supabase,accountId,()=>userIdRef.current===accountId)
+    if(fresh)replaceJournal(fresh)
+  }
+
   return (
     <div className="shell"><SkipLink language={language} />
       <SiteHeader language={language} onJournal={() => { if (!user) setAuthOpen(true); else document.getElementById('quadern')?.scrollIntoView() }}>
@@ -543,8 +564,9 @@ export default function CimTracker() {
         <ProgressShare language={language} essential={essentialDone} summits={completed.length} visits={visits.length} ready={ready && authReady && (!user || journalReady)} />
       </section>
 
+      {user && supabase && <OfflineJournal key={user.id} supabase={supabase} userId={user.id} summits={summits} language={language} onRefresh={refreshJournal} />}
       {user && !journalReady && <div className="journal-loading" role="status">{t(journalError ? 'No s’ha pogut carregar el quadern. Torna-ho a provar.' : 'Carregant el quadern…')}{journalError && <button type="button" className="secondary-button" onClick={reloadJournal}>{t('Tornar-ho a provar')}</button>}</div>}
-      {user && journalReady && <><Journal summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} onRefreshPhoto={refreshPhoto} onImport={importAscents} />{supabase && <TripPlanner key={user.id} supabase={supabase} userId={user.id} summits={summits} ascents={ascents} language={language} onSummit={id => setSelectedSummit(summits.find(summit => summit.id === id) ?? null)} />}</>}
+      {user && journalReady && <><Journal key={user.id} client={supabase!} userId={user.id} onRefresh={refreshJournal} summits={summits} ascents={ascents} visits={visits} favorites={favorites} language={language} t={t} onEdit={editAscent} onRefreshPhoto={refreshPhoto} onImport={importAscents} />{supabase && <TripPlanner key={user.id} supabase={supabase} userId={user.id} summits={summits} ascents={ascents} language={language} onSummit={id => setSelectedSummit(summits.find(summit => summit.id === id) ?? null)} />}</>}
 
       <section className="catalog" id="cims">
         <div className="section-heading"><div><p className="eyebrow">{t('EL TEU CATÀLEG')}</p><h2>{t('Tria el pròxim cim')}</h2></div><div className="catalog-heading-actions"><span className="catalog-count"><b>{visible.length}</b> {language === 'es' ? 'montañas' : language === 'en' ? 'summits' : 'muntanyes'}</span><div className="catalog-view-toggle" role="group" aria-label={language === 'es' ? 'Vista del catálogo' : language === 'en' ? 'Catalogue view' : 'Vista del catàleg'}><button type="button" className={catalogView === 'list' ? 'active' : ''} aria-pressed={catalogView === 'list'} onClick={() => setCatalogView('list')}><Icon name="grid" size={16} />{language === 'es' ? 'Lista' : language === 'en' ? 'List' : 'Llista'}</button><button type="button" className={catalogView === 'map' ? 'active' : ''} aria-pressed={catalogView === 'map'} onClick={() => setCatalogView('map')}><Icon name="map" size={16} />{language === 'es' ? 'Mapa' : language === 'en' ? 'Map' : 'Mapa'}</button></div></div></div>

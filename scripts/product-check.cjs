@@ -65,6 +65,7 @@ async function fixture(browser, width, signedIn = false) {
     if (url.pathname.includes('/auth/v1/token')) return json(session)
     if (url.pathname.includes('/rest/v1/summits')) return json(catalog)
     if (url.pathname.includes('/rest/v1/trip_lists')) return json([])
+    if (/\/rest\/v1\/(journal_goals|visit_tracks)/.test(url.pathname)) return json([])
     if (/\/rest\/v1\/(ascent_records|ascent_visits)/.test(url.pathname)) {
       const key = url.pathname.includes('ascent_visits') ? 'visits' : 'records'
       if (method === 'GET') return json(state[key])

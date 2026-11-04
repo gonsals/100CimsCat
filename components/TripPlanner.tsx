@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import FeatureDialog from '@/components/FeatureDialog'
+import ShareTrip from '@/components/ShareTrip'
 import Icon from '@/components/Icon'
 import { planningText } from '@/lib/planning-i18n'
 import { loadTripLists, saveTripList, type TripList } from '@/lib/trip-planning'
@@ -69,6 +70,7 @@ export default function TripPlanner({ supabase, userId, summits, ascents, langua
   const [busy, setBusy] = useState(false)
   const [mapOpen, setMapOpen] = useState(false)
   const t = (value: string) => planningText(language, value)
+  useEffect(() => { const reload = () => setVersion(value => value + 1); window.addEventListener('journal-restored', reload); return () => window.removeEventListener('journal-restored', reload) }, [])
   useEffect(() => {
     let active = true
     setReady(false); setError(''); setLists([]); setSelectedId(''); setEditing(null)
@@ -105,7 +107,7 @@ export default function TripPlanner({ supabase, userId, summits, ascents, langua
     {selected && <article className="trip-detail"><h3>{selected.name}</h3><p className="field-hint">{selected.planned_on ? friendlyDate(selected.planned_on, language) : t('Sense data prevista')} · {listSummits.length} {t('cims')}</p>{selected.notes && <p className="trip-notes">{selected.notes}</p>}
       <ol className="trip-summits">{listSummits.map(summit => <li key={summit.id}><button className="trip-summit-link" type="button" onClick={() => onSummit(summit.id)}>{summit.name}</button><span>{ascents.has(summit.id) ? `✓ ${t('Fets')}` : `${summit.height} m`}</span></li>)}</ol>
       {!listSummits.length && <p>{t('La llista encara no té cims.')}</p>}
-      <div className="feature-actions"><button className="secondary-button" type="button" disabled={busy} onClick={() => setEditing({ ...selected, summitIds: [...selected.summitIds] })}>{t('Editar llista')}</button><button className="secondary-button" type="button" disabled={!listSummits.length || busy} aria-expanded={mapOpen} onClick={() => setMapOpen(previous => !previous)}>{t(mapOpen ? 'Amagar mapa' : 'Veure mapa de la llista')}</button><button className="danger-button" type="button" disabled={busy} onClick={() => setDeleting(true)}>{t('Eliminar llista')}</button></div>
+      <div className="feature-actions"><ShareTrip client={supabase} userId={userId} list={selected} summits={summits} language={language}/><button className="secondary-button" type="button" disabled={busy} onClick={() => setEditing({ ...selected, summitIds: [...selected.summitIds] })}>{t('Editar llista')}</button><button className="secondary-button" type="button" disabled={!listSummits.length || busy} aria-expanded={mapOpen} onClick={() => setMapOpen(previous => !previous)}>{t(mapOpen ? 'Amagar mapa' : 'Veure mapa de la llista')}</button><button className="danger-button" type="button" disabled={busy} onClick={() => setDeleting(true)}>{t('Eliminar llista')}</button></div>
       {deleting && <div className="trip-delete" role="alert"><p>{t('Eliminar aquesta llista? Les ascensions i les fotos es conservaran.')}</p><div className="feature-actions"><button type="button" className="secondary-button" disabled={busy} onClick={() => setDeleting(false)}>{t('Cancel·lar')}</button><button type="button" className="danger-button" disabled={busy} onClick={() => void remove()}>{busy ? '…' : t('Sí, eliminar llista')}</button></div></div>}
       {mapOpen && <SummitMap summits={listSummits} ascents={ascents} language={language} onSelectSummit={onSummit} rememberPosition={false} />}
     </article>}

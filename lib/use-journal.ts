@@ -35,9 +35,10 @@ export function useJournal(supabase: SupabaseClient | null, userId: string | nul
       : previous)
   }, [userId])
   const reload = useCallback(() => setVersion(previous => previous + 1), [])
+  const replace = useCallback((data: JournalData) => setState(previous => previous.userId === userId ? { ...data, userId, ready: true, error: false } : previous), [userId])
   const current = state.userId === userId
   return {
     visits: current ? state.visits : [], favorites: current ? state.favorites : new Set<string>(),
-    ready: current && state.ready, error: current && state.error, setVisits, setFavorites, reload,
+    ready: current && state.ready, error: current && state.error, setVisits, setFavorites, reload, replace,
   }
 }

@@ -19,6 +19,7 @@ export function useAccount(supabase: SupabaseClient | null) {
     }).finally(() => { if (active) setReady(true) })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!active) return
+      if (_event === 'SIGNED_OUT') void import('@/public/journal-store').then(store => store.setOwner(null)).catch(() => {})
       sessionChanged = true
       setUser(session?.user ? { id: session.user.id, email: session.user.email } : null)
       setReady(true)
